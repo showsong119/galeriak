@@ -1,0 +1,30 @@
+name: db
+# Aplica supabase/schema.sql a la base de datos y registra al administrador.
+on:
+  push:
+    branches: [main]
+    paths: ['supabase/schema.sql']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar cliente de Postgres
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+      - name: Aplicar esquema
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+        run: |
+          if [ -z "$DB_URL" ]; then echo "Falta el secreto SUPABASE_DB_URL"; exit 1; fi
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -q -f supabase/schema.sql
+          if [ -n "$ADMIN_EMAIL" ]; then
+            echo "insert into public.admins(email) values (:'admin') on conflict do nothing;" \
+              | psql "$DB_URL" -v ON_ERROR_STOP=1 -q -v admin="$ADMIN_EMAIL"
+          fi
+          echo "Esquema aplicado."

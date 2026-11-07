@@ -1,0 +1,12 @@
+{
+  "name": "galeriak",
+  "private": true,
+  "type": "module",
+  "description": "GaleríaK – comunidad de K-Beauty y K-Pop en México",
+  "scripts": {
+    "test": "node --test scripts/*.test.mjs",
+    "deals": "node scripts/publish-deals.mjs",
+    "deals:dry": "DRY_RUN=1 AMAZON_TAG=prueba-20 node scripts/publish-deals.mjs"
+  },
+  "engines": { "node": ">=20" }
+}

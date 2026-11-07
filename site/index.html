@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GaleríaK – Comunidad de K-Beauty, K-Pop y ofertas en México</title>
+<meta name="description" content="Comunidad en español para fans de la cosmética coreana, K-Pop y K-Dramas en México: galerías por tema e idol, ofertas de K-Beauty, rankings de Corea y guías para comprar productos originales.">
+<meta property="og:title" content="GaleríaK – K-Beauty y K-Pop en México">
+<meta property="og:description" content="Ofertas reales de K-Beauty, galerías de tu grupo favorito y guías para comprar originales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<!-- AdSense: pega aquí el script de tu cuenta cuando sea aprobada -->
+</head>
+<body>
+<div class="banner" id="banner" hidden></div>
+<header class="top">
+  <div class="top-in">
+    <a class="logo" href="#home">Galería<b>K</b></a>
+    <form class="search" id="searchForm" role="search"><input id="q" placeholder="Buscar en GaleríaK" aria-label="Buscar"><button aria-label="Buscar">Buscar</button></form>
+    <div class="acts">
+      <button class="write-top" id="writeTop">Escribir</button>
+      <span id="authBox"></span>
+    </div>
+  </div>
+  <nav class="main" id="nav" aria-label="Secciones"></nav>
+</header>
+
+<div class="wrap">
+  <main id="main"><div class="card empty">Cargando…</div></main>
+  <aside class="side" id="side"></aside>
+</div>
+
+<footer>
+  <div>
+    <a href="#reglas">Reglas</a> · <a href="#privacidad">Aviso de privacidad</a> · <a href="#galerias">Todas las galerías</a>
+  </div>
+  <p>GaleríaK es una comunidad de fans no oficial. No está afiliada a ninguna agencia, artista ni marca. Los nombres de artistas y marcas pertenecen a sus dueños. Para usar la comunidad debes tener 13 años o más.</p>
+  <p>Como Afiliado de Amazon, GaleríaK obtiene ingresos por las compras adscritas que cumplen los requisitos aplicables.</p>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
