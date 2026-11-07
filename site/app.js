@@ -242,6 +242,22 @@ async function vAdmin() {
   if (!user) return needLogin();
   if (!admin) return vNotFound('Esta página es solo para el equipo.');
   const since = new Date(Date.now() - 3 * D).toISOString();
+  const dayAgo = new Date(Date.now() - D).toISOString(), weekAgo = new Date(Date.now() - 7 * D).toISOString();
+  const count = async b => { const { count: c, error } = await b; return error ? '—' : c; };
+  const head = { count: 'exact', head: true };
+  const [members, membersWeek, postsAll, postsDay, dealsLive, comments] = await Promise.all([
+    count(sb.from('profiles').select('id', head)),
+    count(sb.from('profiles').select('id', head).gte('created_at', weekAgo)),
+    count(sb.from('posts').select('id', head)),
+    count(sb.from('posts').select('id', head).gte('created_at', dayAgo)),
+    count(sb.from('posts').select('id', head).eq('gallery', 'ofertas').eq('deal_sold', false).gte('deal_expires_at', new Date().toISOString())),
+    count(sb.from('comments').select('id', head).gte('created_at', dayAgo))
+  ]);
+  const stat = (k, v, d) => `<div style="border:1px solid var(--line);border-radius:12px;padding:10px 12px"><div class="hint">${k}</div><div style="font-size:22px;font-weight:800">${v}</div>${d ? `<div class="hint">${d}</div>` : ''}</div>`;
+  const stats = `<div class="card"><h2>Resumen</h2><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">
+    ${stat('Miembros', members, `+${membersWeek} esta semana`)}${stat('Publicaciones', postsAll, `+${postsDay} en 24 h`)}
+    ${stat('Ofertas vigentes', dealsLive, 'precio de menos de 24 h')}${stat('Comentarios', comments, 'en 24 h')}</div>
+    <p class="hint" style="margin-top:8px">Para llevar estas cifras al panel de operación (GaleríaK 운영실), anótalas en la pestaña KPI una vez por semana.</p></div>`;
   const [auto, flagged] = await Promise.all([
     q(sb.from('posts').select(POST_COLS + ',deal_url,deal_asin,deal_source').eq('is_auto', true).gte('created_at', since).order('created_at', { ascending: false })),
     q(sb.from('posts').select(POST_COLS + ',reports').or('hidden.eq.true,reports.gt.0').order('created_at', { ascending: false }).limit(50))
@@ -256,6 +272,7 @@ async function vAdmin() {
     <button class="btn btn-sm" data-ahide="${p.id}" data-v="${p.hidden ? 0 : 1}">${p.hidden ? 'Mostrar' : 'Ocultar'}</button>
     <button class="btn btn-sm" data-adel="${p.id}">Borrar</button></div>`;
   return `<div class="card"><h2>Revisión</h2><p class="hint">${runInfo || 'Sin registro del bot todavía.'}</p></div>
+  ${stats}
   <div class="card"><h2>Ofertas del bot (últimos 3 días) · ${auto.length}</h2>${auto.length ? auto.map(adminRow).join('') : emptyBox('El bot no ha publicado nada en los últimos 3 días.')}</div>
   <div class="card"><h2>Reportadas u ocultas · ${flagged.length}</h2>${flagged.length ? flagged.map(adminRow).join('') : emptyBox('Nada pendiente.')}</div>`;
 }
