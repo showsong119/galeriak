@@ -7,15 +7,10 @@
   `comments`, `votes(post_id, voter, value)`, `reports`, RPC `increment_view`, `admin_users`. **스키마를 새로 만들지 말 것.**
 - 운영실: https://claude.ai/artifact/Qyi16cNk8L8B1LmgUdZEgo (컬렉션: tasks, content, deals, revenue, kpi, config, secrets)
 
-## 저장소 연결 시 1회
-1. `gh api repos/showsong119/galeriak/actions/secrets/public-key` → `{key_id, key}`
-2. 운영실 `config/github`에 `{repo, key_id, key}` 저장 → 비밀 키 입력칸이 열림
-
-## 키 반영
-- `config/public.AMAZON_TAG` → `gh secret set AMAZON_TAG --repo showsong119/galeriak`
-- `secrets/<NAME>`(SUPABASE_SERVICE_ROLE_KEY, PAAPI_*)의 `encrypted_value`, `key_id` →
-  `gh api -X PUT repos/showsong119/galeriak/actions/secrets/<NAME> -f encrypted_value=… -f key_id=…`
-- 성공: 문서에 `applied_at` 기록 / 실패: `error` 기록. 반영 후 `gh workflow run deals`
+## 키
+- 이 세션의 GitHub 프록시는 Actions secrets API를 막음 → 비밀 키는 사용자가 GitHub 화면에서 직접 입력 (`SUPABASE_SERVICE_ROLE_KEY` 하나)
+- `AMAZON_TAG`는 공개값: 운영실 `config/public.AMAZON_TAG`를 읽어 `deals/config.json`의 `amazon_tag`에 커밋
+- 키 상태 확인: 봇이 매 실행마다 `deals/last-run.json`에 `status`(`sin-configurar`면 `missing` 목록)를 커밋
 
 ## 매일 (예약 작업)
 - `CURATOR.md`대로 후보를 `deals/inbox/`에 올림 → 봇이 `needs_review=true`로 게시 (관리자 화면 '검토 필요'에 표시)

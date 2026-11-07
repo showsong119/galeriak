@@ -225,7 +225,14 @@ async function readInbox() {
   return { files, cands, rejected };
 }
 
+// AMAZON_TAG: secreto de GitHub o, si no existe, deals/config.json (el ID de seguimiento es público: va en cada enlace)
+async function loadTag() {
+  if (env.AMAZON_TAG) return;
+  try { const c = JSON.parse(await readFile(path.join(ROOT, 'deals', 'config.json'), 'utf8')); if (c.amazon_tag) env.AMAZON_TAG = c.amazon_tag; } catch { /* sin archivo */ }
+}
+
 export async function main() {
+  await loadTag();
   const required = DRY ? ['AMAZON_TAG'] : ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'AMAZON_TAG'];
   const missing = required.filter(k => !env[k]);
   if (missing.length) {

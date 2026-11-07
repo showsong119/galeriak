@@ -7,21 +7,22 @@
 - [x] Google 로그인 연결 (Google Cloud OAuth + Supabase Provider)
 - [x] Supabase Site URL / Redirect URL (galeriak.netlify.app)
 
-## 1. GitHub 저장소 만들기 — 1분
-https://github.com/new → 이름 `galeriak`, **Public**, README 체크 안 함 → Create repository
+## 1. GitHub 저장소 — 완료
+https://github.com/showsong119/galeriak
 
-## 2. Netlify를 GitHub와 연결 — 2분 (Claude가 코드를 올린 뒤)
+## 2. Netlify를 GitHub와 연결 — 2분
 app.netlify.com → galeriak → **Project configuration › Build & deploy › Continuous deployment › Link repository**
 → GitHub → `showsong119/galeriak` → Branch `main` → 배포 (설정은 저장소의 netlify.toml이 자동으로 채움)
-이후로는 Claude가 GitHub에 올리는 대로 사이트가 자동 갱신됩니다.
 
 ## 3. Amazon 제휴 가입 — 15분
 https://afiliados.amazon.com.mx 에서 가입 (사이트 주소: `https://galeriak.netlify.app`)
-→ 추적 ID(예: `galeriak-20`)를 운영실 키 설정의 `AMAZON_TAG`에 입력
+→ 추적 ID(예: `galeriak-20`)를 운영실 키 설정의 `AMAZON_TAG`에 입력 → Claude가 `deals/config.json`에 반영
 
-## 4. Supabase Secret key — 2분 (저장소 연결 후)
-Supabase › Project Settings › API Keys › **Secret keys** (`sb_secret_…`) 복사
-→ 운영실 키 설정의 `SUPABASE_SERVICE_ROLE_KEY`에 붙여넣기 (브라우저에서 GitHub 공개키로 암호화되어 저장)
+## 4. Supabase Secret key — 2분 (GitHub에 직접 입력)
+1. Supabase › Project Settings › API Keys › **Secret keys**에서 키(`sb_secret_…`) 복사
+2. https://github.com/showsong119/galeriak/settings/secrets/actions/new 열기
+3. Name: `SUPABASE_SERVICE_ROLE_KEY`, Secret: 복사한 키 → **Add secret**
+(이 키는 채팅이나 운영실에 넣지 마세요. GitHub에만 넣습니다.)
 
 ## 5. 정식 오픈
 준비가 끝나면 Netlify 화면 아래쪽의 **Make public**을 누릅니다.
