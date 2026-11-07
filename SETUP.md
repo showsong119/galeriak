@@ -18,8 +18,13 @@
    - Site URL: `https://showsong119.github.io/galeriak/`
    - Redirect URLs: `https://showsong119.github.io/galeriak/**`
 
-## 3. GitHub 저장소 Secrets 입력 — 약 5분
-저장소 → Settings → Secrets and variables → Actions → New repository secret
+## 3. 키 입력 — 약 5분
+**GaleríaK 운영실 › 더보기 › 키 설정** 화면에서 바로 입력하면 됩니다. 각 키 옆의 '찾으러 가기' 버튼을 누르면 해당 화면으로 이동해요.
+- 공개 설정(Supabase 주소, anon 키, Amazon 추적 ID)은 그대로 저장되고 Claude가 GitHub에 반영합니다.
+- 비밀 키는 운영실에서 GitHub 저장소 공개키로 암호화된 뒤 저장됩니다. 복호화는 GitHub만 할 수 있어요.
+- 반영이 안 되면(화면에 '반영 실패'로 표시) 아래 표대로 GitHub에서 직접 넣어도 됩니다.
+
+직접 넣을 때: 저장소 → Settings → Secrets and variables → Actions → New repository secret
 
 | 이름 | 어디서 찾나요 |
 | --- | --- |

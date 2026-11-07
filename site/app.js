@@ -379,5 +379,6 @@ document.addEventListener('submit', async e => {
 });
 
 window.addEventListener('hashchange', route);
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 if (sb) sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_IN' || ev === 'SIGNED_OUT') loadSession().then(route); });
 loadSession().then(route);
