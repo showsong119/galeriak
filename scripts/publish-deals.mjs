@@ -25,6 +25,7 @@ const MAX = Number(env.MAX_PER_RUN || 6);
 const MIN_SAVING = Number(env.MIN_SAVING || 15);
 const PRICE_TTL_H = 24; // Amazon: un precio mostrado no debe tener más de 24 h
 const DEDUPE_DAYS = 7;
+export const BOT_NAME = 'Bot de ofertas';
 
 // Marcas coreanas que el bot busca en Amazon México (solo con PA-API)
 export const BRANDS = ['COSRX', 'Beauty of Joseon', 'ANUA', 'Round Lab', 'SKIN1004', 'Torriden', 'Medicube',
@@ -45,6 +46,8 @@ export function validateCandidate(c) {
   if (/https?:\/\//i.test(t)) errs.push('el título no lleva enlaces');
   return errs;
 }
+
+export const asinFromUrl = u => (String(u || '').match(/\/(?:dp|gp\/product)\/([A-Z0-9]{10})/) || [])[1] || null;
 
 export function affiliateUrl(asin, tag) {
   return `https://www.amazon.com.mx/dp/${asin}?tag=${encodeURIComponent(tag)}`;
@@ -67,20 +70,18 @@ export function buildPost(c, tag, now = new Date()) {
   lines.push('Publicado automáticamente por el bot de ofertas de GaleríaK. Si la oferta ya no está, márcala como agotada.');
   lines.push('Como Afiliado de Amazon, GaleríaK obtiene ingresos por las compras adscritas que cumplen los requisitos aplicables.');
   const title = (saving ? `[-${saving}%] ` : '') + String(c.title).trim();
+  // Estructura de la tabla posts del sitio en Netlify (gallery_id, anon_name, deal_* en texto, needs_review).
+  // needs_review=true: la oferta se ve de inmediato y además aparece en la cola "검토 필요" del panel de administración.
+  // El sitio oculta el precio de las ofertas del bot después de 24 h (PRICE_TTL_H).
   return {
-    gallery: 'ofertas',
+    gallery_id: 'ofertas',
+    anon_name: BOT_NAME,
     title: title.slice(0, 120),
     body: lines.join('\n\n'),
-    author_label: 'Bot de ofertas',
-    is_auto: true,
-    deal_price: price,
-    deal_list_price: list,
+    deal_price: price ? fmtMXN(price) : 'Ver precio en Amazon',
     deal_store: 'Amazon México',
     deal_url: affiliateUrl(c.asin, tag),
-    deal_asin: c.asin,
-    deal_price_at: price ? now.toISOString() : null,
-    deal_expires_at: new Date(now.getTime() + PRICE_TTL_H * 3600e3).toISOString(),
-    deal_source: c.verified ? 'amazon-pa-api' : 'curaduria'
+    needs_review: true
   };
 }
 
@@ -177,12 +178,16 @@ async function discoverWithPaapi() {
 }
 
 // ---------------- Supabase (REST) ----------------
+// Llaves nuevas de Supabase (sb_secret_…) van solo en "apikey"; las llaves JWT antiguas también en Authorization.
+export function sbHeaders(key) {
+  return key.startsWith('sb_') ? { apikey: key } : { apikey: key, authorization: `Bearer ${key}` };
+}
+
 async function sb(pathAndQuery, opts = {}) {
   const res = await fetch(`${env.SUPABASE_URL}/rest/v1/${pathAndQuery}`, {
     ...opts,
     headers: {
-      apikey: env.SUPABASE_SERVICE_ROLE_KEY,
-      authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+      ...sbHeaders(env.SUPABASE_SERVICE_ROLE_KEY),
       'content-type': 'application/json',
       prefer: 'return=representation',
       ...(opts.headers || {})
@@ -195,8 +200,8 @@ async function sb(pathAndQuery, opts = {}) {
 
 async function recentAsins() {
   const since = new Date(Date.now() - DEDUPE_DAYS * 864e5).toISOString();
-  const rows = await sb(`posts?select=deal_asin&gallery=eq.ofertas&deal_asin=not.is.null&created_at=gte.${since}`);
-  return new Set(rows.map(r => r.deal_asin));
+  const rows = await sb(`posts?select=deal_url&gallery_id=eq.ofertas&deal_url=not.is.null&created_at=gte.${since}`);
+  return new Set(rows.map(r => asinFromUrl(r.deal_url)).filter(Boolean));
 }
 
 // ---------------- Principal ----------------
@@ -247,7 +252,7 @@ export async function main() {
     const post = buildPost(c, env.AMAZON_TAG);
     if (DRY) { published.push({ asin: c.asin, title: post.title, dry: true }); continue; }
     const [row] = await sb('posts', { method: 'POST', body: JSON.stringify(post) });
-    published.push({ id: row.id, asin: c.asin, title: row.title, price: row.deal_price, source: row.deal_source });
+    published.push({ id: row.id, asin: c.asin, title: row.title, price: row.deal_price, source: c.verified ? 'amazon-pa-api' : 'curaduria' });
   }
 
   if (!DRY && files.length) {

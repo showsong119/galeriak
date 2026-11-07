@@ -1,6 +1,6 @@
 // GaleríaK · service worker: la app abre aunque no haya conexión (muestra la última versión guardada).
 const CACHE = 'galeriak-v1';
-const SHELL = ['./', './index.html', './styles.css', './app.js', './content.js', './config.js', './manifest.webmanifest', './icons/icon-192.png'];
+const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

@@ -3,37 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GaleríaK – Comunidad de K-Beauty, K-Pop y ofertas en México</title>
-<meta name="description" content="Comunidad en español para fans de la cosmética coreana, K-Pop y K-Dramas en México: galerías por tema e idol, ofertas de K-Beauty, rankings de Corea y guías para comprar productos originales.">
-<meta property="og:title" content="GaleríaK – K-Beauty y K-Pop en México">
-<meta property="og:description" content="Ofertas reales de K-Beauty, galerías de tu grupo favorito y guías para comprar originales.">
 <meta name="theme-color" content="#e5317d">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="GaleríaK">
+<title>GaleríaK – Comunidad de K-Beauty, K-Pop y ofertas en México</title>
+<meta name="description" content="Comunidad en español para fans de la cosmética coreana, K-Pop y K-Dramas en México: galerías por tema e idol, ofertas de K-Beauty, rankings de Corea y guías para comprar productos originales.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <!-- AdSense: pega aquí el script de tu cuenta cuando sea aprobada -->
+<style>
+:root{--bg:#f4f4f6;--card:#fff;--ink:#17171c;--muted:#6b6b76;--line:#e6e6ec;--brand:#e5317d;--brand-soft:#fde8f1;--blue:#2f5bd8;--hot:#e5482b;--ok:#1d8a5a}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.top-in{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 16px}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.5px;white-space:nowrap}
+.logo b{color:var(--brand)}
+.search{flex:1;display:flex;max-width:420px}
+.search input{flex:1;border:1px solid var(--line);border-radius:10px 0 0 10px;padding:8px 12px;font:inherit;min-width:0}
+.search button{border:0;background:var(--ink);color:#fff;border-radius:0 10px 10px 0;padding:0 14px}
+.write-top{margin-left:auto;background:var(--brand);color:#fff;border:0;border-radius:10px;padding:8px 14px;font-weight:700;white-space:nowrap}
+nav.main{max-width:1120px;margin:0 auto;display:flex;gap:4px;padding:0 12px 8px;overflow-x:auto;scrollbar-width:none}
+nav.main::-webkit-scrollbar{display:none}
+nav.main a{padding:6px 12px;border-radius:999px;font-weight:600;color:var(--muted);white-space:nowrap}
+nav.main a.on{background:var(--ink);color:#fff}
+.demo{background:#fff7d6;border-bottom:1px solid #f1e3a4;color:#7a5b00;font-size:12.5px;text-align:center;padding:6px 10px}
+.wrap{max-width:1120px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1fr 300px;gap:16px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}.side{order:2}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+.card h2{font-size:16px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.card h2 .more{margin-left:auto;font-size:12.5px;color:var(--blue);font-weight:600}
+.ad{background:repeating-linear-gradient(45deg,#fafafa,#fafafa 8px,#f1f1f4 8px,#f1f1f4 16px);border:1px dashed #cfcfd8;border-radius:10px;display:grid;place-items:center;color:#9a9aa6;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.ad-leader{height:90px}.ad-rect{height:250px}.ad-feed{height:100px;margin:6px 0}.ad-post{height:120px;margin:16px 0}
+@media(max-width:700px){.ad-leader{height:60px}.top-in{flex-wrap:wrap;gap:8px;padding:8px 12px}.search{order:3;flex:1 0 100%;max-width:none}#userBox .hint{display:none}}
+.list{list-style:none;margin:0;padding:0}
+.row{display:flex;gap:10px;align-items:center;padding:9px 4px;border-bottom:1px solid #f0f0f3}
+.row:last-child{border-bottom:0}
+.row .num{width:34px;text-align:center;color:var(--muted);font-size:12px;flex:none}
+.row .t{flex:1;min-width:0}
+.row .t a{font-weight:500}
+.row .t a:hover{text-decoration:underline}
+.row .cc{color:var(--blue);font-weight:700;font-size:12px;margin-left:4px}
+.row .meta{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;margin-top:2px}
+.row .up{flex:none;font-size:12px;font-weight:700;color:var(--brand);width:38px;text-align:right}
+.pill{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;margin-right:4px;vertical-align:1px}
+.p-hot{background:#ffe7e2;color:var(--hot)}.p-pin{background:#e8eefc;color:var(--blue)}.p-gal{background:#f1f1f4;color:#555}.p-sold{background:#eee;color:#888}.p-best{background:var(--brand-soft);color:var(--brand)}
+.price{font-weight:800;color:var(--hot)}
+.galgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.gal{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;display:flex;gap:8px;align-items:center}
+.gal:hover{border-color:var(--brand)}
+.av{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px;flex:none}
+.gal small{display:block;color:var(--muted);font-size:11px}
+.gh{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.gh .av{width:44px;height:44px;font-size:16px;border-radius:12px}
+.gh h1{font-size:20px;margin:0}
+.gh p{margin:0;color:var(--muted);font-size:13px}
+.gh .write{margin-left:auto}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 12px;font-weight:600}
+.btn-brand{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn-dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.tabs{display:flex;gap:6px;margin-bottom:8px}
+.tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font-weight:600;color:var(--muted)}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pager{display:flex;gap:4px;justify-content:center;margin-top:10px}
+.pager button{border:1px solid var(--line);background:#fff;border-radius:8px;min-width:32px;padding:4px}
+.pager button.on{background:var(--ink);color:#fff}
+.post h1{font-size:20px;margin:4px 0 6px}
+.post .pmeta{font-size:12.5px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px}
+.post .body{white-space:pre-wrap;word-wrap:break-word;font-size:15px;line-height:1.7;margin:16px 0}
+.dealbox{border:1px solid #ffd2c8;background:#fff6f3;border-radius:12px;padding:12px;margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.dealbox a{color:var(--blue);font-weight:700}
+.srcbox{border:1px solid #d7e1fb;background:#f4f7ff;border-radius:12px;padding:10px 12px;margin-top:12px;font-size:13px}
+.srcbox a{color:var(--blue);word-break:break-all}
+.votes{display:flex;justify-content:center;gap:10px;margin:18px 0 6px}
+.votes button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 18px;font-weight:700;min-width:110px}
+.votes .v-up{color:var(--brand);border-color:#f6c3d8}
+.votes button:disabled{opacity:.5;cursor:default}
+.post-actions{display:flex;justify-content:flex-end;gap:8px;font-size:12px}
+.post-actions button{background:none;border:0;color:var(--muted)}
+.cmts h3{font-size:14px;margin:4px 0 8px}
+.cmt{border-top:1px solid #f0f0f3;padding:9px 0}
+.cmt .who{font-size:12px;font-weight:700}
+.cmt .who span{font-weight:400;color:var(--muted);margin-left:6px}
+.cmt p{margin:2px 0 0;white-space:pre-wrap}
+form .f{margin-bottom:10px}
+form label{display:block;font-weight:600;font-size:13px;margin-bottom:4px}
+form input,form textarea,form select{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;background:#fff}
+form textarea{min-height:160px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hint{font-size:12px;color:var(--muted)}
+.err{color:var(--hot);font-size:13px;font-weight:600;min-height:18px}
+.rank li{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid #f0f0f3;align-items:flex-start}
+.rank li:last-child{border:0}
+.rank .n{font-weight:800;color:var(--brand);width:18px;flex:none}
+.rank small{display:block;color:var(--muted);font-size:11.5px}
+.rank .ph{width:48px;height:48px;border-radius:8px;flex:none;object-fit:contain;background:#f4f4f6;border:1px solid var(--line);display:grid;place-items:center;color:#9a9aa6;font-size:18px}
+.rank a{color:var(--blue);font-weight:600;font-size:12px}
+.guides{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.guide{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.guide b{display:block;margin-bottom:4px}
+.guide span{color:var(--muted);font-size:12.5px}
+.article{font-size:15px;line-height:1.75}
+.article h1{font-size:22px;line-height:1.3}
+.article h2{font-size:17px;margin-top:22px}
+.article .note{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:20px}
+.article a{color:var(--blue)}
+.empty{color:var(--muted);text-align:center;padding:24px}
+footer{max-width:1120px;margin:0 auto;padding:10px 16px 40px;color:var(--muted);font-size:12px;text-align:center}
+footer a{margin:0 6px;text-decoration:underline}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:10px;padding:9px 14px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:50}
+.toast.show{opacity:1}
+</style>
 </head>
 <body>
-<div class="banner" id="banner" hidden></div>
 <header class="top">
   <div class="top-in">
     <a class="logo" href="#home">Galería<b>K</b></a>
-    <form class="search" id="searchForm" role="search"><input id="q" placeholder="Buscar en GaleríaK" aria-label="Buscar"><button aria-label="Buscar">Buscar</button></form>
-    <div class="acts">
-      <button class="write-top" id="writeTop">Escribir</button>
-      <span id="authBox"></span>
-    </div>
+    <form class="search" id="searchForm"><input id="q" placeholder="Buscar en GaleríaK" aria-label="Buscar"><button aria-label="Buscar">🔍</button></form>
+    <span id="userBox" style="margin-left:auto;display:flex;gap:8px;align-items:center"></span><button class="write-top" id="writeTop" style="margin-left:0">Escribir</button>
   </div>
-  <nav class="main" id="nav" aria-label="Secciones"></nav>
+  <nav class="main" id="nav"></nav>
 </header>
 
 <div class="wrap">
-  <main id="main"><div class="card empty">Cargando…</div></main>
+  <main id="main"></main>
   <aside class="side" id="side"></aside>
 </div>
 
@@ -44,9 +144,546 @@
   <p>GaleríaK es una comunidad de fans no oficial. No está afiliada a ninguna agencia, artista ni marca. Los nombres de artistas y marcas pertenecen a sus dueños. Para usar la comunidad debes tener 13 años o más.</p>
   <p>Como Afiliado de Amazon, GaleríaK obtiene ingresos por las compras adscritas que cumplen los requisitos aplicables.</p>
 </footer>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="toast" id="toast"></div>
 
-<script src="config.js"></script>
-<script type="module" src="app.js"></script>
+<script>
+/* ================= GaleríaK – versión conectada a Supabase ================= */
+const SUPABASE_URL='https://pimuwxsazuzmgwhbrzbx.supabase.co';
+const SUPABASE_KEY='sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn';
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const H=3600e3,D=24*H,HOT_DEAL=5,BEST=10,PAGE=20;
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let ME=null, MYNICK='', MYROLE='', myVotes=new Map();
+
+const CATS=[
+ {id:'beauty',name:'K-Beauty'},
+ {id:'deals',name:'Ofertas'},
+ {id:'kpop',name:'K-Pop'},
+ {id:'kdrama',name:'K-Drama'},
+ {id:'vida',name:'Corea y más'}
+];
+const GALS=[
+ {id:'skincare',cat:'beauty',name:'Skincare coreano',desc:'Rutinas, ingredientes y dudas de cuidado de la piel',c:'#e5317d'},
+ {id:'maquillaje',cat:'beauty',name:'Maquillaje coreano',desc:'Cushions, tints, tonos para piel latina',c:'#d94f9a'},
+ {id:'resenas',cat:'beauty',name:'Reseñas',desc:'Reseñas honestas después de usar el producto',c:'#b83f7a'},
+ {id:'idol-picks',cat:'beauty',name:'Productos de idols',desc:'Lo que usan los idols — siempre con fuente',c:'#8e44ad',needSource:true},
+ {id:'ofertas',cat:'deals',name:'Ofertas K-Beauty',desc:'Precios bajos en México, con enlace y tienda',c:'#e5482b',deal:true},
+ {id:'bts',cat:'kpop',name:'BTS',desc:'Galería de fans de BTS',c:'#6c4bd8'},
+ {id:'blackpink',cat:'kpop',name:'BLACKPINK',desc:'Galería de fans de BLACKPINK',c:'#e0457b'},
+ {id:'stray-kids',cat:'kpop',name:'Stray Kids',desc:'Galería de fans de Stray Kids',c:'#c0392b'},
+ {id:'twice',cat:'kpop',name:'TWICE',desc:'Galería de fans de TWICE',c:'#ff7a59'},
+ {id:'seventeen',cat:'kpop',name:'SEVENTEEN',desc:'Galería de fans de SEVENTEEN',c:'#5c7cfa'},
+ {id:'ateez',cat:'kpop',name:'ATEEZ',desc:'Galería de fans de ATEEZ',c:'#d35400'},
+ {id:'enhypen',cat:'kpop',name:'ENHYPEN',desc:'Galería de fans de ENHYPEN',c:'#34495e'},
+ {id:'txt',cat:'kpop',name:'TXT',desc:'Galería de fans de TOMORROW X TOGETHER',c:'#3498db'},
+ {id:'aespa',cat:'kpop',name:'aespa',desc:'Galería de fans de aespa',c:'#16a085'},
+ {id:'ive',cat:'kpop',name:'IVE',desc:'Galería de fans de IVE',c:'#e84393'},
+ {id:'le-sserafim',cat:'kpop',name:'LE SSERAFIM',desc:'Galería de fans de LE SSERAFIM',c:'#2d3436'},
+ {id:'kdramas',cat:'kdrama',name:'K-Dramas',desc:'Recomendaciones y comentarios (sin spoilers en el título)',c:'#00a383'},
+ {id:'viajes',cat:'vida',name:'Viaje a Corea',desc:'Compras, tax free y consejos para tu viaje',c:'#0984e3'},
+ {id:'coreano',cat:'vida',name:'Aprender coreano',desc:'Frases útiles, hangul y recursos',c:'#6d4c41'},
+ {id:'libre',cat:'vida',name:'Charla libre',desc:'De todo un poco',c:'#636e72'},
+ {id:'solicitudes',cat:'vida',name:'Solicitar galería',desc:'Pide nuevas galerías de grupos, actores o marcas',c:'#2f5bd8'}
+];
+
+const G=Object.fromEntries(GALS.map(g=>[g.id,g]));
+/* ---------------- Ranking (datos reales con fuente) ---------------- */
+const RANK=[
+ ['Round Lab 1025 Dokdo Toner','Mejor tóner / bruma — 1.er lugar',{url:'https://www.amazon.com.mx/dp/B08FM43PB3',img:'https://m.media-amazon.com/images/I/41sw-+DasYL._AC_SX160_.jpg',seller:'ALIPA Comercializadora',pos:'94% positivas'}],
+ ['Aestura Atobarrier 365 Cream','Hidratante votada #1 varios años'],
+ ['Illiyoon Ceramide Ato Lotion','Ganadora en cuidado corporal'],
+ ['Labo-H Scalp Strengthening Shampoo','Mejor champú — 1.er lugar'],
+ ['Fillimilli Heating Eyelash Curler','Mejor herramienta — 1.er lugar']
+];
+const RANK_SRC='https://themonodist.com/olive-young-awards-2025/';
+
+/* ---------------- Guías ---------------- */
+const GUIDES={
+ 'guia-original':{t:'Cómo saber si tu cosmético coreano es original',d:'7 señales para no comprar imitaciones en México',html:`
+<p>Con el boom del K-Beauty en México también aparecieron más imitaciones. Antes de comprar, revisa estos puntos.</p>
+<h2>1. Compra en tiendas oficiales o distribuidores autorizados</h2>
+<p>En marketplaces como Amazon México o Mercado Libre, busca la etiqueta de <b>tienda oficial</b> de la marca o de un distribuidor reconocido. Desconfía de vendedores nuevos sin reseñas.</p>
+<h2>2. Revisa la etiqueta en español</h2>
+<p>Los cosméticos que se venden formalmente en México deben llevar etiqueta en español con los datos del importador. Si el producto solo trae coreano y no tiene ningún dato de importación, pregunta al vendedor de dónde viene.</p>
+<h2>3. Lote y fecha de caducidad</h2>
+<p>Los productos originales traen número de lote y fecha impresos con claridad. Impresión borrosa, fechas pegadas con etiqueta encima o lotes que no coinciden entre caja y envase son focos rojos.</p>
+<h2>4. Un precio demasiado bajo</h2>
+<p>Si cuesta mucho menos que en todas las demás tiendas, algo pasa: imitación, producto caducado o mal almacenado.</p>
+<h2>5. Compara el empaque con fotos oficiales</h2>
+<p>Tipografía, colores, posición del código de barras y textos deben coincidir con las fotos de la página oficial de la marca.</p>
+<h2>6. Textura y olor</h2>
+<p>Si el producto huele raro, cambió de color o la textura es muy distinta a las reseñas, deja de usarlo.</p>
+<h2>7. Pregunta a la comunidad</h2>
+<p>¿Dudas? Publica fotos de la caja (sin datos personales) en la galería <a href="#g-resenas">Reseñas</a>.</p>
+<p class="note">Guía informativa. Ante cualquier reacción en la piel, suspende el uso y consulta a un profesional de la salud.</p>`},
+ 'guia-donde-comprar':{t:'Dónde comprar cosmética coreana en México',d:'Tiendas físicas y en línea con marcas coreanas',html:`
+<p>Hoy es más fácil que nunca encontrar K-Beauty en México. Estos son los canales más comunes:</p>
+<h2>Tiendas departamentales y de belleza</h2>
+<p><b>Sephora México</b> y <b>Sally Beauty México</b> manejan marcas como COSRX, Tocobo y Skin1004 (<a href="https://playersoflife.com/nacional/k-beauty-crece-135-en-mexico-asi-se-volvio-negocio-el-skincare-coreano/" target="_blank" rel="noopener">fuente</a>). <b>Ulta Beauty México</b> sumó una selección de K-Beauty World (<a href="https://www.cosmeticsdesign.com/Article/2025/09/24/k-beauty-world-expands-to-latin-america-via-ulta-mexico" target="_blank" rel="noopener">fuente</a>), y <b>Sanborns</b> vende TONYMOLY en algunas tiendas (<a href="https://www.modaes.com/empresas/tonymoly-se-une-a-sanborns-para-extender-su-presencia-en-mexico" target="_blank" rel="noopener">fuente</a>).</p>
+<h2>Marketplaces</h2>
+<p>Amazon México y Mercado Libre tienen mucha variedad. Prefiere tiendas oficiales y revisa la <a href="#guia-original">guía para detectar originales</a>.</p>
+<h2>Tiendas especializadas en línea</h2>
+<p>Hay tiendas mexicanas dedicadas solo a cosmética coreana. Revisa reseñas, política de devoluciones y si muestran fotos reales de su inventario.</p>
+<h2>Comprar en Corea</h2>
+<p>Si viajas, Olive Young es la cadena más popular. Mira el <a href="#guia-rebajas">calendario de rebajas</a> para planear tu compra.</p>
+<p class="note">Esta lista no es pagada. Si una tienda se convierte en patrocinador, lo indicaremos claramente.</p>`},
+ 'guia-rebajas':{t:'Calendario de rebajas de Olive Young',d:'Cuándo comprar más barato en Corea u Olive Young Global',html:`
+<p>Olive Young hace sus <b>grandes rebajas cuatro veces al año: a inicios de marzo, junio, septiembre y diciembre</b>, y cada una dura alrededor de una semana (<a href="https://www.pressreader.com/china/south-china-morning-post-6150/20240513/282157886343442" target="_blank" rel="noopener">fuente</a>). La tienda en línea internacional, Olive Young Global, también participa.</p>
+<h2>Próxima rebaja: inicios de diciembre de 2026</h2>
+<p>Por el patrón de años anteriores se espera que empiece a finales de noviembre o el primer fin de semana de diciembre. La fecha exacta se confirma pocos días antes en las redes oficiales de Olive Young.</p>
+<h2>Olive Young Awards: finales de noviembre</h2>
+<p>Cada año, a finales de noviembre, Olive Young anuncia los productos más vendidos del año (<a href="${RANK_SRC}" target="_blank" rel="noopener">fuente</a>). Es la mejor lista para saber qué comprar en la rebaja de diciembre. Actualizaremos el ranking de GaleríaK en cuanto salga.</p>
+<h2>Consejos</h2>
+<p>• Lleva tu pasaporte: en muchas tiendas puedes pedir el tax free inmediato.<br>• Descarga la app de Olive Young Global para cupones.<br>• Haz tu lista antes: las tiendas grandes de Myeongdong se llenan en temporada de rebajas.</p>`}
+};
+
+
+
+/* ---------------- utilidades ---------------- */
+function ago(t){t=new Date(t).getTime();const d=Date.now()-t;if(d<60e3)return'ahora';if(d<H)return Math.floor(d/60e3)+' min';if(d<D)return Math.floor(d/H)+' h';if(d<7*D)return Math.floor(d/D)+' d';const x=new Date(t);return x.getDate()+'/'+(x.getMonth()+1)}
+const BOT='Bot de ofertas';
+// Ofertas del bot: el precio solo se muestra durante 24 h (regla de Amazon sobre precios)
+const priceShown=p=>!!p.deal_price&&!(p.anon_name===BOT&&Date.now()-new Date(p.created_at).getTime()>D);
+const nick=p=>esc(p.profiles&&p.profiles.nickname||p.anon_name||'usuario');
+const ad=k=>`<div class="ad ad-${k}">Publicidad</div>`;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2200)}
+function av(g){return `<span class="av" style="background:${g.c}">${esc(g.name.replace(/[^A-Za-z0-9ÁÉÍÓÚÑáéíóúñ]/g,'').slice(0,2).toUpperCase())}</span>`}
+const loading=()=>`<div class="card empty">Cargando…</div>`;
+const fail=e=>`<div class="card empty">No se pudo cargar (${esc(e&&e.message||'error')}). Intenta de nuevo.</div>`;
+function tags(p,showGal){
+  let h='';
+  if(p.is_pinned)h+='<span class="pill p-pin">Aviso</span>';
+  if(p.is_sponsored)h+='<span class="pill p-pin">Patrocinado</span>';
+  if(p.is_hidden)h+='<span class="pill p-sold">Oculto</span>';
+  const g=G[p.gallery_id]||{name:p.gallery_id};
+  if(g.deal){if(p.deal_sold)h+='<span class="pill p-sold">Agotado</span>';else if(p.up_count>=HOT_DEAL)h+='<span class="pill p-hot">🔥 Caliente</span>'}
+  else if(p.up_count>=BEST&&!p.is_pinned)h+='<span class="pill p-best">Destacado</span>';
+  if(showGal)h+=`<span class="pill p-gal">${esc(g.name)}</span>`;
+  return h;
+}
+function row(p,i,showGal){
+  return `<li class="row"><span class="num">${p.is_pinned?'📌':(i==null?p.id:i)}</span><div class="t">${tags(p,showGal)}<a href="#p-${p.id}">${esc(p.title)}</a>${p.comment_count?`<span class="cc">[${p.comment_count}]</span>`:''}
+  ${priceShown(p)?` <span class="price">${esc(p.deal_price)}</span>`:''}
+  <div class="meta"><span>${nick(p)}</span><span>${ago(p.created_at)}</span></div></div><span class="up">♥ ${p.up_count}</span></li>`;
+}
+function listWithAds(arr,start,showGal){
+  let h='<ul class="list">';arr.forEach((p,k)=>{h+=row(p,start==null?null:start+k,showGal);if(k===4&&arr.length>6)h+='</ul>'+ad('feed')+'<ul class="list">'});return h+'</ul>';
+}
+const SEL='id,gallery_id,title,created_at,up_count,down_count,comment_count,deal_price,deal_sold,is_pinned,is_sponsored,is_hidden,anon_name,profiles(nickname)';
+
+/* ---------------- sesión ---------------- */
+async function refreshSession(){
+  const {data}=await sb.auth.getSession();
+  ME=data.session?data.session.user:null;MYNICK='';MYROLE='';myVotes=new Map();
+  if(ME){
+    let {data:prof}=await sb.from('profiles').select('nickname,role').eq('id',ME.id).maybeSingle();
+    if(!prof){ // primer inicio de sesión: crear perfil con el apodo del registro
+      const md=ME.user_metadata||{};let ageOk=!!md.age_confirmed;try{ageOk=ageOk||localStorage.getItem('gk_age_ok')==='1'}catch(_){}
+      const gname=String(md.full_name||md.name||'').replace(/[^A-Za-z0-9_ÁÉÍÓÚÑáéíóúñ]/g,'').slice(0,14);
+      let n=md.nickname||(gname.length>=2?gname:('fan'+ME.id.slice(0,5)));
+      const ins=nn=>sb.from('profiles').insert({id:ME.id,nickname:nn,age_confirmed_at:ageOk?new Date().toISOString():null}).select('nickname,role').single();
+      let r=await ins(n);if(r.error&&/duplicate|unique/i.test(r.error.message||'')){n=n.slice(0,14)+ME.id.slice(0,4);r=await ins(n)}
+      prof=r.data||{nickname:n};
+    }
+    MYNICK=prof.nickname;MYROLE=prof.role||'';
+    const {data:v}=await sb.from('votes').select('post_id,value').eq('voter',ME.id);
+    (v||[]).forEach(x=>myVotes.set(x.post_id,x.value));
+  }
+  renderUserBox();
+}
+function renderUserBox(){
+  $('#userBox').innerHTML=ME?`<span class="hint" style="white-space:nowrap">Hola, <b>${esc(MYNICK)}</b></span> <button class="btn" id="logoutBtn">Salir</button>`:`<a class="btn" href="#entrar">Entrar</a>`;
+  const lo=$('#logoutBtn');if(lo)lo.onclick=async()=>{await sb.auth.signOut();await refreshSession();toast('Sesión cerrada');route()};
+}
+
+/* ---------------- barra lateral ---------------- */
+async function side(){
+  const {data:hot}=await listQ().gte('created_at',new Date(Date.now()-7*D).toISOString()).eq('is_pinned',false).order('up_count',{ascending:false}).limit(5);
+  $('#side').innerHTML=`
+  <div class="card"><h2>🏆 Ranking Corea <a class="more" href="#guia-rebajas">Guía</a></h2>
+   <ol class="list rank">${RANK.map((r,i)=>`<li><span class="n">${i+1}</span>${r[2]?`<img class="ph" src="${esc(r[2].img)}" alt="${esc(r[0])}" loading="lazy" referrerpolicy="no-referrer">`:`<span class="ph" aria-hidden="true">🧴</span>`}<div>${esc(r[0])}<small>${esc(r[1])}</small>${r[2]?`<a href="${esc(r[2].url)}" target="_blank" rel="nofollow noopener">Ver en Amazon México →</a><small>Vendedor externo: ${esc(r[2].seller)} (${esc(r[2].pos)}). No confirmado como original. <a href="#guia-original">Cómo revisarlo</a></small>`:`<small>Sin vendedor confiable en Amazon México por ahora.</small>`}</div></li>`).join('')}</ol>
+   <div class="hint">Selección de ganadores Olive Young Awards 2025. <a href="${RANK_SRC}" target="_blank" rel="noopener" style="color:var(--blue)">Fuente</a> · Los de 2026 salen a finales de noviembre.</div></div>
+  ${ad('rect')}
+  <div class="card"><h2>🔥 Lo más votado</h2>${hot&&hot.length?`<ul class="list">${hot.map((p,i)=>`<li class="row"><span class="num">${i+1}</span><div class="t"><a href="#p-${p.id}">${esc(p.title)}</a></div></li>`).join('')}</ul>`:'<div class="hint">Aún no hay votos esta semana.</div>'}</div>
+  <div class="card"><h2>📘 Guías</h2>${Object.entries(GUIDES).map(([k,g])=>`<div class="row"><div class="t"><a href="#${k}">${esc(g.t)}</a></div></div>`).join('')}</div>`;
+}
+
+/* ---------------- vistas ---------------- */
+function nav(cur){
+  const items=[['home','Inicio'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y más'],['guias','Guías'],['galerias','Galerías']];
+  if(MYROLE==='admin')items.push(['admin','관리자']);
+  $('#nav').innerHTML=items.map(([h,n])=>`<a href="#${h}" class="${cur===h?'on':''}">${n}</a>`).join('');
+}
+const galCard=g=>`<a class="gal" href="#g-${g.id}">${av(g)}<div><b>${esc(g.name)}</b><small>${esc(g.desc)}</small></div></a>`;
+const welcome=()=>ME?'':`<div class="card" style="background:var(--brand-soft);border-color:#f6c3d8"><b>¡Bienvenida, bienvenido a GaleríaK!</b> La comunidad en español de K-Beauty y K-Pop. <a href="#entrar" style="color:var(--brand);font-weight:700">Crea tu cuenta</a> para publicar, comentar y votar.</div>`;
+
+async function vHome(){
+  nav('home');
+  const [best,deals,recent]=await Promise.all([
+    listQ().gte('up_count',BEST).neq('gallery_id','ofertas').order('created_at',{ascending:false}).limit(8),
+    listQ().eq('gallery_id','ofertas').eq('deal_sold',false).order('created_at',{ascending:false}).limit(5),
+    listQ().eq('is_pinned',false).order('created_at',{ascending:false}).limit(10)
+  ]);
+  if(recent.error)return fail(recent.error);
+  const B=best.data||[],Dl=deals.data||[],R=recent.data||[];
+  return ad('leader')+welcome()+`
+  ${B.length?`<div class="card"><h2>⭐ Destacados <a class="more" href="#mejores">Ver más</a></h2>${listWithAds(B,1,true)}</div>`:''}
+  <div class="card"><h2>🔥 Ofertas K-Beauty <a class="more" href="#g-ofertas">Ver todas</a></h2>${Dl.length?`<ul class="list">${Dl.map((p,i)=>row(p,i+1,false)).join('')}</ul>`:'<div class="empty">¿Viste un buen precio? <a href="#w-ofertas" style="color:var(--blue)">Compártelo</a></div>'}</div>
+  <div class="card"><h2>🕒 Lo más nuevo</h2>${R.length?listWithAds(R,1,true):'<div class="empty">¡Sé la primera persona en publicar!</div>'}</div>
+  <div class="card"><h2>📂 Galerías <a class="more" href="#galerias">Todas</a></h2><div class="galgrid">${GALS.slice(0,8).map(galCard).join('')}</div></div>
+  <div class="card"><h2>📘 Guías para comprar K-Beauty en México</h2><div class="guides">${Object.entries(GUIDES).map(([k,g])=>`<a class="guide" href="#${k}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}</div></div>`;
+}
+async function vCat(cid){
+  nav('c-'+cid);const c=CATS.find(x=>x.id===cid);const gs=GALS.filter(g=>g.cat===cid);
+  const {data,error}=await listQ().in('gallery_id',gs.map(g=>g.id)).eq('is_pinned',false).order('created_at',{ascending:false}).limit(20);
+  if(error)return fail(error);
+  return ad('leader')+`<div class="card"><h2>${esc(c.name)}: galerías</h2><div class="galgrid">${gs.map(galCard).join('')}</div></div>
+  <div class="card"><h2>Publicaciones recientes</h2>${data.length?listWithAds(data,1,true):'<div class="empty">Aún no hay publicaciones.</div>'}</div>`;
+}
+let galTab='all',galPage=1,lastGal='';
+async function vGal(gid){
+  const g=G[gid];if(!g)return vNotFound();
+  if(lastGal!==gid){galTab='all';galPage=1;lastGal=gid}
+  nav(g.deal?'g-ofertas':g.id==='kdramas'?'g-kdramas':'c-'+g.cat);
+  let q=listQ({count:'exact'}).eq('gallery_id',gid).eq('is_pinned',false);
+  if(galTab==='best')q=q.gte('up_count',g.deal?HOT_DEAL:BEST);
+  const from=(galPage-1)*PAGE;
+  const [{data,count,error},pins]=await Promise.all([q.order('created_at',{ascending:false}).range(from,from+PAGE-1),listQ().eq('gallery_id',gid).eq('is_pinned',true)]);
+  if(error)return fail(error);
+  const pages=Math.max(1,Math.ceil((count||0)/PAGE));const P=pins.data||[];
+  return ad('leader')+`<div class="card"><div class="gh">${av(g)}<div><h1>${esc(g.name)}</h1><p>${esc(g.desc)}</p></div><a class="btn btn-brand write" href="#w-${g.id}">Escribir</a></div>
+  <div class="tabs"><button data-tab="all" class="${galTab==='all'?'on':''}">Todo</button><button data-tab="best" class="${galTab==='best'?'on':''}">${g.deal?'🔥 Calientes':'⭐ Destacados'}</button></div>
+  ${P.length?'<ul class="list">'+P.map(p=>row(p,0,false)).join('')+'</ul>':''}
+  ${data.length?listWithAds(data,null,false):'<div class="empty">Todavía no hay publicaciones aquí. ¡Sé la primera persona en escribir!</div>'}
+  ${pages>1?`<div class="pager">${Array.from({length:Math.min(pages,10)},(_,i)=>`<button data-page="${i+1}" class="${galPage===i+1?'on':''}">${i+1}</button>`).join('')}</div>`:''}</div>`;
+}
+let curPost=null;
+async function vPost(id){
+  const {data:p,error}=await sb.from('posts').select('id,gallery_id,author_id,anon_name,title,body,source_url,deal_price,deal_store,deal_url,deal_sold,is_pinned,is_sponsored,is_hidden,is_deleted,needs_review,views,up_count,down_count,comment_count,created_at,profiles(nickname,role)').eq('id',id).maybeSingle();
+  if(error)return fail(error);
+  if(!p)return vNotFound('Esta publicación no existe o fue ocultada por moderación.');
+  curPost=p;const g=G[p.gallery_id]||G.libre;nav(g.deal?'g-ofertas':'c-'+g.cat);
+  const {data:cm}=await sb.from('comments').select('id,author_id,body,is_hidden,is_deleted,created_at,anon_name,profiles(nickname)').eq('post_id',id).order('created_at');
+  const C=cm||[];const myVote=myVotes.get(p.id);const mine=ME&&p.author_id===ME.id;
+  if(p.is_deleted&&!C.length&&MYROLE!=='admin')return vNotFound('Esta publicación fue eliminada.');
+  if(!p.is_deleted)countView(p.id);
+  document.title=p.title+' – GaleríaK';
+  return ad('leader')+`<div class="card post">
+   <a href="#g-${g.id}" class="hint">← ${esc(g.name)}</a>
+   <h1>${tags(p,false)}${esc(p.title)}</h1>
+   <div class="pmeta"><span>${nick(p)}</span><span>${ago(p.created_at)}</span><span>👁 ${p.views||0}</span><span>♥ ${p.up_count}</span><span>💬 ${C.length}</span></div>
+   ${p.deal_price?`<div class="dealbox"><div><div class="hint">Precio</div><div class="price" style="font-size:20px">${priceShown(p)?esc(p.deal_price):'Revisa el precio actual'}</div></div><div><div class="hint">Tienda</div><b>${esc(p.deal_store)}</b></div><div style="margin-left:auto">${p.deal_sold?'<span class="pill p-sold">Agotado</span>':(safeUrl(p.deal_url)?`<a href="${esc(p.deal_url)}" target="_blank" rel="nofollow sponsored noopener">Ir a la oferta →</a>`:`<span class="hint">${esc(p.deal_url||'Sin enlace')}</span>`)}</div></div>`:''}
+   <div class="body">${esc(p.body)}</div>
+   ${p.source_url?`<div class="srcbox"><b>Fuente:</b> ${safeUrl(p.source_url)?`<a href="${esc(p.source_url)}" target="_blank" rel="nofollow noopener">${esc(p.source_url)}</a>`:esc(p.source_url)}</div>`:''}
+   ${ad('post')}
+   ${p.is_deleted?'':`<div class="votes"><button class="v-up" data-vote="1" style="${myVote===1?'background:var(--brand-soft)':''}">♥ Me gusta ${p.up_count}</button><button data-vote="-1" style="${myVote===-1?'background:#eee':''}">👎 ${p.down_count}</button></div>`}
+   ${p.is_deleted?'':`<div class="post-actions">${mine?'<button data-pdel="1">🗑 Eliminar</button>':''}${mine&&g.deal&&!p.deal_sold?'<button data-sold="1">Marcar como agotada</button>':''}<button data-report="1">🚩 Reportar</button></div>`}
+   ${admPostPanel(p)}
+  </div>
+  <div class="card cmts"><h3>Comentarios (${C.length})</h3>
+   ${C.map(c=>`<div class="cmt"><div class="who">${nick(c)}<span>${ago(c.created_at)}</span>${c.is_hidden?'<span class="pill p-sold">Oculto</span>':''}${admCmtBtn(c)}</div><p>${esc(c.body)}</p>${cmtBtns(c)}</div>`).join('')||'<div class="hint">Sé la primera persona en comentar.</div>'}
+   ${p.is_deleted?'<p class="hint" style="margin-top:12px">Esta publicación fue eliminada.</p>':ME?`<form id="cform" style="margin-top:12px"><div class="f"><textarea id="cbody" maxlength="1000" style="min-height:80px" placeholder="Escribe un comentario respetuoso"></textarea></div><div class="err" id="cerr"></div><button class="btn btn-dark">Comentar</button></form>`:`<p style="margin-top:12px"><a href="#entrar" style="color:var(--blue);font-weight:700">Entra</a> para comentar.</p>`}
+  </div>`;
+}
+function vWrite(gid){
+  const g=G[gid]||G.libre;nav('');
+  if(!ME)return `<div class="card empty">Para publicar necesitas una cuenta. <a href="#entrar" style="color:var(--blue);font-weight:700">Entrar o registrarse</a></div>`;
+  return `<div class="card"><div class="gh">${av(g)}<div><h1>Escribir en ${esc(g.name)}</h1><p>Publicas como <b>${esc(MYNICK)}</b>. Lee las <a href="#reglas" style="color:var(--blue)">reglas</a>.</p></div></div>
+  <form id="wform">
+   <div class="f"><label>Galería</label><select id="wg">${GALS.map(x=>`<option value="${x.id}" ${x.id===g.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>
+   <div class="f"><label>Título</label><input id="wtitle" maxlength="80" required></div>
+   <div id="dealFields" style="display:none"><div class="two"><div class="f"><label>Precio</label><input id="wprice" maxlength="20" placeholder="$299 MXN"></div><div class="f"><label>Tienda</label><input id="wstore" maxlength="40" placeholder="Amazon MX, Sephora…"></div></div><div class="f"><label>Enlace de la oferta</label><input id="wurl" placeholder="https://"></div></div>
+   <div id="srcField" style="display:none" class="f"><label>Fuente (obligatoria)</label><input id="wsrc" placeholder="Enlace a entrevista, video oficial o publicación del artista/marca"></div>
+   <div class="f"><label>Contenido</label><textarea id="wbody" maxlength="5000" required></textarea><div class="hint">No compartas datos personales. Máximo 3 enlaces.</div></div>
+   <div class="err" id="werr"></div>
+   <button class="btn btn-brand" id="wsend">Publicar</button> <a class="btn" href="#g-${g.id}">Cancelar</a>
+  </form></div>`;
+}
+function syncWriteFields(){const g=G[$('#wg').value];$('#dealFields').style.display=g.deal?'':'none';$('#srcField').style.display=g.needSource?'':'none'}
+function vAuth(){
+  nav('');
+  if(ME)return `<div class="card empty">Ya iniciaste sesión como <b>${esc(MYNICK)}</b>. <a href="#home" style="color:var(--blue)">Ir al inicio</a></div>`;
+  return `<div class="card" style="max-width:440px;margin:0 auto 14px">
+   <div class="tabs"><button data-auth="in" class="${authMode==='in'?'on':''}">Entrar</button><button data-auth="up" class="${authMode==='up'?'on':''}">Crear cuenta</button></div>
+   ${authMode!=='reset'?`<button type="button" class="btn" id="gLogin" style="width:100%;display:flex;gap:8px;justify-content:center;align-items:center;margin-bottom:6px"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M45 24.5c0-1.6-.1-2.8-.4-4H24v7.6h11.9c-.2 2-1.6 5-4.6 7l7.1 5.5C42.6 36.6 45 31.1 45 24.5z"/><path fill="#34A853" d="M24 46c6 0 11-2 14.6-5.4l-7.1-5.5c-1.9 1.3-4.4 2.2-7.5 2.2-5.8 0-10.7-3.8-12.4-9.1l-7.3 5.7C7.9 41.2 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.6 28.2c-.4-1.3-.7-2.7-.7-4.2s.3-2.9.7-4.2l-7.3-5.7C2.8 17.1 2 20.4 2 24s.8 6.9 2.3 9.9l7.3-5.7z"/><path fill="#EA4335" d="M24 10.7c4.1 0 6.9 1.8 8.5 3.3l6.3-6.1C35 4.3 30 2 24 2 15.4 2 7.9 6.8 4.3 14.1l7.3 5.7c1.7-5.3 6.6-9.1 12.4-9.1z"/></svg>Continuar con Google</button><p class="hint" style="text-align:center;margin:0 0 10px">Al continuar con Google confirmas que tienes 13 años o más y aceptas las <a href="#reglas" style="color:var(--blue)">reglas</a>. · o usa tu correo:</p>`:''}
+   <form id="aform">
+    ${authMode==='up'?`<div class="f"><label>Apodo (visible para todos)</label><input id="anick" maxlength="20" minlength="2" required></div>`:''}
+    <div class="f"><label>Correo</label><input id="amail" type="email" required autocomplete="email"></div>
+    ${authMode==='reset'?'<p class="hint">Te enviaremos un enlace para crear una contraseña nueva.</p>':`<div class="f"><label>Contraseña</label><input id="apass" type="password" minlength="8" required autocomplete="${authMode==='up'?'new-password':'current-password'}"><div class="hint">Mínimo 8 caracteres.</div></div>`}
+    ${authMode==='up'?`<div class="f"><label style="font-weight:400"><input type="checkbox" id="aage" style="width:auto"> Tengo 13 años o más y acepto las <a href="#reglas" style="color:var(--blue)">reglas</a> y el <a href="#privacidad" style="color:var(--blue)">aviso de privacidad</a>.</label></div>`:''}
+    <div class="err" id="aerr"></div>
+    <button class="btn btn-brand" style="width:100%">${authMode==='up'?'Crear cuenta':authMode==='reset'?'Enviar enlace':'Entrar'}</button>
+   </form>${authMode==='in'?'<div class="post-actions" style="margin-top:8px"><button data-auth="reset">¿Olvidaste tu contraseña?</button></div>':''}</div>`;
+}
+let authMode='in';
+async function vSearch(q){
+  nav('');const k=q.trim().replace(/[%_,()]/g,' ');
+  const {data,error}=k?await listQ().ilike('title','%'+k+'%').order('created_at',{ascending:false}).limit(40):{data:[]};
+  if(error)return fail(error);
+  return `<div class="card"><h2>Resultados para “${esc(q)}” (${data.length})</h2>${data.length?listWithAds(data,1,true):'<div class="empty">No encontramos nada. Prueba otra palabra.</div>'}</div>`;
+}
+async function vBest(){nav('');const {data,error}=await listQ().gte('up_count',BEST).neq('gallery_id','ofertas').order('created_at',{ascending:false}).limit(50);if(error)return fail(error);return ad('leader')+`<div class="card"><h2>⭐ Destacados (${BEST}+ me gusta)</h2>${data.length?listWithAds(data,1,true):'<div class="empty">Aún no hay destacados.</div>'}</div>`}
+function vAllGals(){nav('galerias');return CATS.map(c=>`<div class="card"><h2>${esc(c.name)}</h2><div class="galgrid">${GALS.filter(g=>g.cat===c.id).map(galCard).join('')}</div></div>`).join('')+`<div class="card"><h2>¿Falta tu grupo?</h2><p>Pídelo en <a href="#g-solicitudes" style="color:var(--blue)">Solicitar galería</a>.</p></div>`}
+function vGuides(){nav('guias');return `<div class="card"><h2>📘 Guías</h2><div class="guides">${Object.entries(GUIDES).map(([k,g])=>`<a class="guide" href="#${k}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}</div></div>`}
+function vGuide(k){nav('guias');const g=GUIDES[k];document.title=g.t+' – GaleríaK';return ad('leader')+`<div class="card article"><a href="#guias" class="hint">← Guías</a><h1>${esc(g.t)}</h1>${g.html}${ad('post')}</div>`}
+function vRules(){nav('');return `<div class="card article"><h1>Reglas de GaleríaK</h1>
+<h2>1. Respeto</h2><p>Nada de insultos, acoso ni “fan wars”. Se puede opinar distinto sin atacar a artistas ni a otros fans.</p>
+<h2>2. Privacidad de los artistas</h2><p>Prohibido publicar horarios privados, direcciones, números de vuelo, teléfonos o cualquier contenido tipo sasaeng. Solo información pública y oficial.</p>
+<h2>3. Datos personales</h2><p>No publiques datos personales tuyos ni de otras personas (teléfonos, direcciones, cuentas).</p>
+<h2>4. Productos de idols con fuente</h2><p>Decir que un artista “usa” o “recomienda” un producto requiere un enlace a una fuente verificable. Sin fuente, se oculta.</p>
+<h2>5. Nada de réplicas</h2><p>Prohibido vender o promover imitaciones o productos falsificados.</p>
+<h2>6. Ofertas reales</h2><p>Las ofertas deben tener precio, tienda y enlace reales. Si se agota, márcala como agotada. Spam o autopromoción no declarada se elimina.</p>
+<h2>7. Derechos de autor</h2><p>No subas fotos, videos ni textos de otras personas sin permiso. Comparte enlaces a fuentes oficiales.</p>
+<h2>8. Contenido para todo público</h2><p>Sin contenido sexual, violento ni de odio. Muchos fans son menores de edad.</p>
+<h2>Moderación</h2><p>Las publicaciones con varios reportes pasan a revisión del equipo.</p>
+<h2>Publicidad y enlaces de afiliado</h2><p>GaleríaK muestra anuncios y puede usar enlaces de afiliado en algunas ofertas. Si una publicación es patrocinada, se indica claramente.</p></div>`}
+function vPrivacy(){nav('');return `<div class="card article"><h1>Aviso de privacidad</h1><p><b>Borrador para revisar con un profesional antes de lanzar.</b></p>
+<p>GaleríaK recopila el apodo que elijas, lo que publicas y datos técnicos básicos (como cookies de publicidad y estadísticas) para operar el sitio y mostrar anuncios.</p>
+<p>Usamos servicios de terceros como Google AdSense, que pueden usar cookies para mostrar anuncios. Puedes configurar tus preferencias en tu navegador.</p>
+<p>Puedes pedir el acceso, corrección o eliminación de tus datos escribiendo al correo de contacto del sitio.</p>
+<p>Para usar la comunidad debes tener 13 años o más.</p></div>`}
+
+function vNotFound(m){nav('');return `<div class="card empty">${esc(m||'Página no encontrada.')} <a href="#home" style="color:var(--blue)">Ir al inicio</a></div>`}
+
+/* ---------------- funciones de usuario ---------------- */
+const listQ=o=>sb.from('posts').select(SEL,o).eq('is_deleted',false);
+function countView(id){
+  try{if(sessionStorage.getItem('v'+id))return;sessionStorage.setItem('v'+id,'1')}catch(e){}
+  sb.rpc('increment_view',{p_post_id:id}).then(()=>{},()=>{});
+}
+function cmtBtns(c){
+  if(!ME||c.is_deleted)return '';
+  return '<div class="post-actions">'+(c.author_id===ME.id?'<button data-cdel="'+c.id+'">🗑 Eliminar</button>':'<button data-creport="'+c.id+'">🚩 Reportar</button>')+'</div>';
+}
+function vNewPass(){
+  nav('');
+  if(!ME)return '<div class="card empty">El enlace no es válido o ya expiró. <a href="#entrar" style="color:var(--blue);font-weight:700">Solicita otro</a></div>';
+  return '<div class="card" style="max-width:440px;margin:0 auto 14px"><h2>Nueva contraseña</h2><form id="pform"><div class="f"><label>Contraseña nueva</label><input id="npass" type="password" minlength="8" required autocomplete="new-password"><div class="hint">Mínimo 8 caracteres.</div></div><div class="err" id="perr"></div><button class="btn btn-brand" style="width:100%">Guardar contraseña</button></form></div>';
+}
+
+/* ---------------- administración ---------------- */
+let admTab='review',admQ='';
+const ADM_POST='id,title,gallery_id,author_id,deal_sold,is_hidden,is_pinned,is_sponsored,needs_review,up_count,created_at,profiles(nickname,role)';
+const admBox=h=>'<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px">'+h+'</div>';
+function admPostBtns(p){
+  return '<button class="btn" data-act="'+(p.is_hidden?'restore':'hide')+'" data-pid="'+p.id+'">'+(p.is_hidden?'복구':'숨기기')+'</button>'
+   +(p.needs_review?'<button class="btn" data-act="clear" data-pid="'+p.id+'">문제 없음</button>':'')
+   +'<button class="btn" data-act="'+(p.is_pinned?'unpin':'pin')+'" data-pid="'+p.id+'">'+(p.is_pinned?'고정 해제':'고정')+'</button>'
+   +'<button class="btn" data-act="'+(p.is_sponsored?'unsponsor':'sponsor')+'" data-pid="'+p.id+'">'+(p.is_sponsored?'협찬 해제':'협찬 표시')+'</button>';
+}
+function admBanCtl(uid,role){
+  if(!uid||uid===(ME&&ME.id)||role==='admin')return '';
+  const u=esc(uid);
+  return '<span style="display:inline-flex;gap:4px;align-items:center"><select aria-label="차단 기간" style="padding:6px;border:1px solid var(--line);border-radius:8px;background:#fff"><option value="1">1일</option><option value="7" selected>7일</option><option value="30">30일</option><option value="36500">영구</option></select><button class="btn" data-ban="'+u+'">차단</button><button class="btn" data-unban="'+u+'">차단 해제</button></span>';
+}
+function admPostRow(p){
+  const pr=p.profiles||{};
+  return '<li class="row"><div class="t">'+(p.needs_review?'<span class="pill p-hot">검토 필요</span>':'')+tags(p,true)+'<a href="#p-'+p.id+'">'+esc(p.title)+'</a>'
+   +'<div class="meta"><span>'+esc(pr.nickname||'usuario')+'</span><span>'+ago(p.created_at)+'</span><span>♥ '+p.up_count+'</span></div>'
+   +admBox(admPostBtns(p)+admBanCtl(p.author_id,pr.role))+'</div></li>';
+}
+function admPostPanel(p){
+  if(MYROLE!=='admin')return '';
+  const pr=p.profiles||{};
+  return '<div style="border-top:1px solid var(--line);margin-top:12px;padding-top:10px"><b>관리자</b>'+(p.needs_review?' <span class="pill p-hot">검토 필요</span>':'')+admBox(admPostBtns(p)+admBanCtl(p.author_id,pr.role))+'</div>';
+}
+function admCmtBtn(c){
+  if(MYROLE!=='admin')return '';
+  return ' <button class="btn" style="padding:2px 8px;font-size:11px" data-cact="'+(c.is_hidden?'restore':'hide')+'" data-cid="'+c.id+'">'+(c.is_hidden?'복구':'숨기기')+'</button>';
+}
+const admList=(rows,fn,empty)=>rows.length?'<ul class="list">'+rows.map(fn).join('')+'</ul>':'<div class="empty">'+empty+'</div>';
+async function vAdmin(){
+  nav('admin');
+  if(!ME)return '<div class="card empty">먼저 <a href="#entrar" style="color:var(--blue);font-weight:700">로그인</a>해 주세요.</div>';
+  if(MYROLE!=='admin')return '<div class="card empty">관리자만 볼 수 있는 페이지입니다.</div>';
+  document.title='관리자 – GaleríaK';
+  const TABS=[['review','검토 필요'],['reports','신고 내역'],['hidden','숨긴 글'],['users','사용자']];
+  let body='';
+  if(admTab==='review'){
+    const {data,error}=await sb.from('posts').select(ADM_POST).eq('needs_review',true).order('created_at',{ascending:false}).limit(50);
+    if(error)return fail(error);
+    body='<p class="hint">가입 7일 이상 계정 3명이 신고한 글입니다. 숨기기 전까지 글은 그대로 보입니다.</p>'+admList(data,admPostRow,'검토할 글이 없습니다.');
+  }else if(admTab==='reports'){
+    const {data,error}=await sb.from('reports').select('id,post_id,comment_id,reporter,reason,created_at,posts(id,title,is_hidden),comments(id,post_id,body,is_hidden)').order('created_at',{ascending:false}).limit(50);
+    if(error)return fail(error);
+    const ids=[...new Set(data.map(r=>r.reporter))];let names={};
+    if(ids.length){const pr=await sb.from('profiles').select('id,nickname').in('id',ids);(pr.data||[]).forEach(x=>{names[x.id]=x.nickname})}
+    body=admList(data,r=>{
+      const c=r.comments,p=r.posts,pid=(p&&p.id)||(c&&c.post_id);
+      const target=c?'댓글: '+esc(String(c.body||'').slice(0,80)):esc(p&&p.title||'(삭제됨)');
+      return '<li class="row"><div class="t">'+(c&&c.is_hidden||p&&p.is_hidden?'<span class="pill p-sold">숨김</span>':'')+(pid?'<a href="#p-'+pid+'">'+target+'</a>':target)
+       +'<div class="meta"><span>신고자: '+esc(names[r.reporter]||'알 수 없음')+'</span><span>'+ago(r.created_at)+'</span>'+(r.reason?'<span>사유: '+esc(r.reason)+'</span>':'')+'</div>'
+       +(c?admBox(admCmtBtn(c)):'')+'</div></li>';
+    },'신고 내역이 없습니다.');
+  }else if(admTab==='hidden'){
+    const [ps,cs]=await Promise.all([
+      sb.from('posts').select(ADM_POST).eq('is_hidden',true).order('created_at',{ascending:false}).limit(50),
+      sb.from('comments').select('id,post_id,body,is_hidden,created_at,profiles(nickname)').eq('is_hidden',true).order('created_at',{ascending:false}).limit(50)
+    ]);
+    if(ps.error)return fail(ps.error);if(cs.error)return fail(cs.error);
+    body='<h3>글</h3>'+admList(ps.data,admPostRow,'숨긴 글이 없습니다.')+'<h3>댓글</h3>'+admList(cs.data,c=>'<li class="row"><div class="t"><a href="#p-'+c.post_id+'">'+esc(String(c.body).slice(0,120))+'</a><div class="meta"><span>'+nick(c)+'</span><span>'+ago(c.created_at)+'</span></div>'+admBox(admCmtBtn(c))+'</div></li>','숨긴 댓글이 없습니다.');
+  }else{
+    const {data,error}=await sb.rpc('admin_users',{p_search:admQ||null});
+    if(error)return fail(error);
+    body='<form id="admsearch" style="display:flex;gap:6px;margin-bottom:8px"><input id="admq" value="'+esc(admQ)+'" placeholder="닉네임 검색"><button class="btn" style="white-space:nowrap">검색</button></form>'
+     +admList(data,u=>{
+       const banned=u.banned_until&&new Date(u.banned_until).getTime()>Date.now();
+       return '<li class="row"><div class="t"><b>'+esc(u.nickname)+'</b>'+(u.role==='admin'?' <span class="pill p-pin">관리자</span>':'')+(banned?' <span class="pill p-hot">차단: '+esc(new Date(u.banned_until).toLocaleDateString('ko-KR'))+'까지</span>':'')
+        +'<div class="meta"><span>가입 '+ago(u.created_at)+'</span></div>'+admBox(admBanCtl(u.id,u.role))+'</div></li>';
+     },'사용자가 없습니다.');
+  }
+  return '<div class="card"><h2>관리자</h2><div class="tabs" style="flex-wrap:wrap">'+TABS.map(([k,n])=>'<button data-admtab="'+k+'" class="'+(admTab===k?'on':'')+'">'+n+'</button>').join('')+'</div>'+body+'</div>';
+}
+async function admClick(t){
+  if(t.dataset.admtab){admTab=t.dataset.admtab;route();return}
+  if(MYROLE!=='admin')return;
+  const PATCH={hide:{is_hidden:true,needs_review:false},restore:{is_hidden:false,needs_review:false},clear:{needs_review:false},pin:{is_pinned:true},unpin:{is_pinned:false},sponsor:{is_sponsored:true},unsponsor:{is_sponsored:false}};
+  let res;t.disabled=true;
+  if(t.dataset.pid)res=await sb.from('posts').update(PATCH[t.dataset.act]).eq('id',+t.dataset.pid).select('id');
+  else if(t.dataset.cid)res=await sb.from('comments').update({is_hidden:t.dataset.cact==='hide'}).eq('id',+t.dataset.cid).select('id');
+  else if(t.dataset.ban){const days=+t.parentElement.querySelector('select').value;res=await sb.from('profiles').update({banned_until:new Date(Date.now()+days*D).toISOString()}).eq('id',t.dataset.ban).select('id')}
+  else if(t.dataset.unban)res=await sb.from('profiles').update({banned_until:null}).eq('id',t.dataset.unban).select('id');
+  if(!res)return;
+  if(res.error){t.disabled=false;toast(errMsg(res.error));return}
+  if(!res.data||!res.data.length){t.disabled=false;toast('변경되지 않았습니다.');return}
+  toast('처리했습니다.');route();
+}
+
+/* ---------------- validación ---------------- */
+const BANNED=['sasaeng','dirección de','teléfono de','réplica 1:1','fake 1:1'];
+function validate(text){
+  if((text.match(/https?:\/\//g)||[]).length>3)return 'Máximo 3 enlaces por publicación (antispam).';
+  const low=text.toLowerCase();const b=BANNED.find(w=>low.includes(w));if(b)return 'Tu texto contiene algo no permitido por las reglas ("'+b+'").';
+  if(/(\d[\s-]?){10,}/.test(text))return 'Parece que incluiste un número de teléfono. No compartas datos personales.';
+  return '';
+}
+const okUrl=u=>/^https:\/\/[^\s]+\.[^\s]+/.test(u);
+const safeUrl=u=>/^https:\/\//.test(String(u||''))?u:'';
+function errMsg(e){const m=(e&&e.message)||'';if(/Invalid login/i.test(m))return 'Correo o contraseña incorrectos.';if(/Email not confirmed/i.test(m))return 'Confirma tu correo: te enviamos un enlace.';if(/already registered/i.test(m))return 'Ese correo ya tiene cuenta. Entra con él.';if(/duplicate key.*nickname/i.test(m))return 'Ese apodo ya está en uso.';if(/rate limit/i.test(m))return 'Demasiados intentos. Espera un momento.';if(/row-level security/i.test(m))return 'Tu cuenta no puede realizar esta acción en este momento.';if(/_https/.test(m))return 'Los enlaces deben empezar con https://';return m||'Ocurrió un error.'}
+
+/* ---------------- router ---------------- */
+let routeSeq=0;
+async function route(){
+  const seq=++routeSeq;const raw=decodeURIComponent(location.hash.slice(1));const h=/^(access_token|error|type)=/.test(raw)?'home':(raw||'home');let m,html;
+  document.title='GaleríaK – Comunidad de K-Beauty, K-Pop y ofertas en México';
+  $('#main').innerHTML=loading();
+  try{
+    if(h==='home')html=await vHome();
+    else if(m=h.match(/^c-(\w+)$/))html=CATS.some(c=>c.id===m[1])?await vCat(m[1]):vNotFound();
+    else if(m=h.match(/^g-([\w-]+)$/)){html=await vGal(m[1]);if(G[m[1]])document.title=G[m[1]].name+' – GaleríaK'}
+    else if(m=h.match(/^p-(\d+)$/))html=await vPost(+m[1]);
+    else if(m=h.match(/^w-([\w-]+)$/))html=vWrite(m[1]);
+    else if(h==='entrar')html=vAuth();
+    else if(h==='admin')html=await vAdmin();
+    else if(h==='nueva-clave')html=vNewPass();
+    else if(h==='buscar')html=await vSearch($('#q').value);
+    else if(h==='mejores')html=await vBest();
+    else if(h==='galerias')html=vAllGals();
+    else if(h==='guias')html=vGuides();
+    else if(GUIDES[h])html=vGuide(h);
+    else if(h==='reglas')html=vRules();
+    else if(h==='privacidad')html=vPrivacy();
+    else html=vNotFound();
+  }catch(e){html=fail(e)}
+  if(seq!==routeSeq)return;
+  $('#main').innerHTML=html;window.scrollTo(0,0);
+  if($('#wg')){$('#wg').onchange=syncWriteFields;syncWriteFields()}
+  side().catch(()=>{});
+}
+function go(h){if(location.hash==='#'+h)route();else location.hash=h}
+
+/* ---------------- eventos ---------------- */
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.tab){galTab=t.dataset.tab;galPage=1;route();return}
+  if(t.dataset.page){galPage=+t.dataset.page;route();return}
+  if(t.dataset.auth){authMode=t.dataset.auth;route();return}
+  if(t.dataset.admtab||t.dataset.pid||t.dataset.cid||t.dataset.ban||t.dataset.unban){await admClick(t);return}
+  const p=curPost;
+  if(!p)return;
+  if(t.dataset.vote||t.dataset.report||t.dataset.sold||t.dataset.pdel||t.dataset.cdel||t.dataset.creport){
+    if(!ME){toast('Entra a tu cuenta para participar');go('entrar');return}
+  }
+  if(t.dataset.vote){t.disabled=true;const val=+t.dataset.vote,cur=myVotes.get(p.id);const q=cur===val?sb.from('votes').delete().eq('post_id',p.id).eq('voter',ME.id):cur?sb.from('votes').update({value:val}).eq('post_id',p.id).eq('voter',ME.id):sb.from('votes').insert({post_id:p.id,voter:ME.id,value:val});const {error}=await q;if(error){toast(errMsg(error));t.disabled=false;return}if(cur===val)myVotes.delete(p.id);else myVotes.set(p.id,val);toast(cur===val?'Voto cancelado':'¡Gracias por votar!');route();return}
+  if(t.dataset.pdel){if(!confirm('¿Eliminar esta publicación? No se puede deshacer.'))return;const {error}=await sb.from('posts').update({is_deleted:true}).eq('id',p.id);toast(error?errMsg(error):'Publicación eliminada');if(!error)go('g-'+p.gallery_id);return}
+  if(t.dataset.cdel){if(!confirm('¿Eliminar este comentario?'))return;const {error}=await sb.from('comments').update({is_deleted:true}).eq('id',+t.dataset.cdel);toast(error?errMsg(error):'Comentario eliminado');if(!error)route();return}
+  if(t.dataset.creport){const {error}=await sb.from('reports').insert({comment_id:+t.dataset.creport,reporter:ME.id});toast(error?(/duplicate/i.test(error.message)?'Ya reportaste este comentario':errMsg(error)):'Reporte enviado. El equipo lo revisará.');return}
+  if(t.dataset.report){const {error}=await sb.from('reports').insert({post_id:p.id,reporter:ME.id});toast(error?(/duplicate/i.test(error.message)?'Ya reportaste esta publicación':errMsg(error)):'Reporte enviado. El equipo lo revisará.');return}
+  if(t.dataset.sold){const {error}=await sb.from('posts').update({deal_sold:true}).eq('id',p.id);toast(error?errMsg(error):'Marcada como agotada');route();return}
+});
+$('#writeTop').onclick=()=>{const m=location.hash.match(/^#g-([\w-]+)$/);go('w-'+(m&&G[m[1]]?m[1]:'libre'))};
+$('#searchForm').onsubmit=e=>{e.preventDefault();if($('#q').value.trim())go('buscar')};
+document.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const f=e.target;const btn=f.querySelector('button.btn-brand,button.btn-dark');
+  const busy=v=>{if(btn)btn.disabled=v};
+  if(f.id==='pform'){
+    const pw=$('#npass').value;if(pw.length<8)return $('#perr').textContent='Mínimo 8 caracteres.';
+    busy(true);const {error}=await sb.auth.updateUser({password:pw});busy(false);
+    if(error)return $('#perr').textContent=errMsg(error);
+    toast('Contraseña actualizada');go('home');return;
+  }
+  if(f.id==='admsearch'){admQ=$('#admq').value.trim();route();return}
+  if(f.id==='aform'){
+    const err=$('#aerr');err.textContent='';const mail=$('#amail').value.trim(),pass=($('#apass')||{}).value;
+    busy(true);
+    if(authMode==='reset'){
+      const {error}=await sb.auth.resetPasswordForEmail(mail,{redirectTo:location.origin+location.pathname});busy(false);
+      if(error)return err.textContent=errMsg(error);
+      $('#main').innerHTML='<div class="card empty" style="max-width:440px;margin:0 auto">📩 Si existe una cuenta con ese correo, te enviamos un enlace. Revisa tu bandeja.</div>';return;
+    }
+    if(authMode==='up'){
+      const n=$('#anick').value.trim();
+      if(!/^[\wÁÉÍÓÚÑáéíóúñ.\-]{2,20}$/.test(n)){busy(false);return err.textContent='El apodo debe tener 2 a 20 letras o números, sin espacios.'}
+      if(!$('#aage').checked){busy(false);return err.textContent='Debes confirmar que tienes 13 años o más.'}
+      const {data:taken}=await sb.from('profiles').select('id').eq('nickname',n).maybeSingle();
+      if(taken){busy(false);return err.textContent='Ese apodo ya está en uso.'}
+      const {data,error}=await sb.auth.signUp({email:mail,password:pass,options:{data:{nickname:n,age_confirmed:true},emailRedirectTo:location.origin+location.pathname}});
+      busy(false);
+      if(error)return err.textContent=errMsg(error);
+      if(!data.session){$('#main').innerHTML=`<div class="card empty" style="max-width:440px;margin:0 auto">📩 Te enviamos un correo a <b>${esc(mail)}</b>. Abre el enlace para confirmar tu cuenta y después entra.<br><br><button class="btn btn-brand" data-auth="in">Ya confirmé, entrar</button></div>`;return}
+      await refreshSession();toast('¡Cuenta creada!');go('home');
+    }else{
+      const {error}=await sb.auth.signInWithPassword({email:mail,password:pass});busy(false);
+      if(error)return err.textContent=errMsg(error);
+      await refreshSession();toast('¡Hola, '+MYNICK+'!');go('home');
+    }
+    return;
+  }
+  if(f.id==='wform'){
+    const err=$('#werr');err.textContent='';const g=G[$('#wg').value];
+    const title=$('#wtitle').value.trim(),body=$('#wbody').value.trim();
+    if(title.length<4)return err.textContent='El título es muy corto.';
+    if(body.length<10)return err.textContent='Escribe un poco más en el contenido.';
+    const v=validate(title+' '+body);if(v)return err.textContent=v;
+    const row={gallery_id:g.id,author_id:ME.id,title,body};
+    if(g.deal){const price=$('#wprice').value.trim(),store=$('#wstore').value.trim(),url=$('#wurl').value.trim();if(!price||!store)return err.textContent='Las ofertas necesitan precio y tienda.';if(!okUrl(url))return err.textContent='Agrega un enlace válido a la oferta (https://…).';Object.assign(row,{deal_price:price,deal_store:store,deal_url:url})}
+    if(g.needSource){const s=$('#wsrc').value.trim();if(!okUrl(s))return err.textContent='En esta galería la fuente es obligatoria (enlace https://…).';row.source_url=s}
+    busy(true);const {data,error}=await sb.from('posts').insert(row).select('id').single();busy(false);
+    if(error)return err.textContent=errMsg(error);
+    toast('¡Publicado!');go('p-'+data.id);return;
+  }
+  if(f.id==='cform'){
+    const b=$('#cbody').value.trim();if(b.length<2)return $('#cerr').textContent='El comentario está vacío.';
+    const v=validate(b);if(v)return $('#cerr').textContent=v;
+    busy(true);const {error}=await sb.from('comments').insert({post_id:curPost.id,author_id:ME.id,body:b});busy(false);
+    if(error)return $('#cerr').textContent=errMsg(error);
+    toast('Comentario publicado');route();
+  }
+});
+sb.auth.onAuthStateChange((ev)=>{if(ev==='SIGNED_IN'||ev==='SIGNED_OUT')refreshSession();if(ev==='PASSWORD_RECOVERY')location.hash='nueva-clave'});
+window.addEventListener('hashchange',route);
+document.addEventListener('click',async e=>{
+  if(!e.target.closest('#gLogin'))return;
+  try{localStorage.setItem('gk_age_ok','1')}catch(_){}
+  const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});
+  if(error)toast('No se pudo iniciar sesión con Google');
+});
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+refreshSession().catch(()=>{}).finally(route);
+
+</script>
 </body>
 </html>

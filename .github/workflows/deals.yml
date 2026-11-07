@@ -26,7 +26,7 @@ jobs:
           node-version: 20
       - name: Publicar ofertas
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://pimuwxsazuzmgwhbrzbx.supabase.co' }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           AMAZON_TAG: ${{ secrets.AMAZON_TAG }}
           PAAPI_ACCESS_KEY: ${{ secrets.PAAPI_ACCESS_KEY }}

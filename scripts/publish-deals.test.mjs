@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateCandidate, buildPost, affiliateUrl, readOffer, signPaapi } from './publish-deals.mjs';
+import { validateCandidate, buildPost, affiliateUrl, readOffer, signPaapi, asinFromUrl, sbHeaders, BOT_NAME } from './publish-deals.mjs';
 
 test('valida candidatos', () => {
   assert.deepEqual(validateCandidate({ asin: 'B00PBX3L7K', title: 'COSRX Snail 96 Essence', price: 299 }), []);
@@ -13,19 +13,29 @@ test('enlace de afiliado', () => {
   assert.equal(affiliateUrl('B00PBX3L7K', 'galeriak-20'), 'https://www.amazon.com.mx/dp/B00PBX3L7K?tag=galeriak-20');
 });
 
-test('arma la publicación con descuento, aviso y caducidad de 24 h', () => {
+test('arma la publicación con la estructura del sitio (gallery_id, anon_name, needs_review)', () => {
   const now = new Date('2026-11-09T15:00:00Z');
   const p = buildPost({ asin: 'B00PBX3L7K', title: 'COSRX Snail 96 Essence 100 ml', price: 299, list_price: 450, note: 'Buen precio.', verified: true }, 'galeriak-20', now);
-  assert.equal(p.gallery, 'ofertas');
+  assert.equal(p.gallery_id, 'ofertas');
+  assert.equal(p.anon_name, BOT_NAME);
+  assert.equal(p.needs_review, true);
+  assert.equal(p.deal_price, '$299 MXN');
+  assert.equal(p.deal_store, 'Amazon México');
+  assert.equal(p.deal_url, 'https://www.amazon.com.mx/dp/B00PBX3L7K?tag=galeriak-20');
   assert.ok(p.title.startsWith('[-34%] '));
   assert.ok(p.body.includes('Como Afiliado de Amazon'));
-  assert.ok(p.body.includes('$299 MXN'));
-  assert.equal(p.deal_source, 'amazon-pa-api');
-  assert.equal(new Date(p.deal_expires_at) - now, 24 * 3600e3);
+  assert.deepEqual(Object.keys(p).sort(), ['anon_name','body','deal_price','deal_store','deal_url','gallery_id','needs_review','title']);
   const q = buildPost({ asin: 'B00PBX3L7K', title: 'Sin precio' }, 't-20', now);
-  assert.equal(q.deal_price, null);
-  assert.equal(q.deal_price_at, null);
+  assert.equal(q.deal_price, 'Ver precio en Amazon');
   assert.ok(q.body.includes('Revisa el precio actual'));
+});
+
+test('ASIN desde enlace y encabezados de Supabase', () => {
+  assert.equal(asinFromUrl('https://www.amazon.com.mx/dp/B00PBX3L7K?tag=x-20'), 'B00PBX3L7K');
+  assert.equal(asinFromUrl('https://www.amazon.com.mx/COSRX/dp/B08FM43PB3'), 'B08FM43PB3');
+  assert.equal(asinFromUrl('https://sephora.com.mx/x'), null);
+  assert.deepEqual(sbHeaders('sb_secret_abc'), { apikey: 'sb_secret_abc' });
+  assert.deepEqual(sbHeaders('eyJhbGc'), { apikey: 'eyJhbGc', authorization: 'Bearer eyJhbGc' });
 });
 
 test('lee ofertas v2 y v1', () => {

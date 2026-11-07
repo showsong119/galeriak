@@ -1,0 +1,9 @@
+# Netlify publica la carpeta site/ (sin compilación) cada vez que cambia main en GitHub.
+[build]
+  publish = "site"
+  command = ""
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
