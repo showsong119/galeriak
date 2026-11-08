@@ -33,7 +33,7 @@ deals/config.json        { "amazon_tag": "" }  ← Amazon 추적 ID(공개값)
 deals/last-run.json      봇 실행 결과 (status, missing, published, rejected)
 drafts/sns/              SNS 초안 (게시는 하지 않음)
 .github/workflows/deals.yml  봇: 매일 15:07 UTC + deals/inbox 푸시 시
-CURATOR.md               매일 큐레이션 규칙
+CURATOR.md               핫딜 매뉴얼 (기준·툴박스·완료 기준·변경 기록)
 OPS.md                   운영 연동 절차
 SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 ```
