@@ -79,7 +79,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
    - 대안: `galeriak-site.zip`(site/ 폴더 압축)을 Netlify 'Already built it?'에 드래그&드롭하면 수동 배포됨.
 2. **Supabase Secret key → GitHub Secret** `SUPABASE_SERVICE_ROLE_KEY` (https://github.com/showsong119/galeriak/settings/secrets/actions/new). 채팅·운영실에 값 넣지 않기.
 3. **Amazon Afiliados México 가입** (사이트 주소 `https://galeriakmx.com`) → 추적 ID를 운영실 키 설정 `AMAZON_TAG`에 저장 → Claude가 `deals/config.json`에 반영.
-4. 관리자 권한 확인(로그인 시 '관리자' 메뉴). 없으면 SQL: `update public.profiles set role='admin' where nickname='showsong117';`
+4. 관리자 권한 확인(로그인 시 '관리자' 메뉴). 관리자 닉네임은 2026-11-09 `Administrador`로 변경(`supabase/2026-11-09-apodo-admin.sql`, 이전 showsong117). 권한 없으면 SQL: `update public.profiles set role='admin' where nickname='Administrador';`
 5. ~~Netlify Make public~~ (완료 2026-11-08) → AdSense 가입·`ca-pub` 전달 → Claude가 `scripts/set-adsense.py` 실행.
 6. 앱 출시(나중): Apple Developer($99/년), Google Play($25), Sign in with Apple, Amazon 제휴에 앱 등록.
 
