@@ -37,7 +37,7 @@ test('nivel: acertar hasta L da nivel L con cualquier examen', () => {
     for (let L = 1; L <= 6; L++) assert.equal(grade(Object.fromEntries(qs.map(q => [q.id, q.lv <= L ? 0 : 1])), qs).level, L);
   }
 });
-test('sin enlaces de Amazon y anuncios apagados hasta configurar', () => {
+test('sin enlaces de Amazon y AdSense configurado', () => {
   assert.doesNotMatch(html, /amazon/i);
-  assert.match(html, /const ADS=\{client:"",/);
+  assert.match(html, /const ADS=\{client:"(ca-pub-\d+)?",/);
 });
