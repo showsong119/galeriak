@@ -99,6 +99,8 @@ nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:now
 .post h1{font-size:20px;margin:4px 0 6px}
 .post .pmeta{font-size:12.5px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px}
 .post .body{white-space:pre-wrap;word-wrap:break-word;font-size:15px;line-height:1.7;margin:16px 0}
+.post .body img.pimg{display:block;max-width:100%;max-height:80vh;border-radius:12px;margin:10px 0;background:#f1f1f4}
+.photos{border:1px dashed var(--line);border-radius:12px;padding:10px 12px;margin:-4px 0 12px;background:#fafafc}.photos.locked{background:#f6f6f8;color:var(--muted)}.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.thumbs div{position:relative}.thumbs img{width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}.thumbs button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:#17171c;color:#fff;font-size:12px;cursor:pointer}
 .dealbox{border:1px solid #ffd2c8;background:#fff6f3;border-radius:12px;padding:12px;margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
 .dealbox a{color:var(--blue);font-weight:700}
 .srcbox{border:1px solid #d7e1fb;background:#f4f7ff;border-radius:12px;padding:10px 12px;margin-top:12px;font-size:13px}
@@ -559,6 +561,55 @@ const ATT_PTS=5,LV2_ASIS=7;
 const levelOf=(pts,asis=null)=>{let l=LEVELS[0];for(const x of LEVELS)if(pts>=x[1]&&(asis==null||asis>=x[3]))l=x;return l};
 const nextLevel=l=>LEVELS.find(x=>x[0]===l[0]+1)||null;
 const LV=new Map();let LV_OFF=false,MYLV=null;
+/* fotos en publicaciones (Lv.2+) — se guardan en Storage 'post-images' y en el texto como [foto:<uid>/<archivo>] */
+const FOTO_LV=2,FOTO_MAX=4,FOTO_BUCKET='post-images';
+const FOTO_RE=/^\[foto:([0-9a-f-]{36})\/([A-Za-z0-9_-]{6,40})\.(webp|jpg|png)\]$/;
+const canPhoto=()=>{if(!ME)return false;if(MYROLE==='admin'||(MYLV&&MYLV.admin))return true;if(!MYLV)return false;return levelOf(MYLV.puntos,MYLV.asistencias)[0]>=FOTO_LV};
+let WFOTOS=[];// [{blob,url}]
+async function shrinkImage(file){
+  const img=await new Promise((ok,ko)=>{const u=URL.createObjectURL(file),i=new Image();i.onload=()=>ok(i);i.onerror=()=>ko(new Error('img'));i.src=u});
+  const k=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight));const c=document.createElement('canvas');
+  c.width=Math.round(img.naturalWidth*k);c.height=Math.round(img.naturalHeight*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  let q=.82,b=await new Promise(r=>c.toBlob(r,'image/webp',q));
+  if(!b||b.type!=='image/webp'){b=await new Promise(r=>c.toBlob(r,'image/jpeg',.85))}
+  while(b&&b.size>1.9e6&&q>.4){q-=.15;b=await new Promise(r=>c.toBlob(r,b.type,q))}
+  return b;// el re-dibujo quita los datos EXIF (como la ubicación GPS)
+}
+function photoBox(){
+  if(!canPhoto()){
+    const lv=MYLV?levelOf(MYLV.puntos,MYLV.asistencias):LEVELS[0],nx=LEVELS[FOTO_LV];
+    return `<div class="photos locked">📷 <b>Fotos desde Lv.${FOTO_LV}</b> (${nx[1]} puntos y ${nx[3]} días de asistencia). ${MYLV?`Tú estás en Lv.${lv[0]}.`:''} <a href="#g-asistencia" style="color:var(--ok);font-weight:700">Pasa lista</a> y participa para desbloquearlas.</div>`;
+  }
+  return `<div class="photos">📷 <b>Fotos</b> <span class="hint">hasta ${FOTO_MAX} · se reducen y se les quita la ubicación automáticamente</span><div style="margin-top:6px"><input type="file" id="wfile" accept="image/jpeg,image/png,image/webp" multiple style="width:auto"></div><div class="hint">Sube solo fotos tuyas o con permiso. Nada de fotos de otras personas sin su consentimiento ni contenido para adultos.</div><div class="thumbs" id="wthumbs"></div></div>`;
+}
+function renderThumbs(){const el=$('#wthumbs');if(el)el.innerHTML=WFOTOS.map((f,i)=>`<div><img src="${f.url}" alt=""><button type="button" data-fdel="${i}" aria-label="Quitar">✕</button></div>`).join('')}
+async function addPhotos(files){
+  const err=$('#werr');err.textContent='';
+  for(const f of [...files]){
+    if(WFOTOS.length>=FOTO_MAX){err.textContent=`Máximo ${FOTO_MAX} fotos por publicación.`;break}
+    if(!/^image\/(jpeg|png|webp)$/.test(f.type)){err.textContent='Solo fotos JPG, PNG o WEBP.';continue}
+    if(f.size>25e6){err.textContent='La foto es demasiado grande.';continue}
+    try{const b=await shrinkImage(f);if(!b)throw 0;WFOTOS.push({blob:b,url:URL.createObjectURL(b)})}catch(_){err.textContent='No se pudo leer una de las fotos.'}
+  }
+  renderThumbs();
+}
+async function uploadPhotos(){
+  const marks=[];
+  for(const f of WFOTOS){
+    const ext=f.blob.type==='image/webp'?'webp':'jpg',name=Date.now().toString(36)+Math.random().toString(36).slice(2,10),path=`${ME.id}/${name}.${ext}`;
+    const {error}=await sb.storage.from(FOTO_BUCKET).upload(path,f.blob,{contentType:f.blob.type,upsert:false,cacheControl:'31536000'});
+    if(error)throw new Error(/row-level|policy|security/i.test(error.message||'')?`Para subir fotos necesitas Lv.${FOTO_LV} (o llegaste al límite diario).`:/bucket/i.test(error.message||'')?'Las fotos aún no están activadas en el sitio.':error.message);
+    marks.push(`[foto:${path}]`);
+  }
+  return marks;
+}
+// muestra el texto con las fotos (solo fotos del bucket y de la carpeta del autor)
+function bodyHTML(p){
+  return String(p.body||'').split('\n').map(line=>{const m=line.trim().match(FOTO_RE);
+    if(m&&m[1]===p.author_id)return `<img class="pimg" loading="lazy" src="${SUPABASE_URL}/storage/v1/object/public/${FOTO_BUCKET}/${m[1]}/${m[2]}.${m[3]}" alt="Foto de la publicación">`;
+    return esc(line)}).join('\n');
+}
+
 /* managers por galería: tabla gk_managers (el equipo los nombra) */
 let MGR=new Map(),MGR_OK=false,mgrReady=Promise.resolve();
 async function loadManagers(){const {data,error}=await sb.from('gk_managers').select('gallery_id,user_id');MGR=new Map();if(error){MGR_OK=false;return}(data||[]).forEach(r=>{if(!MGR.has(r.gallery_id))MGR.set(r.gallery_id,new Set());MGR.get(r.gallery_id).add(r.user_id)});MGR_OK=true}
@@ -764,7 +815,7 @@ async function vPost(id){
    <h1>${tags(p,false)}${esc(p.title)}</h1>
    <div class="pmeta"><span>${nick(p)}</span><span>${ago(p.created_at)}</span><span>👁 ${p.views||0}</span><span>♥ ${p.up_count}</span><span>💬 ${C.length}</span></div>
    ${p.deal_price?`<div class="dealbox"><div><div class="hint">Precio</div><div class="price" style="font-size:20px">${priceShown(p)?esc(p.deal_price):'Revisa el precio actual'}</div></div><div><div class="hint">Tienda</div><b>${esc(p.deal_store)}</b></div><div style="margin-left:auto">${p.deal_sold?'<span class="pill p-sold">Agotado</span>':(safeUrl(p.deal_url)?`<a href="${esc(p.deal_url)}" target="_blank" rel="nofollow sponsored noopener">Ir a la oferta →</a>`:`<span class="hint">${esc(p.deal_url||'Sin enlace')}</span>`)}</div></div>`:''}
-   <div class="body">${esc(p.body)}</div>
+   <div class="body">${bodyHTML(p)}</div>
    ${p.source_url?`<div class="srcbox"><b>Fuente:</b> ${safeUrl(p.source_url)?`<a href="${esc(p.source_url)}" target="_blank" rel="nofollow noopener">${esc(p.source_url)}</a>`:esc(p.source_url)}</div>`:''}
    ${ad('post')}
    ${p.is_deleted?'':`<div class="votes"><button class="v-up" data-vote="1" style="${myVote===1?'background:var(--brand-soft)':''}">♥ Me gusta ${p.up_count}</button><button data-vote="-1" style="${myVote===-1?'background:#eee':''}">👎 ${p.down_count}</button></div>`}
@@ -779,6 +830,7 @@ async function vPost(id){
 function vWrite(gid){
   const g=G[gid]||G.libre;nav('');
   if(g.attend){setTimeout(()=>go('g-asistencia'),0);return loading()}
+  WFOTOS=[];
   if(!ME)return `<div class="card empty">Para publicar necesitas una cuenta. <a href="#entrar" style="color:var(--blue);font-weight:700">Entrar o registrarse</a></div>`;
   return `<div class="card"><div class="gh">${av(g)}<div><h1>Escribir en ${esc(g.name)}</h1><p>Publicas como <b>${esc(MYNICK)}</b>. Lee las <a href="#reglas" style="color:var(--blue)">reglas</a>.</p></div></div>
   ${isNewbie()&&!ATT.today?`<div class="att att-new"><b>💡 Consejo:</b> tu cuenta está en Lv.0. Empieza <a href="#g-asistencia" style="color:var(--ok);font-weight:700">pasando lista en Asistencia diaria</a> (+${ATT_PTS} puntos) y luego vuelve a escribir aquí.</div>`:''}
@@ -788,6 +840,7 @@ function vWrite(gid){
    <div id="dealFields" style="display:none"><div class="two"><div class="f"><label>Precio</label><input id="wprice" maxlength="20" placeholder="$299 MXN"></div><div class="f"><label>Tienda</label><input id="wstore" maxlength="40" placeholder="Amazon MX, Sephora…"></div></div><div class="f"><label>Enlace de la oferta</label><input id="wurl" placeholder="https://"></div></div>
    <div id="srcField" style="display:none" class="f"><label>Fuente (obligatoria)</label><input id="wsrc" placeholder="Enlace a entrevista, video oficial o publicación del artista/marca"></div>
    <div class="f"><label>Contenido</label><textarea id="wbody" maxlength="5000" required></textarea><div class="hint">No compartas datos personales. Máximo 3 enlaces.</div></div>
+   ${photoBox()}
    ${MYROLE==='admin'?'<div class="f"><label style="font-weight:600"><input type="checkbox" id="wpin" style="width:auto"> 📌 Publicar como aviso fijo (solo administradores)</label></div>':''}
    <div class="err" id="werr"></div>
    <button class="btn btn-brand" id="wsend">Publicar</button> <a class="btn" href="#g-${g.id}">Cancelar</a>
@@ -1013,6 +1066,7 @@ async function route(){
   if(seq!==routeSeq)return;
   $('#main').innerHTML=html;window.scrollTo(0,0);
   if($('#wg')){$('#wg').onchange=syncWriteFields;syncWriteFields()}
+  if($('#wfile')){$('#wfile').onchange=e=>{addPhotos(e.target.files).finally(()=>{e.target.value=''})};renderThumbs()}
   decorateLevels().catch(()=>{});
   side().then(()=>decorateLevels()).catch(()=>{});
 }
@@ -1026,6 +1080,7 @@ document.addEventListener('click',async e=>{
   if(t.dataset.hoytab){hoyTab=t.dataset.hoytab;route();return}
   if(t.dataset.page){galPage=+t.dataset.page;route();return}
   if(t.dataset.auth){authMode=t.dataset.auth;route();return}
+  if(t.dataset.fdel!=null&&t.dataset.fdel!==undefined&&t.closest('#wthumbs')){WFOTOS.splice(+t.dataset.fdel,1);renderThumbs();return}
   if(t.dataset.fav){const on=toggleFav(t.dataset.fav);t.classList.toggle('on',on);t.textContent=on?'★ Favorita':'☆ Favorita';renderQbar();toast(on?'Agregada a favoritas':'Quitada de favoritas');return}
   if(t.dataset.mhide||t.dataset.mchide){await mgrClick(t);return}
   if(t.dataset.mgrdel&&MYROLE==='admin'){const [g,u]=t.dataset.mgrdel.split('|');if(!confirm('매니저를 해제할까요?'))return;t.disabled=true;const {error}=await sb.from('gk_managers').delete().eq('gallery_id',g).eq('user_id',u);toast(error?errMsg(error):'해제했습니다.');await loadManagers();route();return}
@@ -1101,9 +1156,13 @@ document.addEventListener('submit',async e=>{
     if(g.deal){const price=$('#wprice').value.trim(),store=$('#wstore').value.trim(),url=$('#wurl').value.trim();if(!price||!store)return err.textContent='Las ofertas necesitan precio y tienda.';if(!okUrl(url))return err.textContent='Agrega un enlace válido a la oferta (https://…).';Object.assign(row,{deal_price:price,deal_store:store,deal_url:url})}
     if(g.needSource){const s=$('#wsrc').value.trim();if(!okUrl(s))return err.textContent='En esta galería la fuente es obligatoria (enlace https://…).';row.source_url=s}
     if(MYROLE==='admin'&&$('#wpin')&&$('#wpin').checked)row.is_pinned=true;
-    busy(true);const {data,error}=await sb.from('posts').insert(row).select('id').single();busy(false);
+    if(/\[foto:/i.test(body))return err.textContent='Usa el botón de fotos para agregar imágenes.';
+    busy(true);
+    if(WFOTOS.length){if(!canPhoto()){busy(false);return err.textContent=`Las fotos son para Lv.${FOTO_LV} o más.`}
+      try{const marks=await uploadPhotos();row.body=body+'\n\n'+marks.join('\n')}catch(e){busy(false);return err.textContent=e.message||'No se pudieron subir las fotos.'}}
+    const {data,error}=await sb.from('posts').insert(row).select('id').single();busy(false);
     if(error)return err.textContent=errMsg(error);
-    toast('¡Publicado!');go('p-'+data.id);return;
+    WFOTOS=[];toast('¡Publicado!');go('p-'+data.id);return;
   }
   if(f.id==='mform'){
     const err=$('#merr');err.textContent='';const as=$('#masunto').value.trim(),cu=$('#mcuerpo').value.trim();

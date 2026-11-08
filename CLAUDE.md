@@ -137,3 +137,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 ## 18. 출석·레벨 v2·매니저 (2026-11-08)
 - SQL: `supabase/2026-11-08-asistencia-niveles-managers.sql` (재실행 안전, 로컬 PG16 테스트 통과). **사용자 실행 필요.** `gk_niveles`를 drop 후 재생성(반환에 `asistencias` 추가, 점수: 출석 +5/일(고유 날짜, America/Mexico_City), 글 +10(asistencia 제외), 댓글 +3, ♥ +2, 가입일수 점수 제거). 새 표 `gk_managers(gallery_id,user_id,created_at,created_by)` RLS: 읽기 전체, insert/delete는 `gk_is_admin()`. `gk_es_manager(text)`, `gk_manager_ocultar(p_tipo 'post'|'comment', p_id bigint, p_oculto)` (관리자 또는 해당 갤러리 매니저, 관리자 콘텐츠 불가).
 - 사이트: 갤러리 `asistencia`(attend:true, 전용 출석 박스·칩, 하루 1회), `libre`(Foro libre), 분류 `comunidad`. `LEVELS=[[n,pts,name,asis]]` Lv0~7, Lv2 이상은 출석 7일 필요(`LV2_ASIS`). 가입 직후 `sessionStorage.gk_new` → `#g-asistencia`. 매니저: `MGR`(gk_managers 캐시, `mgrReady`), `.nk[data-gal]`로 갤러리별 🛡️ 배지, 갤러리 헤더에 매니저 목록, 글/댓글에 매니저 도구, 관리자 탭 `managers`.
+
+## 19. 게시글 사진 (2026-11-08)
+- SQL: `supabase/2026-11-08-fotos.sql` (18번 SQL 다음에 실행, 재실행 안전, 로컬 PG16+모의 storage 테스트 통과). 버킷 `post-images`(public, 2MB, webp/jpeg/png), `gk_puede_fotos()`(admin 또는 gk_niveles 150점+출석 7일, 정지 아님, 하루 40장), storage.objects 정책: insert(본인 폴더+gk_puede_fotos), select(버킷), delete(본인/관리자).
+- 사이트: `FOTO_LV=2`, `canPhoto()`, `photoBox()`(잠김 안내), `shrinkImage()`(canvas → webp ≤1600px, EXIF 제거), 업로드 후 본문 끝에 `[foto:<uid>/<name>.<ext>]` 줄 추가, `bodyHTML(p)`가 작성자 폴더 사진만 <img>로 렌더. 본문에 직접 `[foto:` 입력은 거부.
