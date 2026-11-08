@@ -33,7 +33,7 @@ nav.main{max-width:1120px;margin:0 auto;display:flex;gap:4px;padding:0 12px 8px;
 nav.main::-webkit-scrollbar{display:none}
 nav.main a{padding:6px 12px;border-radius:999px;font-weight:600;color:var(--muted);white-space:nowrap}
 nav.main a.on{background:var(--ink);color:#fff}
-nav.main a.nav-hoy{color:var(--hot);font-weight:800}nav.main a.nav-hoy.on{background:var(--hot);color:#fff}
+nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:nowrap}.hoy-more{margin-left:auto;align-self:center}@media(max-width:700px){.tabs{flex-wrap:wrap}.hoy-more{flex-basis:100%;margin:6px 0 0}}nav.main a.nav-hoy.on{background:var(--hot);color:#fff}
 .demo{background:#fff7d6;border-bottom:1px solid #f1e3a4;color:#7a5b00;font-size:12.5px;text-align:center;padding:6px 10px}
 .wrap{max-width:1120px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1fr 300px;gap:16px}
 @media(max-width:900px){.wrap{grid-template-columns:1fr}.side{order:2}}
@@ -335,7 +335,7 @@ async function side(){
   const [{data:day},{data:week}]=await Promise.all([top(D,10),top(7*D,10)]);
   const best=(arr,empty)=>arr&&arr.length?`<ol class="list best">${arr.map((p,i)=>`<li class="row"><span class="num ${i<3?'top':''}">${i+1}</span><div class="t"><a href="#p-${p.id}">${esc(p.title)}</a>${p.comment_count?`<span class="cc">[${p.comment_count}]</span>`:''}<div class="meta"><span>${esc((G[p.gallery_id]||{name:p.gallery_id}).name)}</span><span>♥ ${p.up_count}</span></div></div></li>`).join('')}</ol>`:`<div class="hint">${empty}</div>`;
   $('#side').innerHTML=`
-  <div class="card"><h2 style="color:var(--hot)">🏆 Mejores de hoy <a class="more" href="#hoy">Ver todo</a></h2>${best(day,'Todavía no hay publicaciones hoy. ¡<a href="#w-libre" style="color:var(--blue)">Escribe la primera</a>!')}</div>
+  ${location.hash==='#hoy'?'':`  <div class="card"><h2 style="color:var(--hot)">🏆 Mejores de hoy <a class="more" href="#hoy">Ver todo</a></h2>${best(day,'Todavía no hay publicaciones hoy. ¡<a href="#w-libre" style="color:var(--blue)">Escribe la primera</a>!')}</div>`}
   ${ad('rect')}
   <div class="card"><h2>🔥 Mejores de la semana</h2>${best(week,'Todavía no hay publicaciones esta semana.')}</div>
   <div class="card"><h2>📘 Guías <a class="more" href="/guias/">Ver todas</a></h2>${STATIC_GUIDES.slice(0,5).map(g=>`<div class="row"><div class="t"><a href="${g.u}">${esc(g.t)}</a></div></div>`).join('')}</div>`;
@@ -565,7 +565,7 @@ async function vHoy(){
     .order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(50);
   if(error)return fail(error);
   return ad('leader')+`<div class="card"><div class="gh"><div class="av" style="background:var(--hot)">🔥</div><div><h1 style="color:var(--hot)">Mejores de hoy</h1><p>Las publicaciones con más ♥ de todas las galerías. Se actualiza solo: ${hoyTab==='hoy'?'últimas 24 horas':'últimos 7 días'}.</p></div></div>
-  <div class="tabs"><button data-hoytab="hoy" class="${hoyTab==='hoy'?'on':''}">🔥 Hoy</button><button data-hoytab="semana" class="${hoyTab==='semana'?'on':''}">📅 Esta semana</button><a class="hint" href="#mejores" style="margin-left:auto;align-self:center">⭐ Destacados de siempre →</a></div>
+  <div class="tabs"><button data-hoytab="hoy" class="${hoyTab==='hoy'?'on':''}">🔥 Hoy</button><button data-hoytab="semana" class="${hoyTab==='semana'?'on':''}">📅 Esta semana</button><a class="hint hoy-more" href="#mejores">⭐ Destacados de siempre →</a></div>
   ${data.length?listWithAds(data,1,true):`<div class="empty">${hoyTab==='hoy'?'Hoy todavía no hay publicaciones con ♥. Dale ♥ a lo que te guste para que aparezca aquí.':'Esta semana todavía no hay publicaciones con ♥.'}</div>`}</div>`;
 }
 let curPost=null;
