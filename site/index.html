@@ -274,9 +274,12 @@ function listWithAds(arr,start,showGal){
 const SEL='id,gallery_id,title,created_at,up_count,down_count,comment_count,deal_price,deal_sold,is_pinned,is_sponsored,is_hidden,anon_name,profiles(nickname)';
 
 /* ---------------- sesión ---------------- */
-async function refreshSession(){
-  const {data}=await sb.auth.getSession();
-  ME=data.session?data.session.user:null;MYNICK='';MYROLE='';myVotes=new Map();
+// La sesión nunca bloquea la página: si getSession tarda (pasa en móviles al volver de Google), seguimos sin ella.
+const withTimeout=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
+async function refreshSession(given){
+  let session=given;
+  if(session===undefined){const res=await withTimeout(sb.auth.getSession(),4000);session=res&&res.data?res.data.session:null}
+  ME=session?session.user:null;MYNICK='';MYROLE='';myVotes=new Map();
   if(ME){
     let {data:prof}=await sb.from('profiles').select('nickname,role').eq('id',ME.id).maybeSingle();
     if(!prof){ // primer inicio de sesión: crear perfil con el apodo del registro
@@ -673,7 +676,11 @@ document.addEventListener('submit',async e=>{
     toast('Comentario publicado');route();
   }
 });
-sb.auth.onAuthStateChange((ev)=>{if(ev==='SIGNED_IN'||ev==='SIGNED_OUT')refreshSession();if(ev==='PASSWORD_RECOVERY')location.hash='nueva-clave'});
+// No llamar a Supabase dentro del callback (bloquea el cliente): se difiere con setTimeout.
+sb.auth.onAuthStateChange((ev,session)=>{
+  if(ev==='SIGNED_IN'||ev==='SIGNED_OUT'||ev==='INITIAL_SESSION')setTimeout(()=>{refreshSession(session||null).catch(()=>{}).finally(()=>{if(ev!=='INITIAL_SESSION'||session)route()})},0);
+  if(ev==='PASSWORD_RECOVERY')location.hash='nueva-clave';
+});
 window.addEventListener('hashchange',route);
 document.addEventListener('click',async e=>{
   if(!e.target.closest('#gLogin'))return;
@@ -682,7 +689,7 @@ document.addEventListener('click',async e=>{
   if(error)toast('No se pudo iniciar sesión con Google');
 });
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
-refreshSession().catch(()=>{}).finally(route);
+route(); // la página se dibuja enseguida; la sesión llega después y vuelve a dibujar
 
 </script>
 </body>
