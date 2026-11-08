@@ -211,6 +211,7 @@ footer a{color:var(--navy)}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2340316018998356" crossorigin="anonymous"></script>
 </head>
 <body>
 <header class="top gut">
@@ -230,7 +231,7 @@ footer a{color:var(--navy)}
       Un bloque vacío no se muestra. Para ver dónde va cada anuncio antes de tener IDs: añade ?demo=ads a la URL.
    3) En AdSense › Anuncios › Por sitio, activa Auto ads con "Anuncios de viñeta" (pantalla completa al cambiar de página)
       y "Anuncios fijos" (barra inferior). Este examen cambia de página entre secciones, lo que activa las viñetas. */
-const ADS={client:"",slots:{top:"",infeed:"",bottom:"",side:"",examBottom:"",pause:"",result:"",review:"",resultBottom:""}};
+const ADS={client:"ca-pub-2340316018998356",slots:{top:"",infeed:"",bottom:"",side:"",examBottom:"",pause:"",result:"",review:"",resultBottom:""}};
 /* ===================================================== */
 </script>
 <script>
@@ -414,7 +415,7 @@ function ad(name,cls=""){
   if(!ADS.client||DEMO)return `<div class="ad demo ${cls}"><span class="ad-label">Publicidad</span><div>${DEMO?"Anuncio · "+name:"Espacio publicitario"}</div></div>`;
   return "";
 }
-if(ADS.client){const s=document.createElement("script");s.async=true;s.crossOrigin="anonymous";s.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client="+encodeURIComponent(ADS.client);document.head.appendChild(s)}
+if(ADS.client&&!document.querySelector('script[src*="adsbygoogle.js"]')){const s=document.createElement("script");s.async=true;s.crossOrigin="anonymous";s.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client="+encodeURIComponent(ADS.client);document.head.appendChild(s)}
 function fillAds(){if(!ADS.client)return;document.querySelectorAll("ins.adsbygoogle:not([data-filled])").forEach(el=>{el.dataset.filled=1;try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}})}
 
 /* Voz coreana */

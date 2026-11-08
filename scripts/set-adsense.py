@@ -16,8 +16,7 @@ for f in sorted((ROOT / 'site').rglob('*.html')):
     s = re.sub(r'<!-- AdSense:[^>]*-->\n?(<!-- <script async src="https://pagead2[^>]*></script> -->\n?)?', '', s)
     if 'examen-coreano' in str(f):
         s = re.sub(r'const ADS=\{client:"[^"]*"', f'const ADS={{client:"{pub}"', s)
-    else:
-        s = s.replace('</head>', tag + '\n</head>', 1)
+    s = s.replace('</head>', tag + '\n</head>', 1)
     if s != o: f.write_text(s); n += 1
 (ROOT / 'site/ads.txt').write_text(f'google.com, {pub.replace("ca-", "")}, DIRECT, f08c47fec0942fa0\n')
 print(f'AdSense {pub}: {n} páginas actualizadas + site/ads.txt')
