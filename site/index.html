@@ -54,6 +54,7 @@ nav.main a.on{background:var(--ink);color:#fff}
 .row .up{flex:none;font-size:12px;font-weight:700;color:var(--brand);width:38px;text-align:right}
 .pill{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;margin-right:4px;vertical-align:1px}
 .aviso-row{background:#f6f8ff}
+.best .num.top{color:var(--brand);font-weight:800}
 .lv{display:inline-block;font-size:10px;font-weight:800;line-height:1;padding:3px 5px;border-radius:5px;margin-left:4px;vertical-align:1px;color:#fff;background:#9a9aa6}
 .lv1{background:#b8b8c2}.lv2{background:#6bbf8a}.lv3{background:#3aa0d8}.lv4{background:#2f5bd8}.lv5{background:#8a4fd8}.lv6{background:#e5317d}.lv7{background:linear-gradient(90deg,#f5a623,#e5317d)}.lv-adm{background:#17171c}
 .lvt{border-collapse:collapse;width:100%;max-width:520px;font-size:14px}.lvt th,.lvt td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left}
@@ -328,14 +329,15 @@ function renderUserBox(){
 
 /* ---------------- barra lateral ---------------- */
 async function side(){
-  const {data:hot}=await listQ().gte('created_at',new Date(Date.now()-7*D).toISOString()).eq('is_pinned',false).order('up_count',{ascending:false}).limit(5);
+  const since=ms=>new Date(Date.now()-ms).toISOString();
+  const top=(ms,n)=>listQ().gte('created_at',since(ms)).eq('is_pinned',false).order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(n);
+  const [{data:day},{data:week}]=await Promise.all([top(D,10),top(7*D,10)]);
+  const best=(arr,empty)=>arr&&arr.length?`<ol class="list best">${arr.map((p,i)=>`<li class="row"><span class="num ${i<3?'top':''}">${i+1}</span><div class="t"><a href="#p-${p.id}">${esc(p.title)}</a>${p.comment_count?`<span class="cc">[${p.comment_count}]</span>`:''}<div class="meta"><span>${esc((G[p.gallery_id]||{name:p.gallery_id}).name)}</span><span>♥ ${p.up_count}</span></div></div></li>`).join('')}</ol>`:`<div class="hint">${empty}</div>`;
   $('#side').innerHTML=`
-  <div class="card"><h2>🏆 Ranking Corea <a class="more" href="#guia-rebajas">Guía</a></h2>
-   <ol class="list rank">${RANK.map((r,i)=>`<li><span class="n">${i+1}</span>${r[2]?`<img class="ph" src="${esc(r[2].img)}" alt="${esc(r[0])}" loading="lazy" referrerpolicy="no-referrer">`:`<span class="ph" aria-hidden="true">🧴</span>`}<div>${esc(r[0])}<small>${esc(r[1])}</small>${r[2]?`<a href="${esc(r[2].url)}" target="_blank" rel="nofollow noopener">Ver en Amazon México →</a><small>Vendedor externo: ${esc(r[2].seller)} (${esc(r[2].pos)}). No confirmado como original. <a href="#guia-original">Cómo revisarlo</a></small>`:`<small>Sin vendedor confiable en Amazon México por ahora.</small>`}</div></li>`).join('')}</ol>
-   <div class="hint">Selección de ganadores Olive Young Awards 2025. <a href="${RANK_SRC}" target="_blank" rel="noopener" style="color:var(--blue)">Fuente</a> · Los de 2026 salen a finales de noviembre.</div></div>
+  <div class="card"><h2>🏆 Mejores de hoy <a class="more" href="#mejores">Destacados</a></h2>${best(day,'Todavía no hay publicaciones hoy. ¡<a href="#w-libre" style="color:var(--blue)">Escribe la primera</a>!')}</div>
   ${ad('rect')}
-  <div class="card"><h2>🔥 Lo más votado</h2>${hot&&hot.length?`<ul class="list">${hot.map((p,i)=>`<li class="row"><span class="num">${i+1}</span><div class="t"><a href="#p-${p.id}">${esc(p.title)}</a></div></li>`).join('')}</ul>`:'<div class="hint">Aún no hay votos esta semana.</div>'}</div>
-  <div class="card"><h2>📘 Guías</h2>${Object.entries(GUIDES).map(([k,g])=>`<div class="row"><div class="t"><a href="#${k}">${esc(g.t)}</a></div></div>`).join('')}</div>`;
+  <div class="card"><h2>🔥 Mejores de la semana</h2>${best(week,'Todavía no hay publicaciones esta semana.')}</div>
+  <div class="card"><h2>📘 Guías <a class="more" href="/guias/">Ver todas</a></h2>${STATIC_GUIDES.slice(0,5).map(g=>`<div class="row"><div class="t"><a href="${g.u}">${esc(g.t)}</a></div></div>`).join('')}</div>`;
 }
 
 /* ---------------- vistas ---------------- */
