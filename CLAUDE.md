@@ -99,12 +99,12 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 ## 12. 무료 한국어 시험 페이지 (/examen-coreano/)
 - `site/examen-coreano/index.html` 단일 파일. 30문항 CBT(어휘·문법 12 → 읽기 10 → 듣기 8), 30분, 영역마다 페이지 이동(`?p=V|pausa-V|R|pausa-R|L|resultado`), 상태는 localStorage `gk-examen-v1` (저장 불가 시 한 페이지 모드).
 - 문제은행: `/* ===== CORE */` 구간의 `BANK`(90문항 = 영역·급마다 시험 1회분의 3배). 응시 때 `pickExam()`이 `BLUEPRINT`대로 30문항을 뽑고, localStorage `gk-examen-vistas`(문항별 노출 횟수)로 덜 본 문제부터 출제 → 3회까지 중복 없음. 문항 추가는 BANK에 넣기만 하면 됨(정답은 항상 o[0], 화면에서 섞임). 테스트: `scripts/examen.test.mjs`.
-- 수익화 설정은 파일 상단 `ADS={client, slots{top,infeed,bottom,side,examBottom,pause,result,review,resultBottom}}`. 아마존 링크는 사용자 요청으로 제거(넣지 말 것). 비어 있으면 광고 안 보임. `?demo=ads`로 위치 확인.
+- 수익화 설정은 파일 상단 `ADS={client, slots{top,infeed,bottom,side,examBottom,pause,result,review,resultBottom}}`. 아마존 링크는 사용자 요청으로 제거(넣지 말 것). `ADS.client`가 비어 있으면 메인 사이트처럼 'Publicidad' 자리 표시 상자가 보이고, 넣으면 실제 광고로 바뀜(`client`만 있고 slot이 빈 자리는 숨김). `?demo=ads`는 자리 이름까지 표시.
 - AdSense 정책: 광고를 보기·버튼 바로 옆에 두지 않음, 라벨은 'Publicidad', 무관한 고단가 키워드 문단 금지. 전면광고는 Auto ads '비녜트'(페이지 이동 시)로.
 - 메뉴 `nav()`에 '/examen-coreano/' 항목, 푸터 링크 있음.
 
 ## 13. 법적 페이지·검색 (AdSense 심사 대비)
 - 정적 페이지 `site/privacidad/`(Política de Privacidad, AdSense 쿠키 고지 포함), `site/terminos/`(Términos y Condiciones). SPA의 `#privacidad`는 /privacidad/로 이동. 메인·시험 페이지 푸터에 링크.
-- **연락처 이메일 미정**: 사용자가 새 Gmail을 만들 예정. 받으면 두 페이지의 `<h2 id="contacto">` 아래 "Correo de contacto: próximamente…" 줄을 교체.
+- 연락처 이메일: galeriakmx@gmail.com (사이트 공개용, 두 법적 페이지에 기재).
 - `site/robots.txt`, `site/sitemap.xml` (새 정적 페이지 생기면 sitemap에 추가).
 - 시험 페이지에 TOPIK 구조·배점·등급 표, 영역별 팁, 스페인어권 학습자 흔한 실수 섹션(`#guia-topik`). 수치 출처: NIIED 시행계획(UAB TOPIK 페이지·seoulstart 2026 확인).

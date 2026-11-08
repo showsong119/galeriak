@@ -410,7 +410,8 @@ function go(p){
 /* Anuncios */
 function ad(name,cls=""){
   if(ADS.client&&ADS.slots[name])return `<div class="ad ${cls}"><span class="ad-label">Publicidad</span><ins class="adsbygoogle" style="display:block" data-ad-client="${esc(ADS.client)}" data-ad-slot="${esc(ADS.slots[name])}" data-ad-format="auto" data-full-width-responsive="true"></ins></div>`;
-  if(DEMO)return `<div class="ad demo ${cls}"><span class="ad-label">Publicidad</span><div>Anuncio · ${name}</div></div>`;
+  // Mientras no haya cuenta de AdSense se muestra el espacio reservado (igual que en el resto de GaleríaK)
+  if(!ADS.client||DEMO)return `<div class="ad demo ${cls}"><span class="ad-label">Publicidad</span><div>${DEMO?"Anuncio · "+name:"Espacio publicitario"}</div></div>`;
   return "";
 }
 if(ADS.client){const s=document.createElement("script");s.async=true;s.crossOrigin="anonymous";s.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client="+encodeURIComponent(ADS.client);document.head.appendChild(s)}
