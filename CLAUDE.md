@@ -148,8 +148,9 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 사이트: `LID`(갤러리→방장), `isLider`, `liderBadge`(👑), `ADV`(활성 경고 캐시, route마다 60초 캐시), `row()`/글 제목 회색(`.adv`)+`⚠️ En revisión`, 댓글폼 숨김, `lidPostPanel`/`advAdminPanel`, 관리자 탭 `avisos`, 매니저 탭에 역할 선택.
 
 ## 21. 개선 4종 (2026-11-08 17시)
-- `supabase/2026-11-08-TODO-en-orden.sql`(갤러리 등록 + 18·19·20번 SQL + 첫 글 26개를 이어 붙인 것, 재생성: 원본 수정 후 같은 순서로 cat), `supabase/verificar.sql`(읽기 전용 ✅/❌), 관리자 탭 `salud`.
+- **2026-11-08 21:46 실제 DB에 실행 완료(verificar 12/12 ✅)** — 17~21번 SQL 기능 모두 활성. `supabase/2026-11-08-TODO-en-orden.sql`(갤러리 등록 + 18·19·20번 SQL + 첫 글 26개를 이어 붙인 것, 재생성: 원본 수정 후 같은 순서로 cat), `supabase/verificar.sql`(읽기 전용 ✅/❌), 관리자 탭 `salud`.
 - 정적 페이지: `scripts/build-static.mjs`(GALS·CATS·키를 site/index.html에서 읽음, posts 최근 1500·comments·활성 경고 제외, 얇은 글 noindex+sitemap 제외, sitemap의 기존 항목 유지), 테스트 `scripts/build-static.test.mjs`. `pages.yml`이 배포 전에 실행 + 3시간 cron. `site/g/`, `site/p/`는 .gitignore. `site/404.html`이 /p/·/g/를 해시 경로로 넘김.
 - K-Pop: `vKpop()`(kTag·kTab·kPage, `.chips2`), 갤러리 `kpop-general`. 첫 글 SQL `2026-11-08-primeras-publicaciones.sql`(관리자 작성, 제목 중복 시 건너뜀).
 - 법·안전: 약관 `#derechos`·`#moderacion`, 개인정보 신법(2025-03-20) 반영. `REP_MOTIVOS`/`repPicker`(reports.reason), honeypot `#aweb`, `TURNSTILE_SITEKEY`(비면 꺼짐; 켤 때 사이트 먼저 → Supabase CAPTCHA 나중).
 - Supabase SQL Editor 사용 시 **브라우저 자동 번역을 끄게** 안내할 것(번역된 SQL이 붙여넣어져 42601 오류, 대시보드도 removeChild 오류로 멈춤). 복사는 GitHub blob 페이지의 「Copy raw file」 버튼이 안전.
+- Actions 수동 실행: `gh workflow run`은 GraphQL이라 막힘 → `gh api -X POST repos/showsong119/galeriak/actions/workflows/pages.yml/dispatches -f ref=main`.
