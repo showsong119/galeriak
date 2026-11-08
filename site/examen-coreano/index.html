@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Examen de coreano gratis en línea (práctica TOPIK I) | GaleríaK</title>
+  <meta name="description" content="Examen de práctica de coreano gratis, estilo TOPIK I, con explicaciones en español. Mide tu nivel básico antes de presentar el TOPIK o aplicar a la Beca GKS.">
+  <link rel="canonical" href="https://galeriakmx.com/examen-coreano/">
+  <meta property="og:title" content="Examen de coreano gratis · práctica TOPIK I">
+  <meta property="og:description" content="5 preguntas con explicación en español. ¿Cuántos puntos sacas?">
+  <meta property="og:url" content="https://galeriakmx.com/examen-coreano/">
+  <meta property="og:locale" content="es_MX">
+  <meta name="theme-color" content="#e5317d">
+  <link rel="icon" href="/icons/icon-192.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- AdSense: cuando aprueben la cuenta, pega aquí el script principal (Auto Ads) -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+  <style>
+    :root { --bg:#f4f4f6; --card:#fff; --ink:#17171c; --muted:#6b6b76; --line:#e6e6ec; --brand:#e5317d; --brand-soft:#fde8f1; --blue:#2f5bd8; --ok:#1d8a5a; --ok-soft:#e3f4ec; --bad:#c62f2f; --bad-soft:#fde7e7; --tip:#fff7e0; --tip-line:#f3dc9a; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; font-size: 15px; }
+    a { color: inherit; }
+
+    .top { background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; }
+    .top-in { max-width: 850px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 16px; }
+    .logo { font-weight: 800; font-size: 20px; letter-spacing: -.5px; text-decoration: none; }
+    .logo b { color: var(--brand); }
+    .nav-btn { background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 700; white-space: nowrap; }
+
+    .container { max-width: 850px; margin: 0 auto; padding: 16px; }
+
+    .hero { background: var(--ink); color: #fff; padding: 26px 24px; border-radius: 16px; margin-bottom: 16px; }
+    .hero .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #ff7fb0; margin-bottom: 6px; }
+    .hero h1 { font-size: clamp(22px, 4.6vw, 30px); line-height: 1.2; letter-spacing: -.5px; margin-bottom: 8px; text-wrap: balance; }
+    .hero h1 span { color: #ff7fb0; }
+    .hero p { font-size: 15px; color: #d6d6de; max-width: 60ch; }
+
+    /* Espacios de anuncio: ocultos hasta que pegues el código de AdSense y les agregues la clase "on" */
+    .ad-slot { display: none; margin: 20px 0; text-align: center; min-height: 100px; }
+    .ad-slot.on { display: block; }
+    .ad-label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+
+    .cbt-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin-bottom: 20px; scroll-margin-top: 72px; }
+    .progress-bar { width: 100%; height: 8px; background: var(--line); border-radius: 4px; margin-bottom: 18px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--brand); width: 20%; transition: width .3s ease; }
+    .question-header { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 12px; font-variant-numeric: tabular-nums; }
+    .question-text { font-size: 18px; font-weight: 700; margin-bottom: 16px; text-wrap: balance; }
+    .korean-box { background: var(--bg); border-left: 4px solid var(--brand); padding: 16px; font-size: 22px; font-weight: 700; margin-bottom: 18px; border-radius: 6px; font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", Inter, sans-serif; }
+
+    .options-list { display: flex; flex-direction: column; gap: 10px; }
+    .option-btn { width: 100%; text-align: left; padding: 14px 16px; border: 2px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font: inherit; font-size: 16px; font-weight: 500; cursor: pointer; transition: border-color .15s, background .15s; }
+    .option-btn:hover:not(:disabled) { border-color: var(--ink); }
+    .option-btn:focus-visible, .next-link-btn:focus-visible, .cta-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+    .option-btn:disabled { cursor: default; }
+    .option-btn.correct { border-color: var(--ok); background: var(--ok-soft); font-weight: 700; }
+    .option-btn.wrong { border-color: var(--bad); background: var(--bad-soft); }
+
+    .explanation-box { display: none; margin-top: 18px; padding: 14px 16px; background: var(--tip); border: 1px solid var(--tip-line); border-radius: 10px; font-size: 15px; }
+    .next-link-btn { display: none; margin-top: 18px; width: 100%; padding: 15px; background: var(--brand); color: #fff; text-align: center; text-decoration: none; border-radius: 12px; font-size: 17px; font-weight: 700; }
+    .next-link-btn:hover { background: #c9246a; }
+
+    .result-screen { display: none; text-align: center; }
+    .result-screen h2 { font-size: 22px; text-wrap: balance; }
+    .score-circle { width: 132px; height: 132px; border-radius: 50%; background: var(--brand-soft); border: 6px solid var(--brand); display: flex; align-items: center; justify-content: center; margin: 20px auto; font-size: 30px; font-weight: 800; color: var(--brand); font-variant-numeric: tabular-nums; }
+    .cta-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 22px; }
+    .cta-btn { padding: 13px 20px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 15px; }
+    .cta-primary { background: var(--brand); color: #fff; }
+    .cta-secondary { background: var(--line); color: var(--ink); }
+
+    .seo-content { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin-top: 20px; }
+    .seo-content h2 { font-size: 19px; margin: 22px 0 8px; text-wrap: balance; }
+    .seo-content h2:first-child { margin-top: 0; }
+    .seo-content p { margin-bottom: 12px; color: #34343c; max-width: 70ch; }
+    .seo-content a { color: var(--blue); font-weight: 600; }
+    .disclaimer { font-size: 12px; color: var(--muted); text-align: center; margin: 20px 0 8px; }
+  </style>
+</head>
+<body>
+
+  <header class="top">
+    <div class="top-in">
+      <a href="/" class="logo">Galería<b>K</b></a>
+      <a href="/" class="nav-btn">Ir al inicio →</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <section class="hero">
+      <div class="eyebrow">Examen de coreano gratis</div>
+      <h1>Práctica estilo <span>TOPIK I</span> con explicaciones en español</h1>
+      <p>Responde 5 preguntas de nivel básico y ve la explicación de cada una. Te sirve para medirte antes de presentar el TOPIK o de preparar tu aplicación a la Beca GKS.</p>
+    </section>
+
+    <!-- Anuncio 1 (arriba). Al pegar el código: <div class="ad-slot on"> -->
+    <div class="ad-slot">
+      <span class="ad-label">Publicidad</span>
+      <!-- código del bloque de anuncios de AdSense -->
+    </div>
+
+    <main class="cbt-card" id="quiz-box">
+      <div id="quiz-screen">
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        <div class="question-header">
+          <span id="q-score-status">Puntaje actual: 0 pts</span>
+          <span id="q-counter">Pregunta 1 de 5</span>
+        </div>
+        <div class="question-text" id="q-prompt">Cargando pregunta…</div>
+        <div class="korean-box" id="q-korean" lang="ko"></div>
+        <div class="options-list" id="options-container"></div>
+        <div class="explanation-box" id="explanation-box"></div>
+        <!-- Cada pregunta es una página propia (?q=), así cada una se puede compartir y medir -->
+        <a href="#" class="next-link-btn" id="next-link-btn">Siguiente pregunta →</a>
+      </div>
+
+      <div id="result-screen" class="result-screen">
+        <h2>Tu resultado del examen de práctica</h2>
+        <div class="score-circle" id="final-score">0 pts</div>
+        <p id="level-feedback" style="font-size:17px;font-weight:600;margin-bottom:12px"></p>
+
+        <!-- Anuncio 2 (resultado). Al pegar el código: <div class="ad-slot on"> -->
+        <div class="ad-slot">
+          <span class="ad-label">Publicidad</span>
+          <!-- código del bloque de anuncios de AdSense -->
+        </div>
+
+        <div class="cta-group">
+          <a href="?q=1&s=0#quiz-box" class="cta-btn cta-secondary">Repetir el examen</a>
+          <a href="/#g-coreano" class="cta-btn cta-primary">Ir a la galería Aprender coreano →</a>
+        </div>
+      </div>
+    </main>
+
+    <section class="seo-content">
+      <h2>¿Qué es el TOPIK?</h2>
+      <p>El TOPIK (Test of Proficiency in Korean) es el examen oficial de idioma coreano. Tiene dos partes: <strong>TOPIK I</strong> (niveles 1 y 2, básico) y <strong>TOPIK II</strong> (niveles 3 a 6, intermedio y avanzado). El nivel se asigna según tu puntaje total; no hay que elegirlo antes del examen.</p>
+      <h2>TOPIK, Beca GKS y estudiar en Corea</h2>
+      <p>Muchas universidades coreanas piden un nivel TOPIK para entrar a licenciatura o posgrado, y en la <strong>Beca GKS (Global Korea Scholarship)</strong> un certificado TOPIK vigente suma puntos en la evaluación. Para un curso de idioma en una universidad (visa D-4) normalmente no se exige TOPIK, pero te ayuda a entrar a un nivel más alto.</p>
+      <h2>Cómo usar este examen de práctica</h2>
+      <p>Estas preguntas son originales y siguen el estilo de la sección de vocabulario y gramática del TOPIK I. Úsalas para detectar qué repasar: partículas (에, 에서), conectores (그래서, 하지만) y tiempos verbales. Las fechas, sedes y costos del examen real cambian cada año; consúltalos en el sitio oficial <a href="https://www.topik.go.kr" target="_blank" rel="noopener">topik.go.kr</a> o con la Embajada de Corea en tu país.</p>
+      <p>¿Tienes dudas sobre el TOPIK o estudiar en Corea? Pregunta en la galería <a href="/#g-coreano">Aprender coreano</a> de GaleríaK.</p>
+    </section>
+
+    <!-- Anuncio 3 (abajo, lejos de los botones). Al pegar el código: <div class="ad-slot on"> -->
+    <div class="ad-slot">
+      <span class="ad-label">Publicidad</span>
+      <!-- código del bloque de anuncios de AdSense -->
+    </div>
+
+    <p class="disclaimer">Examen de práctica no oficial, con preguntas originales. GaleríaK no está afiliada al NIIED, organizador del TOPIK.</p>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        prompt: "1. Elige el verbo «ser» formal correcto para completar la presentación:",
+        korean: "안녕하세요? 저는 멕시코 사람(     ).",
+        options: ["입니다 (imnida)", "있습니다 (isseumnida)", "합니다 (hamnida)", "갑니다 (gamnida)"],
+        answer: 0,
+        explanation: "«입니다» equivale a «ser» en registro formal: 저는 멕시코 사람입니다 = Soy mexicano/a."
+      },
+      {
+        prompt: "2. Elige la partícula de lugar correcta cuando realizas una acción:",
+        korean: "저는 대학교 도서관(     ) 한국어를 공부해요.",
+        options: ["에 (e)", "에서 (eseo)", "를 (reul)", "하고 (hago)"],
+        answer: 1,
+        explanation: "Para el lugar donde haces una acción, como estudiar (공부하다), se usa «에서». «에» marca destino o ubicación sin acción."
+      },
+      {
+        prompt: "3. ¿Qué palabra completa la pregunta sobre el precio del libro?",
+        korean: "이 한국어 책은 (     )예요?",
+        options: ["누구 (¿quién?)", "언제 (¿cuándo?)", "얼마 (¿cuánto?)", "어디 (¿dónde?)"],
+        answer: 2,
+        explanation: "«얼마예요?» = «¿Cuánto cuesta?». Es una expresión básica que aparece mucho en el TOPIK I."
+      },
+      {
+        prompt: "4. Elige el conector que expresa causa y resultado:",
+        korean: "내일 TOPIK 시험이 있어요. (     ) 오늘 열심히 공부해요.",
+        options: ["그래서 (por eso)", "그러나 (sin embargo)", "그리고 (y además)", "하지만 (pero)"],
+        answer: 0,
+        explanation: "«그래서» une una causa (mañana hay examen) con su resultado (por eso hoy estudio mucho)."
+      },
+      {
+        prompt: "5. «작년» significa «el año pasado». Elige el tiempo verbal correcto:",
+        korean: "작년에 서울대학교 어학당에 (     ).",
+        options: ["갑니다 (voy)", "갔습니다 (fui)", "갈 겁니다 (iré)", "가고 싶어요 (quiero ir)"],
+        answer: 1,
+        explanation: "Con «작년» (el año pasado) el verbo 가다 va en pasado: 갔습니다."
+      }
+    ];
+
+    const pointsPerQuestion = Math.round(100 / questions.length);
+    const urlParams = new URLSearchParams(window.location.search);
+    const qParam = urlParams.get('q') || '1';
+    // El puntaje viaja en la URL: solo se aceptan valores posibles (0, 20, 40… 100)
+    let currentScore = parseInt(urlParams.get('s') || '0', 10);
+    if (!Number.isFinite(currentScore) || currentScore < 0 || currentScore > 100 || currentScore % pointsPerQuestion) currentScore = 0;
+    const basePath = window.location.pathname;
+
+    function initPage() {
+      if (qParam === 'result') { showResultScreen(); return; }
+
+      let qIndex = parseInt(qParam, 10) - 1;
+      if (isNaN(qIndex) || qIndex < 0 || qIndex >= questions.length) { qIndex = 0; currentScore = 0; }
+      if (currentScore > qIndex * pointsPerQuestion) currentScore = 0;
+
+      const q = questions[qIndex];
+      document.title = `Pregunta ${qIndex + 1} · Examen de coreano gratis | GaleríaK`;
+      document.getElementById("progress").style.width = ((qIndex + 1) / questions.length * 100) + "%";
+      document.getElementById("q-score-status").innerText = `Puntaje actual: ${currentScore} pts`;
+      document.getElementById("q-counter").innerText = `Pregunta ${qIndex + 1} de ${questions.length}`;
+      document.getElementById("q-prompt").innerText = q.prompt;
+      document.getElementById("q-korean").innerText = q.korean;
+
+      const container = document.getElementById("options-container");
+      container.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerText = opt;
+        btn.onclick = () => handleAnswer(idx, btn, qIndex);
+        container.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(selectedIdx, selectedBtn, qIndex) {
+      const q = questions[qIndex];
+      const buttons = document.querySelectorAll(".option-btn");
+      buttons.forEach(b => b.disabled = true);
+
+      let nextScore = currentScore;
+      if (selectedIdx === q.answer) {
+        selectedBtn.classList.add("correct");
+        nextScore += pointsPerQuestion;
+      } else {
+        selectedBtn.classList.add("wrong");
+        buttons[q.answer].classList.add("correct");
+      }
+
+      const expBox = document.getElementById("explanation-box");
+      expBox.innerHTML = "<strong>Explicación:</strong> ";
+      expBox.appendChild(document.createTextNode(q.explanation));
+      expBox.style.display = "block";
+
+      const nextBtn = document.getElementById("next-link-btn");
+      if (qIndex + 1 >= questions.length) {
+        nextBtn.href = `${basePath}?q=result&s=${nextScore}#quiz-box`;
+        nextBtn.innerText = "Ver mi resultado →";
+      } else {
+        nextBtn.href = `${basePath}?q=${qIndex + 2}&s=${nextScore}#quiz-box`;
+        nextBtn.innerText = `Siguiente pregunta (${qIndex + 2} de ${questions.length}) →`;
+      }
+      nextBtn.style.display = "block";
+    }
+
+    function showResultScreen() {
+      document.title = `Mi resultado: ${currentScore} pts · Examen de coreano gratis | GaleríaK`;
+      document.getElementById("quiz-screen").style.display = "none";
+      document.getElementById("result-screen").style.display = "block";
+      document.getElementById("final-score").innerText = `${currentScore} pts`;
+
+      const feedback = document.getElementById("level-feedback");
+      if (currentScore >= 80) {
+        feedback.innerText = "¡Excelente! Dominas lo básico de este nivel. El siguiente paso es practicar con exámenes TOPIK I completos, incluida la parte auditiva.";
+      } else if (currentScore >= 60) {
+        feedback.innerText = "¡Muy bien! Vas por buen camino. Repasa las partículas y los tiempos verbales y vuelve a intentarlo.";
+      } else {
+        feedback.innerText = "¡Buen intento! Te recomendamos repasar el vocabulario básico y repetir la práctica.";
+      }
+    }
+
+    initPage();
+  </script>
+</body>
+</html>

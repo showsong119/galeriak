@@ -139,7 +139,7 @@ footer a{margin:0 6px;text-decoration:underline}
 
 <footer>
   <div>
-    <a href="#reglas">Reglas</a> · <a href="#privacidad">Aviso de privacidad</a> · <a href="#galerias">Todas las galerías</a>
+    <a href="#reglas">Reglas</a> · <a href="#privacidad">Aviso de privacidad</a> · <a href="#galerias">Todas las galerías</a> · <a href="/examen-coreano/">Examen de coreano gratis</a>
   </div>
   <p>GaleríaK es una comunidad de fans no oficial. No está afiliada a ninguna agencia, artista ni marca. Los nombres de artistas y marcas pertenecen a sus dueños. Para usar la comunidad debes tener 13 años o más.</p>
   <p>Como Afiliado de Amazon, GaleríaK obtiene ingresos por las compras adscritas que cumplen los requisitos aplicables.</p>
@@ -330,9 +330,9 @@ async function side(){
 
 /* ---------------- vistas ---------------- */
 function nav(cur){
-  const items=[['home','Inicio'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y más'],['guias','Guías'],['galerias','Galerías']];
+  const items=[['home','Inicio'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y más'],['guias','Guías'],['/examen-coreano/','Examen de coreano'],['galerias','Galerías']];
   if(MYROLE==='admin')items.push(['admin','관리자']);
-  $('#nav').innerHTML=items.map(([h,n])=>`<a href="#${h}" class="${cur===h?'on':''}">${n}</a>`).join('');
+  $('#nav').innerHTML=items.map(([h,n])=>`<a href="${h[0]==='/'?h:'#'+h}" class="${cur===h?'on':''}">${n}</a>`).join('');
 }
 const galCard=g=>`<a class="gal" href="#g-${g.id}">${av(g)}<div><b>${esc(g.name)}</b><small>${esc(g.desc)}</small></div></a>`;
 const welcome=()=>ME?'':`<div class="card" style="background:var(--brand-soft);border-color:#f6c3d8"><b>¡Bienvenida, bienvenido a GaleríaK!</b> La comunidad en español de K-Beauty y K-Pop. <a href="#entrar" style="color:var(--brand);font-weight:700">Crea tu cuenta</a> para publicar, comentar y votar.</div>`;
