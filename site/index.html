@@ -154,7 +154,22 @@ const SUPABASE_KEY='sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const H=3600e3,D=24*H,HOT_DEAL=5,BEST=10,PAGE=20;
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+// lock sin bloqueo: en algunos navegadores móviles el candado de sesión (navigator.locks) se queda trabado
+// después de volver de Google y todas las consultas esperan para siempre.
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,lock:async(_n,_t,fn)=>fn()}});
+// Si algo falla o tarda, mostrar un aviso con opción de reparar en vez de quedarse en "Cargando…".
+function stuckBox(detail){
+  const m=document.querySelector('#main'); if(!m||!/Cargando/.test(m.innerText))return;
+  m.innerHTML='<div class="card empty"><p>La página tarda en cargar.</p><p><button class="btn btn-brand" id="fixReload">Reparar y recargar</button></p><p class="hint">Esto cierra tu sesión en este navegador y vuelve a cargar.</p>'+(detail?'<p class="hint" style="word-break:break-all">'+String(detail).replace(/[<>&]/g,'').slice(0,200)+'</p>':'')+'</div>';
+}
+window.addEventListener('error',e=>stuckBox(e.message));
+window.addEventListener('unhandledrejection',e=>stuckBox(e.reason&&e.reason.message||e.reason));
+setTimeout(()=>stuckBox('timeout'),9000);
+document.addEventListener('click',e=>{ if(!e.target.closest('#fixReload'))return;
+  try{Object.keys(localStorage).filter(k=>k.startsWith('sb-')).forEach(k=>localStorage.removeItem(k))}catch(_){}
+  try{navigator.serviceWorker&&navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()))}catch(_){}
+  location.replace(location.pathname+'#home'); setTimeout(()=>location.reload(),200);
+});
 let ME=null, MYNICK='', MYROLE='', myVotes=new Map();
 
 const CATS=[
