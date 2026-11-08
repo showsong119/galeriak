@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const BASE = 'https://galeriakmx.com';
+const VISIT_JS = "<script>/* contador de visitas anónimo */(function(){try{var k='gk_vid',v=localStorage.getItem(k);if(!v){v=(crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)}));localStorage.setItem(k,v)}fetch('https://pimuwxsazuzmgwhbrzbx.supabase.co/rest/v1/rpc/gk_registrar_visita',{method:'POST',headers:{'apikey':'sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn','Content-Type':'application/json'},body:JSON.stringify({p_visitante:v}),keepalive:true}).catch(function(){})}catch(e){}})();</script>";
 const MAX_POSTS = 1500;
 
 // ---------- utilidades ----------
@@ -67,6 +68,7 @@ ${body}
 </div>
 <footer>GaleríaK es una comunidad de fans no oficial. No está afiliada a ninguna agencia, artista ni marca. Las publicaciones son de sus autores.<br>
 <a href="/">Inicio</a> · <a href="/g/">Galerías</a> · <a href="/guias/">Guías</a> · <a href="/acerca/">Acerca de</a> · <a href="/contacto/">Contacto</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="mailto:galeriakmx@gmail.com">galeriakmx@gmail.com</a></footer>
+${VISIT_JS}
 </body>
 </html>
 `;
@@ -87,7 +89,7 @@ export function renderPost(p, g, comments, ctx) {
 <div class="crumb"><a href="/">Inicio</a> › <a href="/g/">Galerías</a> › <a href="/g/${g.id}/">${esc(g.name)}</a></div>
 <span class="cat">${esc(g.name)}</span>
 <h1>${esc(p.title)}</h1>
-<p class="meta">${esc(nick)} · ${fecha(p.created_at)} · ♥ ${p.up_count || 0} · 💬 ${comments.length}</p>
+<p class="meta">${esc(nick)} · ${fecha(p.created_at)} · 👁 ${p.views || 0} · ♥ ${p.up_count || 0} · 💬 ${comments.length}</p>
 <div class="pbody">${bodyHTML(p, ctx.url)}</div>
 ${p.deal_price ? `<p><b>Tienda:</b> ${esc(p.deal_store || '')} · revisa el precio actual en la tienda.</p>` : ''}
 <div class="btns"><a class="btnp" href="/#p-${p.id}">💬 Comentar o dar ♥</a><a class="btnp sec" href="/#g-${g.id}">Más de ${esc(g.name)}</a></div>
@@ -105,7 +107,7 @@ export function renderGallery(g, cat, posts, ctx) {
 <p class="big">${esc(g.desc)}. Comunidad en español para fans en México.</p>
 <div class="btns"><a class="btnp" href="/#g-${g.id}">Abrir la galería</a><a class="btnp sec" href="/#w-${g.id}">Escribir</a></div>
 <h2>Publicaciones recientes</h2>
-${posts.length ? `<ul class="list">${posts.slice(0, 50).map(p => `<li><a href="/p/${p.id}/">${esc(p.title)}</a><small>${esc(p.profiles?.nickname || p.anon_name || 'usuario')} · ${fecha(p.created_at)} · ♥ ${p.up_count || 0} · 💬 ${p.comment_count || 0}</small></li>`).join('')}</ul>` : '<p>Todavía no hay publicaciones. ¡Sé la primera persona en escribir!</p>'}
+${posts.length ? `<ul class="list">${posts.slice(0, 50).map(p => `<li><a href="/p/${p.id}/">${esc(p.title)}</a><small>${esc(p.profiles?.nickname || p.anon_name || 'usuario')} · ${fecha(p.created_at)} · 👁 ${p.views || 0} · ♥ ${p.up_count || 0} · 💬 ${p.comment_count || 0}</small></li>`).join('')}</ul>` : '<p>Todavía no hay publicaciones. ¡Sé la primera persona en escribir!</p>'}
 </article>`;
   return page({ title: `${g.name} – Galería de fans en español | GaleríaK`, desc: snippet(`${g.desc}. Comunidad de fans en español en México: publicaciones, reseñas y conversaciones sobre ${g.name}.`), canonical: url, robots: posts.length ? '' : 'noindex,follow', jsonld: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: g.name, description: g.desc, url, inLanguage: 'es-MX' }, body, css: ctx.css, adsense: ctx.adsense });
 }
@@ -130,7 +132,7 @@ async function rest(cfg, path) {
   return r.json();
 }
 async function fetchData(cfg) {
-  const posts = await rest(cfg, `posts?select=id,gallery_id,author_id,anon_name,title,body,deal_price,deal_store,up_count,comment_count,created_at,profiles(nickname)&is_deleted=eq.false&is_hidden=eq.false&gallery_id=neq.asistencia&order=created_at.desc&limit=${MAX_POSTS}`);
+  const posts = await rest(cfg, `posts?select=id,gallery_id,author_id,anon_name,title,body,deal_price,deal_store,views,up_count,comment_count,created_at,profiles(nickname)&is_deleted=eq.false&is_hidden=eq.false&gallery_id=neq.asistencia&order=created_at.desc&limit=${MAX_POSTS}`);
   let warned = new Set();
   try { (await rest(cfg, 'gk_advertencias?select=post_id&estado=eq.activa&limit=2000')).forEach(r => warned.add(+r.post_id)); } catch { /* aún no existe */ }
   const visible = posts.filter(p => !warned.has(+p.id));

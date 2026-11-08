@@ -67,8 +67,10 @@ def head(title, desc, url, extra='', og='/icons/icon-512.png'):
 <header class="top"><div class="top-in"><a class="logo" href="/">Galería<b>K</b></a><nav><a href="/guias/">Guías</a><a class="exam" href="/examen-coreano/">📝 Examen gratis<em>GRATIS</em></a></nav></div></header>
 """
 
+VISIT_JS = "<script>/* contador de visitas anónimo */(function(){try{var k='gk_vid',v=localStorage.getItem(k);if(!v){v=(crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)}));localStorage.setItem(k,v)}fetch('https://pimuwxsazuzmgwhbrzbx.supabase.co/rest/v1/rpc/gk_registrar_visita',{method:'POST',headers:{'apikey':'sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn','Content-Type':'application/json'},body:JSON.stringify({p_visitante:v}),keepalive:true}).catch(function(){})}catch(e){}})();</script>"
 FOOT = """<footer>GaleríaK es una comunidad de fans no oficial. No está afiliada a ninguna agencia, artista ni marca.<br>
 <a href="/">Inicio</a> · <a href="/guias/">Guías</a> · <a href="/acerca/">Acerca de</a> · <a href="/contacto/">Contacto</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="/#reglas">Reglas</a> · <a href="mailto:galeriakmx@gmail.com">galeriakmx@gmail.com</a></footer>
+""" + VISIT_JS + """
 </body>
 </html>
 """

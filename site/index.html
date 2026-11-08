@@ -70,6 +70,7 @@ nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:now
 .exambar{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:center;background:linear-gradient(120deg,#2f5bd8,#5a7bff);color:#fff;border:0}.exambar img{width:100%;height:auto;border-radius:12px;display:block}
 .exambar h2{color:#fff;font-size:22px;margin:0 0 4px}.exambar p{margin:0 0 10px;color:#e8eeff;font-size:14px}.exambar .go{display:inline-block;background:#ffd400;color:#17171c;font-weight:900;border-radius:999px;padding:9px 18px}.exambar .tag{display:inline-block;background:#ff7a00;color:#fff;font-weight:900;border-radius:999px;padding:2px 10px;font-size:12px;margin-bottom:6px}
 @media(max-width:700px){.exambar{grid-template-columns:1fr}.exambar img{max-height:170px;object-fit:cover}}
+.vbars{display:flex;align-items:flex-end;gap:3px;height:150px;border-bottom:1px solid var(--line);padding-top:6px}.vb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}.vb i{display:block;width:100%;min-height:2px;background:var(--brand);border-radius:4px 4px 0 0}.vb small{font-size:9px;color:var(--muted);margin-top:2px}
 .lv-lid{background:linear-gradient(90deg,#8e44ad,#e5317d);display:inline-flex;align-items:center;gap:3px;margin-left:3px}.lv-lid svg{width:12px;height:12px;flex:none}
 .row .t a.adv,.post h1.adv{color:#9a9aa6}.p-adv{background:#fff1d6;color:#a86400}.advbox{background:#fff6e5;border:1px solid #f5d39a;border-radius:12px;padding:10px 12px;margin:10px 0;font-size:14px}.lidbox{border-top:1px solid var(--line);margin-top:12px;background:#f7f0fb;border-radius:10px;padding:10px 12px}
 .lv-mgr{background:linear-gradient(90deg,#f5b400,#ff7a00);display:inline-flex;align-items:center;gap:3px;margin-left:3px}.lv-mgr svg{width:12px;height:12px;flex:none}.mgrs{font-size:12px;color:var(--muted);margin-top:4px}.mgrbox{border-top:1px solid var(--line);margin-top:12px;padding-top:10px;background:#fff8e6;border-radius:10px;padding:10px 12px}
@@ -330,12 +331,12 @@ function tags(p,showGal){
 function row(p,i,showGal){
   return `<li class="row"><span class="num">${p.is_pinned?'📌':(i==null?p.id:i)}</span><div class="t">${ADV.has(+p.id)?'<span class="pill p-adv" title="Comentarios pausados: en revisión del equipo">⚠️ En revisión</span>':''}${tags(p,showGal)}<a href="#p-${p.id}"${ADV.has(+p.id)?' class="adv"':''}>${esc(p.title)}</a>${p.comment_count?`<span class="cc">[${p.comment_count}]</span>`:''}
   ${priceShown(p)?` <span class="price">${esc(p.deal_price)}</span>`:''}
-  <div class="meta"><span>${nick(p)}</span><span>${ago(p.created_at)}</span></div></div><span class="up">♥ ${p.up_count}</span></li>`;
+  <div class="meta"><span>${nick(p)}</span><span>${ago(p.created_at)}</span><span title="Vistas">👁 ${p.views||0}</span></div></div><span class="up">♥ ${p.up_count}</span></li>`;
 }
 function listWithAds(arr,start,showGal){
   let h='<ul class="list">';arr.forEach((p,k)=>{h+=row(p,start==null?null:start+k,showGal);if(k===4&&arr.length>6)h+='</ul>'+ad('feed')+'<ul class="list">'});return h+'</ul>';
 }
-const SEL='id,gallery_id,author_id,title,created_at,up_count,down_count,comment_count,deal_price,deal_sold,is_pinned,is_sponsored,is_hidden,anon_name,profiles(nickname)';
+const SEL='id,gallery_id,author_id,title,created_at,views,up_count,down_count,comment_count,deal_price,deal_sold,is_pinned,is_sponsored,is_hidden,anon_name,profiles(nickname)';
 
 /* ---------------- sesión ---------------- */
 // La sesión nunca bloquea la página: si getSession tarda (pasa en móviles al volver de Google), seguimos sin ella.
@@ -389,6 +390,10 @@ async function side(){
 
 /* ---------------- vistas ---------------- */
 /* ---------------- recientes y favoritas (como "최근 방문 갤러리" de DC Inside) ---------------- */
+/* contador de visitas anónimo (solo el equipo ve las estadísticas) */
+let VID=null,lastVisit=0;
+function visitId(){if(VID)return VID;try{VID=localStorage.getItem('gk_vid');if(!VID){VID=(crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)}));localStorage.setItem('gk_vid',VID)}}catch(_){VID=null}return VID}
+function countVisit(){const now=Date.now();if(now-lastVisit<4000)return;lastVisit=now;const v=visitId();if(v)sb.rpc('gk_registrar_visita',{p_visitante:v}).then(()=>{},()=>{})}
 const LSJ={get(k){try{const v=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(v)?v:[]}catch(_){return []}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}};
 function visitGal(id){if(!G[id]||G[id].attend)return;const r=LSJ.get('gk_recent').filter(x=>x!==id);r.unshift(id);LSJ.set('gk_recent',r.slice(0,8))}
 const isFav=id=>LSJ.get('gk_favs').includes(id);
@@ -878,7 +883,7 @@ async function vPost(id){
    <a href="#g-${g.id}" class="hint">← ${esc(g.name)}</a>
    <h1${ADV.has(+p.id)?' class="adv"':''}>${ADV.has(+p.id)?'<span class="pill p-adv">⚠️ En revisión</span>':''}${tags(p,false)}${esc(p.title)}</h1>
    ${ADV.has(+p.id)?`<div class="advbox">⚠️ <b>Esta publicación recibió una advertencia</b> del líder de la galería (motivo: ${esc(ADV.get(+p.id).motivo)}). Los comentarios están pausados mientras el equipo de GaleríaK la revisa y decide si se elimina o se reactiva.</div>`:''}
-   <div class="pmeta"><span>${nick(p)}</span><span>${ago(p.created_at)}</span><span>👁 ${p.views||0}</span><span>♥ ${p.up_count}</span><span>💬 ${C.length}</span></div>
+   <div class="pmeta"><span>${nick(p)}</span><span>${ago(p.created_at)}</span><span title="Vistas">👁 ${(p.views||0)+1}</span><span>♥ ${p.up_count}</span><span>💬 ${C.length}</span></div>
    ${p.deal_price?`<div class="dealbox"><div><div class="hint">Precio</div><div class="price" style="font-size:20px">${priceShown(p)?esc(p.deal_price):'Revisa el precio actual'}</div></div><div><div class="hint">Tienda</div><b>${esc(p.deal_store)}</b></div><div style="margin-left:auto">${p.deal_sold?'<span class="pill p-sold">Agotado</span>':(safeUrl(p.deal_url)?`<a href="${esc(p.deal_url)}" target="_blank" rel="nofollow sponsored noopener">Ir a la oferta →</a>`:`<span class="hint">${esc(p.deal_url||'Sin enlace')}</span>`)}</div></div>`:''}
    <div class="body">${bodyHTML(p)}</div>
    ${p.source_url?`<div class="srcbox"><b>Fuente:</b> ${safeUrl(p.source_url)?`<a href="${esc(p.source_url)}" target="_blank" rel="nofollow noopener">${esc(p.source_url)}</a>`:esc(p.source_url)}</div>`:''}
@@ -1066,7 +1071,7 @@ async function vAdmin(){
   if(!ME)return '<div class="card empty">먼저 <a href="#entrar" style="color:var(--blue);font-weight:700">로그인</a>해 주세요.</div>';
   if(MYROLE!=='admin')return '<div class="card empty">관리자만 볼 수 있는 페이지입니다.</div>';
   document.title='관리자 – GaleríaK';
-  const TABS=[['review','검토 필요'],['reports','신고 내역'],['hidden','숨긴 글'],['users','사용자'],['managers','🛡️ 매니저·방장'],['avisos','⚠️ 방장 경고'],['salud','🩺 점검']];
+  const TABS=[['review','검토 필요'],['reports','신고 내역'],['hidden','숨긴 글'],['users','사용자'],['managers','🛡️ 매니저·방장'],['avisos','⚠️ 방장 경고'],['visitas','📊 방문자'],['salud','🩺 점검']];
   let body='';
   if(admTab==='review'){
     const {data,error}=await sb.from('posts').select(ADM_POST).eq('needs_review',true).order('created_at',{ascending:false}).limit(50);
@@ -1091,6 +1096,16 @@ async function vAdmin(){
     ]);
     if(ps.error)return fail(ps.error);if(cs.error)return fail(cs.error);
     body='<h3>글</h3>'+admList(ps.data,admPostRow,'숨긴 글이 없습니다.')+'<h3>댓글</h3>'+admList(cs.data,c=>'<li class="row"><div class="t"><a href="#p-'+c.post_id+'">'+esc(String(c.body).slice(0,120))+'</a><div class="meta"><span>'+nick(c)+'</span><span>'+ago(c.created_at)+'</span></div>'+admBox(admCmtBtn(c))+'</div></li>','숨긴 댓글이 없습니다.');
+  }else if(admTab==='visitas'){
+    const {data:st,error}=await sb.rpc('gk_estadisticas_visitas');
+    if(error)return '<div class="card"><h2>📊 방문자</h2><p>방문자 통계가 아직 켜지지 않았습니다. Supabase SQL Editor에서 <code>supabase/2026-11-09-visitas.sql</code>을 실행해 주세요.</p><p class="hint">'+esc(error.message||'')+'</p><p><button class="btn" data-admtab="review">← 관리자</button></p></div>';
+    const n=x=>Number(x||0).toLocaleString('ko-KR'),D=st.dias||[],mx=Math.max(1,...D.map(d=>d.visitantes));
+    const box=(t,v,sub)=>'<div class="mc-stat"><b>'+n(v)+'</b><span>'+t+(sub?'<br><small>'+sub+'</small>':'')+'</span></div>';
+    body='<p class="hint">방문자 = 그날 사이트를 연 브라우저 수(같은 사람이 여러 번 와도 1명). 조회 = 열어 본 페이지 수. 날짜는 멕시코시티 기준. 관리자만 볼 수 있어요.</p>'
+     +'<div class="mc-stats">'+box('오늘 방문자',st.hoy_visitantes,'페이지 조회 '+n(st.hoy_vistas))+box('어제 방문자',st.ayer_visitantes)+box('최근 7일 방문자',st.semana_visitantes)+box('최근 30일 방문자',st.mes_visitantes)+'</div>'
+     +'<div class="mc-stats">'+box('총 방문자(누적)',st.total_visitantes,st.desde?'집계 시작 '+st.desde:'')+box('총 방문(일별 합계)',st.total_visitas)+box('총 페이지 조회',st.total_vistas)+'</div>'
+     +'<h3 style="margin:14px 0 6px">최근 30일 방문자</h3><div class="vbars">'+D.map(d=>'<div class="vb" title="'+d.dia+' · 방문자 '+d.visitantes+' · 조회 '+d.vistas+'"><i style="height:'+Math.round(d.visitantes/mx*100)+'%"></i><small>'+(+d.dia.slice(8))+'</small></div>').join('')+'</div>'
+     +'<p class="hint" style="margin-top:8px">막대에 마우스를 올리면 날짜별 숫자가 보여요.</p>';
   }else if(admTab==='salud'){
     const ck=async(name,fn,fix)=>{try{const r=await fn();return {name,ok:r===true,info:typeof r==='string'?r:'',fix}}catch(e){return {name,ok:false,info:String(e&&e.message||e).slice(0,120),fix}}};
     const errOf=r=>{if(r.error)throw new Error(r.error.message);return true};
@@ -1104,6 +1119,7 @@ async function vAdmin(){
       ck('사진 권한 함수(gk_puede_fotos)',async()=>{const r=await sb.rpc('gk_puede_fotos');errOf(r);return true},F2),
       ck('방장 역할(rol)',async()=>errOf(await sb.from('gk_managers').select('rol').limit(1)),F3),
       ck('경고 표(gk_advertencias)',async()=>errOf(await sb.from('gk_advertencias').select('id').limit(1)),F3),
+      ck('방문자 통계(gk_estadisticas_visitas)',async()=>errOf(await sb.rpc('gk_estadisticas_visitas')),'2026-11-09-visitas.sql'),
       ck('정적 페이지(/g/, /p/)',async()=>{const r=await fetch('/g/skincare/',{cache:'no-store'});return r.ok||'아직 생성 전(최대 몇 분)'},'GitHub Actions'),
     ]);
     body='<p class="hint">각 기능이 실제 DB에서 켜졌는지 확인합니다. ❌가 있으면 오른쪽 파일을 Supabase SQL Editor에서 실행한 뒤 새로고침하세요. (전체 한 번에: <code>supabase/2026-11-08-TODO-en-orden.sql</code>)</p><ul class="list">'
@@ -1171,6 +1187,7 @@ async function route(){
   try{if(ME&&sessionStorage.getItem('gk_new')){sessionStorage.removeItem('gk_new');if(location.hash!=='#g-asistencia'){location.hash='#g-asistencia';return}}}catch(_){}
   const seq=++routeSeq;const raw=decodeURIComponent(location.hash.slice(1));const h=/^(access_token|error|type)=/.test(raw)?'home':(raw||'home');let m,html;
   document.title='GaleríaK – Comunidad de K-Beauty, K-Pop y ofertas en México';
+  countVisit();
   $('#main').innerHTML=loading();
   await Promise.all([loadAdv().catch(()=>{}),mgrReady]);
   try{

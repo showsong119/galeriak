@@ -48,6 +48,7 @@ footer a{color:var(--muted)}
   <li><strong>Actividad en la comunidad:</strong> asistencia diaria, puntos y nivel, favoritos y galerías recientes (estos dos últimos solo se guardan en tu navegador), y si el equipo te nombró líder o manager de una galería.</li>
   <li><strong>Moderación:</strong> reportes que haces (con su motivo), advertencias de líderes de galería y decisiones del equipo sobre publicaciones.</li>
   <li><strong>Mensajes:</strong> las consultas que envías al equipo desde la sección Mensajes del sitio y nuestras respuestas. Solo tú y el equipo de GaleríaK pueden leerlas.</li>
+  <li><strong>Contador de visitas:</strong> para saber cuántas personas visitan el sitio, tu navegador guarda un identificador aleatorio (no es tu nombre, correo ni cuenta) y registramos el día de la visita y cuántas páginas abriste. Solo el equipo ve los totales. Puedes borrarlo limpiando los datos del sitio en tu navegador.</li>
   <li><strong>Datos técnicos:</strong> dirección IP, tipo de navegador y dispositivo, y páginas visitadas, que registran de forma automática nuestros proveedores de alojamiento y publicidad.</li>
   <li><strong>Almacenamiento en tu navegador:</strong> guardamos en tu propio dispositivo tu sesión, preferencias y el avance del examen de coreano. Esta información no se envía a nuestros servidores.</li>
 </ul>
@@ -107,5 +108,6 @@ footer a{color:var(--muted)}
 <p>Si tienes cuenta, puedes escribirnos desde <a href="/#mensajes">Mensajes</a>. Correo de contacto: <a href="mailto:galeriakmx@gmail.com">galeriakmx@gmail.com</a>. Usa este correo para solicitudes de privacidad (derechos ARCO) y cualquier duda sobre esta política. Revisa también nuestros <a href="/terminos/">Términos y Condiciones</a>.</p>
 </main>
 <footer><a href="/">GaleríaK</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="/#reglas">Reglas de la comunidad</a> · <a href="/examen-coreano/">Examen de coreano gratis</a></footer>
+<script>/* contador de visitas anónimo */(function(){try{var k='gk_vid',v=localStorage.getItem(k);if(!v){v=(crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)}));localStorage.setItem(k,v)}fetch('https://pimuwxsazuzmgwhbrzbx.supabase.co/rest/v1/rpc/gk_registrar_visita',{method:'POST',headers:{'apikey':'sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn','Content-Type':'application/json'},body:JSON.stringify({p_visitante:v}),keepalive:true}).catch(function(){})}catch(e){}})();</script>
 </body>
 </html>
