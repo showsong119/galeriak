@@ -59,7 +59,7 @@ nav.main a.on{background:var(--ink);color:#fff}
 .lv1{background:#b8b8c2}.lv2{background:#6bbf8a}.lv3{background:#3aa0d8}.lv4{background:#2f5bd8}.lv5{background:#8a4fd8}.lv6{background:#e5317d}.lv7{background:linear-gradient(90deg,#f5a623,#e5317d)}.lv-adm{background:#17171c}
 .lvt{border-collapse:collapse;width:100%;max-width:520px;font-size:14px}.lvt th,.lvt td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left}
 .lvme{background:var(--brand-soft);border-radius:12px;padding:12px 14px;margin:10px 0}.lvbar{height:8px;background:#fff;border-radius:99px;overflow:hidden;margin:8px 0 4px}.lvbar i{display:block;height:100%;background:var(--brand)}
-.msgbtn{position:relative}.badge{position:absolute;top:-6px;right:-6px;background:var(--hot);color:#fff;font-size:10px;font-weight:800;border-radius:99px;padding:2px 5px;line-height:1}
+.msgbtn{position:relative;display:inline-flex;align-items:center;gap:6px;color:var(--ink)}.msgtxt{font-weight:600}@media(max-width:700px){.msgtxt{display:none}}.badge{position:absolute;top:-6px;right:-6px;background:var(--hot);color:#fff;font-size:10px;font-weight:800;border-radius:99px;padding:2px 5px;line-height:1}
 .row.unread .t a{font-weight:800}.row.unread .num{color:var(--brand)}
 .thread{display:flex;flex-direction:column;gap:10px;margin:14px 0}.bubble{border:1px solid var(--line);border-radius:12px;padding:10px 12px;max-width:88%}.bubble p{margin:6px 0 0;white-space:pre-wrap}
 .bubble.me{align-self:flex-end;background:#f6f8ff}.bubble.team{align-self:flex-start;background:var(--brand-soft)}.bubble .who{display:flex;gap:8px;align-items:center;font-size:13px}.bubble .who span:last-child{color:var(--muted)}.aviso-fin{font-size:20px;font-weight:700;color:var(--brand);margin-top:4px}
@@ -322,7 +322,7 @@ async function refreshSession(given){
   if(ME){fetchLevels([ME.id]).then(()=>{MYLV=LV.get(ME.id)||null;renderUserBox();refreshMsgBadge()}).catch(()=>{})}else MYLV=null;
 }
 function renderUserBox(){
-  $('#userBox').innerHTML=ME?`<a class="hint" href="#niveles" style="white-space:nowrap">Hola, <b>${esc(MYNICK)}</b> ${MYLV?lvBadge(MYLV):''}</a> <a class="btn msgbtn" href="#mensajes" title="Mensajes" aria-label="Mensajes">✉️<span class="badge" id="msgBadge" hidden>0</span></a> <button class="btn" id="logoutBtn">Salir</button>`:`<a class="btn" href="#entrar">Entrar</a>`;
+  $('#userBox').innerHTML=ME?`<a class="hint" href="#niveles" style="white-space:nowrap">Hola, <b>${esc(MYNICK)}</b> ${MYLV?lvBadge(MYLV):''}</a> <a class="btn msgbtn" href="#mensajes" title="Mensajes" aria-label="Mensajes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span class="msgtxt">Mensajes</span><span class="badge" id="msgBadge" hidden>0</span></a> <button class="btn" id="logoutBtn">Salir</button>`:`<a class="btn" href="#entrar">Entrar</a>`;
   const lo=$('#logoutBtn');if(lo)lo.onclick=async()=>{await sb.auth.signOut();await refreshSession();toast('Sesión cerrada');route()};
 }
 
