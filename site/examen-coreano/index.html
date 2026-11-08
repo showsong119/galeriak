@@ -182,6 +182,24 @@ h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
 footer{font-size:12px;color:var(--muted);text-align:center;padding-block:0 32px}
 footer a{color:var(--navy)}
 
+.guide{padding:28px;display:flex;flex-direction:column;gap:12px}
+.guide h2{font-size:21px}
+.guide h3{font-size:17px;margin-top:10px}
+.guide p,.guide li{color:var(--muted);font-size:15px;max-width:72ch;margin:0}
+.guide ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.guide strong{color:var(--ink)}
+.tbl{overflow-x:auto}
+.tbl table{border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums;width:100%}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left}
+.tbl th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tbl tr.tot td{font-weight:700}
+.tables{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+.err{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.err div{border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.err b{font-size:15px}
+.ex{font-family:var(--ko);font-size:16px;color:var(--ink)}
+.ex s{color:var(--bad)}
+@media (max-width:820px){.tables,.err{grid-template-columns:minmax(0,1fr)}.guide{padding:20px}}
 @media (max-width:820px){
   .intro,.res-top,.exam,.info,.two{grid-template-columns:minmax(0,1fr)}
   .side{position:static}
@@ -203,7 +221,7 @@ footer a{color:var(--navy)}
   </div>
 </header>
 <div class="wrap gut" id="page"></div>
-<footer class="gut">Prueba de práctica no oficial con preguntas originales. GaleríaK no está afiliada al NIIED ni al examen TOPIK. · <a href="/">Volver a GaleríaK</a></footer>
+<footer class="gut">Prueba de práctica no oficial con preguntas originales. GaleríaK no está afiliada al NIIED ni al examen TOPIK.<br><a href="/">GaleríaK</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="/#reglas">Reglas</a></footer>
 
 <script>
 /* ============ MONETIZACIÓN: solo edita esto ============
@@ -462,6 +480,57 @@ function vInicio(){
     <div><h2>TOPIK y la Beca GKS</h2><p>En la Beca GKS (Global Korea Scholarship) un certificado TOPIK vigente suma puntos en la evaluación, y muchas universidades coreanas piden un nivel mínimo para licenciatura y posgrado. Para un curso de idioma con visa D-4 normalmente no se exige.</p></div>
     <div><h2>Qué mide esta prueba</h2><p>Vocabulario y gramática (partículas, terminaciones, conectores), lectura de avisos, mensajes y textos de opinión, y comprensión auditiva de diálogos y anuncios. Las preguntas suben de nivel dentro de cada sección.</p></div>
     <div><h2>Fechas y costos del examen real</h2><p>Cambian cada año y por país. Consulta el calendario en el sitio oficial <a href="https://www.topik.go.kr" target="_blank" rel="noopener">topik.go.kr</a> o con la Embajada de Corea. Para dudas, pregunta en la galería <a href="/#g-coreano">Aprender coreano</a>.</p></div>
+  </section>
+  <section class="sheet guide" id="guia-topik">
+    <div class="eyebrow n">Guía del TOPIK</div>
+    <h2>Estructura, puntajes y niveles del TOPIK</h2>
+    <p>El TOPIK se presenta en dos exámenes separados. Eliges cuál presentar según tu nivel: TOPIK I si estás empezando y TOPIK II si ya tienes una base intermedia. No hay puntaje mínimo por sección: el nivel depende solo de tu puntaje total.</p>
+    <div class="tables">
+      <div class="tbl"><table>
+        <tr><th>TOPIK I</th><th>Preguntas</th><th>Tiempo</th><th>Puntos</th></tr>
+        <tr><td>Comprensión auditiva</td><td>30</td><td>40 min</td><td>100</td></tr>
+        <tr><td>Lectura</td><td>40</td><td>60 min</td><td>100</td></tr>
+        <tr class="tot"><td>Total</td><td>70</td><td>100 min</td><td>200</td></tr>
+        <tr><td colspan="4">Nivel 1: desde 80 puntos · Nivel 2: desde 140 puntos</td></tr>
+      </table></div>
+      <div class="tbl"><table>
+        <tr><th>TOPIK II</th><th>Preguntas</th><th>Tiempo</th><th>Puntos</th></tr>
+        <tr><td>Comprensión auditiva</td><td>50</td><td>60 min</td><td>100</td></tr>
+        <tr><td>Escritura</td><td>4</td><td>50 min</td><td>100</td></tr>
+        <tr><td>Lectura</td><td>50</td><td>70 min</td><td>100</td></tr>
+        <tr class="tot"><td>Total</td><td>104</td><td>180 min</td><td>300</td></tr>
+        <tr><td colspan="4">Nivel 3: 120 · Nivel 4: 150 · Nivel 5: 190 · Nivel 6: 230 puntos</td></tr>
+      </table></div>
+    </div>
+    <p>Si no alcanzas el puntaje mínimo (80 en TOPIK I o 120 en TOPIK II) no se emite certificado. El certificado tiene una vigencia de dos años. Formatos, fechas y costos pueden cambiar cada año: confírmalos en <a href="https://www.topik.go.kr" target="_blank" rel="noopener" style="color:var(--navy);font-weight:600">topik.go.kr</a>.</p>
+
+    <h3>Consejos para la comprensión auditiva</h3>
+    <ul>
+      <li><strong>Lee las opciones antes del audio.</strong> Así sabes si debes buscar un lugar, una hora, un precio o la opinión de alguien.</li>
+      <li><strong>Identifica quién habla y dónde está.</strong> Muchas preguntas de TOPIK I se resuelven al reconocer la situación: una tienda, un banco, una estación o una oficina.</li>
+      <li><strong>Practica números coreanos y sino-coreanos.</strong> Las horas (세 시 반), los precios (삼만 오천 원) y las fechas aparecen en casi todos los exámenes.</li>
+      <li><strong>No te quedes atorado.</strong> Si una pregunta se te fue, marca tu mejor opción y concéntrate en el siguiente audio.</li>
+    </ul>
+
+    <h3>Consejos para la lectura</h3>
+    <ul>
+      <li><strong>Administra el tiempo.</strong> En TOPIK I tienes unos 90 segundos por pregunta. Las primeras son avisos y mensajes cortos; deja más tiempo para los textos largos del final.</li>
+      <li><strong>Lee primero la pregunta.</strong> Después busca en el texto solo la parte que la responde, en lugar de traducir palabra por palabra.</li>
+      <li><strong>Fíjate en los conectores.</strong> 그래서 (por eso), 그런데 (pero / por cierto), 하지만 (sin embargo) y 그러므로 (por lo tanto) indican el orden de las oraciones y la idea principal.</li>
+    </ul>
+
+    <h3>Escritura en TOPIK II</h3>
+    <p>La sección de escritura tiene cuatro preguntas: dos de completar oraciones (51 y 52), una descripción de una gráfica o datos de 200 a 300 caracteres (53) y un ensayo de opinión de 600 a 700 caracteres (54). Usa el estilo escrito en -다 (예: 증가했다, 필요하다) y no el estilo conversacional en -요.</p>
+
+    <h3>Errores frecuentes de los hispanohablantes</h3>
+    <div class="err">
+      <div><b>은/는 frente a 이/가</b><p>El español no tiene marcador de tema. 은/는 presenta el tema o marca contraste; 이/가 señala el sujeto o la información nueva que se pregunta.</p><span class="ex">누가 왔어요? → 민수가 왔어요. (<s>민수는</s>)</span></div>
+      <div><b>에 frente a 에서</b><p>Los dos se traducen como «en». 에 indica dónde está algo o hacia dónde vas; 에서 indica dónde ocurre una acción.</p><span class="ex">집에 있어요. / 집에서 공부해요.</span></div>
+      <div><b>Adjetivos que se conjugan como verbos</b><p>En coreano los adjetivos se conjugan solos; no se usa 이다 («ser») con ellos.</p><span class="ex">이 가방은 예뻐요. (<s>예쁘입니다</s>)</span></div>
+      <div><b>El verbo va al final</b><p>El orden básico es sujeto, objeto y verbo. Las partículas, y no la posición, dicen quién hace qué.</p><span class="ex">저는 커피를 마셔요. (yo · café · bebo)</span></div>
+      <div><b>Niveles de cortesía</b><p>No basta con tú y usted: está el formal (-ㅂ니다), el cortés (-아요/어요) y el informal (-아/어). En el examen predominan el formal y el cortés.</p><span class="ex">감사합니다 · 고마워요 · 고마워</span></div>
+      <div><b>Consonantes que en español suenan igual</b><p>El coreano distingue consonantes simples, aspiradas y tensas. Practica pares como estos para no confundirlas al escuchar.</p><span class="ex">불 (fuego) · 풀 (pasto) · 뿔 (cuerno)</span></div>
+    </div>
   </section>
   ${ad("infeed")}
   <section class="sheet faq">

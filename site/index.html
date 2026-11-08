@@ -139,7 +139,7 @@ footer a{margin:0 6px;text-decoration:underline}
 
 <footer>
   <div>
-    <a href="#reglas">Reglas</a> · <a href="#privacidad">Aviso de privacidad</a> · <a href="#galerias">Todas las galerías</a> · <a href="/examen-coreano/">Examen de coreano gratis</a>
+    <a href="#reglas">Reglas</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="#galerias">Todas las galerías</a> · <a href="/examen-coreano/">Examen de coreano gratis</a>
   </div>
   <p>GaleríaK es una comunidad de fans no oficial. No está afiliada a ninguna agencia, artista ni marca. Los nombres de artistas y marcas pertenecen a sus dueños. Para usar la comunidad debes tener 13 años o más.</p>
   <p>Como Afiliado de Amazon, GaleríaK obtiene ingresos por las compras adscritas que cumplen los requisitos aplicables.</p>
@@ -430,7 +430,7 @@ function vAuth(){
     ${authMode==='up'?`<div class="f"><label>Apodo (visible para todos)</label><input id="anick" maxlength="20" minlength="2" required></div>`:''}
     <div class="f"><label>Correo</label><input id="amail" type="email" required autocomplete="email"></div>
     ${authMode==='reset'?'<p class="hint">Te enviaremos un enlace para crear una contraseña nueva.</p>':`<div class="f"><label>Contraseña</label><input id="apass" type="password" minlength="8" required autocomplete="${authMode==='up'?'new-password':'current-password'}"><div class="hint">Mínimo 8 caracteres.</div></div>`}
-    ${authMode==='up'?`<div class="f"><label style="font-weight:400"><input type="checkbox" id="aage" style="width:auto"> Tengo 13 años o más y acepto las <a href="#reglas" style="color:var(--blue)">reglas</a> y el <a href="#privacidad" style="color:var(--blue)">aviso de privacidad</a>.</label></div>`:''}
+    ${authMode==='up'?`<div class="f"><label style="font-weight:400"><input type="checkbox" id="aage" style="width:auto"> Tengo 13 años o más y acepto las <a href="#reglas" style="color:var(--blue)">reglas</a> y el <a href="/privacidad/" style="color:var(--blue)">aviso de privacidad</a>.</label></div>`:''}
     <div class="err" id="aerr"></div>
     <button class="btn btn-brand" style="width:100%">${authMode==='up'?'Crear cuenta':authMode==='reset'?'Enviar enlace':'Entrar'}</button>
    </form>${authMode==='in'?'<div class="post-actions" style="margin-top:8px"><button data-auth="reset">¿Olvidaste tu contraseña?</button></div>':''}</div>`;
@@ -457,11 +457,7 @@ function vRules(){nav('');return `<div class="card article"><h1>Reglas de Galer�
 <h2>8. Contenido para todo público</h2><p>Sin contenido sexual, violento ni de odio. Muchos fans son menores de edad.</p>
 <h2>Moderación</h2><p>Las publicaciones con varios reportes pasan a revisión del equipo.</p>
 <h2>Publicidad y enlaces de afiliado</h2><p>GaleríaK muestra anuncios y puede usar enlaces de afiliado en algunas ofertas. Si una publicación es patrocinada, se indica claramente.</p></div>`}
-function vPrivacy(){nav('');return `<div class="card article"><h1>Aviso de privacidad</h1><p><b>Borrador para revisar con un profesional antes de lanzar.</b></p>
-<p>GaleríaK recopila el apodo que elijas, lo que publicas y datos técnicos básicos (como cookies de publicidad y estadísticas) para operar el sitio y mostrar anuncios.</p>
-<p>Usamos servicios de terceros como Google AdSense, que pueden usar cookies para mostrar anuncios. Puedes configurar tus preferencias en tu navegador.</p>
-<p>Puedes pedir el acceso, corrección o eliminación de tus datos escribiendo al correo de contacto del sitio.</p>
-<p>Para usar la comunidad debes tener 13 años o más.</p></div>`}
+function vPrivacy(){location.replace('/privacidad/');return '<div class="card empty">Abriendo la política de privacidad…</div>'}
 
 function vNotFound(m){nav('');return `<div class="card empty">${esc(m||'Página no encontrada.')} <a href="#home" style="color:var(--blue)">Ir al inicio</a></div>`}
 
