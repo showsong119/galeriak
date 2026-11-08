@@ -60,6 +60,9 @@ nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:now
 .lv1{background:#b8b8c2}.lv2{background:#6bbf8a}.lv3{background:#3aa0d8}.lv4{background:#2f5bd8}.lv5{background:#8a4fd8}.lv6{background:#e5317d}.lv7{background:linear-gradient(90deg,#f5a623,#e5317d)}.lv-adm{background:#17171c}
 .lvt{border-collapse:collapse;width:100%;max-width:520px;font-size:14px}.lvt th,.lvt td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left}
 .lvme{background:var(--brand-soft);border-radius:12px;padding:12px 14px;margin:10px 0}.lvbar{height:8px;background:#fff;border-radius:99px;overflow:hidden;margin:8px 0 4px}.lvbar i{display:block;height:100%;background:var(--brand)}
+.mc-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.mc-head h1{margin:0;font-size:22px}.mc-big{font-size:30px;font-weight:800;color:var(--brand);line-height:1.1}
+.mc-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:12px 0}.mc-stat{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}.mc-stat b{display:block;font-size:22px}.mc-stat span{font-size:12px;color:var(--muted)}.mc-stat.heart b{color:var(--hot)}
+.lvme .lvbar{height:12px}.mc-next{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
 .msgbtn{position:relative;display:inline-flex;align-items:center;gap:6px;color:var(--ink)}.msgtxt{font-weight:600}@media(max-width:700px){.msgtxt{display:none}}.badge{position:absolute;top:-6px;right:-6px;background:var(--hot);color:#fff;font-size:10px;font-weight:800;border-radius:99px;padding:2px 5px;line-height:1}
 .row.unread .t a{font-weight:800}.row.unread .num{color:var(--brand)}
 .thread{display:flex;flex-direction:column;gap:10px;margin:14px 0}.bubble{border:1px solid var(--line);border-radius:12px;padding:10px 12px;max-width:88%}.bubble p{margin:6px 0 0;white-space:pre-wrap}
@@ -327,7 +330,7 @@ async function refreshSession(given){
   if(ME){fetchLevels([ME.id]).then(()=>{MYLV=LV.get(ME.id)||null;renderUserBox();refreshMsgBadge()}).catch(()=>{})}else MYLV=null;
 }
 function renderUserBox(){
-  $('#userBox').innerHTML=ME?`<a class="hint" href="#niveles" style="white-space:nowrap">Hola, <b>${esc(MYNICK)}</b> ${MYLV?lvBadge(MYLV):''}</a> <a class="btn msgbtn" href="#mensajes" title="Mensajes" aria-label="Mensajes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span class="msgtxt">Mensajes</span><span class="badge" id="msgBadge" hidden>0</span></a> <button class="btn" id="logoutBtn">Salir</button>`:`<a class="btn" href="#entrar">Entrar</a>`;
+  $('#userBox').innerHTML=ME?`<a class="hint" href="#mi-cuenta" title="Mi cuenta: puntos, nivel y ♥ recibidos" style="white-space:nowrap">Hola, <b>${esc(MYNICK)}</b> ${MYLV?lvBadge(MYLV):''}</a> <a class="btn msgbtn" href="#mensajes" title="Mensajes" aria-label="Mensajes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span class="msgtxt">Mensajes</span><span class="badge" id="msgBadge" hidden>0</span></a> <button class="btn" id="logoutBtn">Salir</button>`:`<a class="btn" href="#entrar">Entrar</a>`;
   const lo=$('#logoutBtn');if(lo)lo.onclick=async()=>{await sb.auth.signOut();await refreshSession();toast('Sesión cerrada');route()};
 }
 
@@ -514,6 +517,51 @@ function vNiveles(){
   <table class="lvt"><tr><th>Nivel</th><th>Nombre</th><th>Puntos</th></tr>${LEVELS.map(([n,min,name])=>`<tr><td>${lvBadge({puntos:min})}</td><td>${name}</td><td>${min.toLocaleString('es-MX')}+</td></tr>`).join('')}
    <tr><td><span class="lv lv-adm">Admin</span></td><td>Equipo de GaleríaK</td><td>—</td></tr><tr><td><span class="pill p-gal">Bot</span></td><td>Bot de ofertas automático</td><td>—</td></tr></table>
   <h2>Avisos fijos</h2><p>Solo el equipo de GaleríaK puede publicar avisos fijos (📌) en las galerías.</p></div>`;
+}
+
+/* ---------------- mi cuenta: puntos, nivel, ♥ recibidos ---------------- */
+async function vMiCuenta(){
+  nav('');document.title='Mi cuenta – GaleríaK';
+  if(!ME)return `<div class="card empty"><p>Inicia sesión para ver tus puntos y tu nivel.</p><p><a class="btn btn-brand" href="#entrar">Entrar</a></p></div>`;
+  LV.delete(ME.id);await fetchLevels([ME.id]);MYLV=LV.get(ME.id)||MYLV;
+  const [pr,cr]=await Promise.all([
+    sb.from('posts').select('id,gallery_id,title,up_count,comment_count,created_at').eq('author_id',ME.id).eq('is_deleted',false).eq('is_hidden',false).order('up_count',{ascending:false}).order('created_at',{ascending:false}).limit(1000),
+    sb.from('comments').select('id',{count:'exact',head:true}).eq('author_id',ME.id).eq('is_deleted',false).eq('is_hidden',false)
+  ]);
+  if(pr.error)return fail(pr.error);
+  const posts=pr.data||[],nPosts=posts.length,nCom=cr.count||0,hearts=posts.reduce((a,p)=>a+(p.up_count||0),0);
+  const days=Math.min(365,Math.max(0,Math.floor((Date.now()-new Date(ME.created_at).getTime())/D)));
+  const calc=nPosts*10+nCom*3+hearts*2+days;
+  const pts=MYLV&&!LV_OFF?MYLV.puntos:calc, adm=MYLV&&MYLV.admin;
+  const lv=levelOf(pts),next=LEVELS.find(x=>x[1]>pts),pct=next?Math.min(100,Math.round((pts-lv[1])/(next[1]-lv[1])*100)):100;
+  const n=x=>Number(x).toLocaleString('es-MX');
+  const top=posts.filter(p=>p.up_count>0).slice(0,5);
+  return `<div class="card">
+   <div class="mc-head"><h1>${esc(MYNICK||'Mi cuenta')}</h1>${adm?'<span class="lv lv-adm">Admin</span>':lvBadge({puntos:pts})}<span class="hint">Miembro desde ${new Date(ME.created_at).toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'})}</span></div>
+   <div class="lvme">
+    <div class="hint">Mis puntos</div><div class="mc-big">${n(pts)} pts</div>
+    <div style="margin-top:6px">Mi nivel: ${lvBadge({puntos:pts})} <b>Lv.${lv[0]} · ${lv[2]}</b>${adm?' <span class="hint">(en el sitio apareces como Admin)</span>':''}</div>
+    ${next?`<div class="lvbar"><i style="width:${pct}%"></i></div><div class="mc-next"><span>Lv.${lv[0]} · ${n(lv[1])}</span><span>${pct}%</span><span>Lv.${next[0]} · ${n(next[1])}</span></div>
+    <div style="margin-top:6px">Te faltan <b>${n(next[1]-pts)} puntos</b> para <b>Lv.${next[0]} · ${next[2]}</b>.</div>`:'<div style="margin-top:6px"><b>¡Llegaste al nivel máximo!</b></div>'}
+   </div>
+   <div class="mc-stats">
+    <div class="mc-stat heart"><b>♥ ${n(hearts)}</b><span>Me gusta recibidos</span></div>
+    <div class="mc-stat"><b>${n(nPosts)}</b><span>Publicaciones</span></div>
+    <div class="mc-stat"><b>${n(nCom)}</b><span>Comentarios</span></div>
+    <div class="mc-stat"><b>${n(days)}</b><span>Días en GaleríaK</span></div>
+   </div>
+   <h2>Cómo se forman tus puntos</h2>
+   <table class="lvt"><tr><th>Actividad</th><th>Cantidad</th><th>Puntos</th></tr>
+    <tr><td>Publicaciones (+10)</td><td>${n(nPosts)}</td><td>${n(nPosts*10)}</td></tr>
+    <tr><td>Comentarios (+3)</td><td>${n(nCom)}</td><td>${n(nCom*3)}</td></tr>
+    <tr><td>♥ recibidos (+2)</td><td>${n(hearts)}</td><td>${n(hearts*2)}</td></tr>
+    <tr><td>Días desde tu registro (+1, máx. 365)</td><td>${n(days)}</td><td>${n(days)}</td></tr>
+    <tr><th>Total</th><th></th><th>${n(calc)}</th></tr></table>
+   ${calc!==pts?`<p class="hint">Tus puntos oficiales (${n(pts)}) se calculan en el servidor y pueden variar un poco respecto a esta tabla.</p>`:''}
+   <p class="hint">Se actualiza al abrir esta página. Las publicaciones y comentarios ocultos o eliminados no cuentan. <a href="#niveles" style="color:var(--blue)">Ver tabla de niveles</a></p>
+  </div>
+  <div class="card"><h2>♥ Mis publicaciones con más me gusta</h2>${top.length?`<ol class="list best">${top.map((p,i)=>`<li class="row"><span class="num ${i<3?'top':''}">${i+1}</span><div class="t"><a href="#p-${p.id}">${esc(p.title)}</a>${p.comment_count?`<span class="cc">[${p.comment_count}]</span>`:''}<div class="meta"><span>${esc((G[p.gallery_id]||{name:p.gallery_id}).name)}</span><span>♥ ${p.up_count}</span><span>${ago(p.created_at)}</span></div></div></li>`).join('')}</ol>`:`<div class="empty">Tus publicaciones todavía no tienen ♥. <a href="#galerias" style="color:var(--blue)">Publica algo</a> y compártelo.</div>`}</div>
+  <div class="card"><a href="#mensajes" style="color:var(--blue)">✉️ Mis mensajes con el equipo</a></div>`;
 }
 
 /* ---------------- mensajes (consultas al equipo, estilo 쪽지) ---------------- */
@@ -794,6 +842,7 @@ async function route(){
     else if(h==='mensajes')html=await vMensajes();
     else if(m=h.match(/^mensaje-(\d+)$/))html=await vHilo(+m[1]);
     else if(h==='niveles')html=vNiveles();
+    else if(h==='mi-cuenta')html=await vMiCuenta();
     else if(h==='entrar')html=vAuth();
     else if(h==='admin')html=await vAdmin();
     else if(h==='nueva-clave')html=vNewPass();
