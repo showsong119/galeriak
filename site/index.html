@@ -54,6 +54,7 @@ nav.main a.on{background:var(--ink);color:#fff}
 .row .meta{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;margin-top:2px}
 .row .up{flex:none;font-size:12px;font-weight:700;color:var(--brand);width:38px;text-align:right}
 .pill{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;margin-right:4px;vertical-align:1px}
+.aviso-row{background:#f6f8ff}.aviso-fin{font-size:20px;font-weight:700;color:var(--brand);margin-top:4px}
 .p-hot{background:#ffe7e2;color:var(--hot)}.p-pin{background:#e8eefc;color:var(--blue)}.p-gal{background:#f1f1f4;color:#555}.p-sold{background:#eee;color:#888}.p-best{background:var(--brand-soft);color:var(--brand)}
 .price{font-weight:800;color:var(--hot)}
 .galgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
@@ -373,9 +374,93 @@ async function vGal(gid){
   const pages=Math.max(1,Math.ceil((count||0)/PAGE));const P=pins.data||[];
   return ad('leader')+`<div class="card"><div class="gh">${av(g)}<div><h1>${esc(g.name)}</h1><p>${esc(g.desc)}</p></div><a class="btn btn-brand write" href="#w-${g.id}">Escribir</a></div>
   <div class="tabs"><button data-tab="all" class="${galTab==='all'?'on':''}">Todo</button><button data-tab="best" class="${galTab==='best'?'on':''}">${g.deal?'🔥 Calientes':'⭐ Destacados'}</button></div>
-  ${P.length?'<ul class="list">'+P.map(p=>row(p,0,false)).join('')+'</ul>':''}
+  <ul class="list">${avisoRow(g)}${P.map(p=>row(p,0,false)).join('')}</ul>
   ${data.length?listWithAds(data,null,false):'<div class="empty">Todavía no hay publicaciones aquí. ¡Sé la primera persona en escribir!</div>'}
   ${pages>1?`<div class="pager">${Array.from({length:Math.min(pages,10)},(_,i)=>`<button data-page="${i+1}" class="${galPage===i+1?'on':''}">${i+1}</button>`).join('')}</div>`:''}</div>`;
+}
+/* ---------------- avisos fijos por galería (📌 Aviso) ---------------- */
+const AVISO_TIPO={skincare:'beauty',maquillaje:'beauty',resenas:'resenas','idol-picks':'idol',ofertas:'ofertas',kdramas:'kdrama',viajes:'viajes',coreano:'coreano',libre:'libre',solicitudes:'solicitudes'};
+const AVISO_ESP={
+ beauty:g=>`<h2>Antes de publicar en ${g}</h2><ul>
+  <li>Comparte tu experiencia real: tu tipo de piel, cuánto tiempo usaste el producto y qué resultado tuviste.</li>
+  <li>Esto no es una consulta médica. No recomiendes medicamentos ni tratamientos para acné, rosácea, dermatitis u otras condiciones: sugiere ver a un dermatólogo.</li>
+  <li>Recuerda a quien pregunta hacer una prueba en una zona pequeña antes de usar un producto nuevo.</li>
+  <li>Si preguntas por un producto, incluye una foto de la etiqueta o el nombre completo para que te puedan ayudar mejor.</li></ul>`,
+ resenas:g=>`<h2>Cómo escribir una reseña en ${g}</h2><ul>
+  <li>Reseña solo productos que hayas usado tú, idealmente por al menos dos semanas.</li>
+  <li>Incluye tu tipo de piel, dónde lo compraste, lo que te gustó y lo que no.</li>
+  <li>Si el producto te lo regalaron o te pagaron por reseñarlo, dilo al inicio. Las reseñas patrocinadas sin aviso se eliminan.</li>
+  <li>Usa tus propias fotos. Si dudas de que tu producto sea original, revisa la <a href="#guia-original">guía para detectar originales</a>.</li></ul>`,
+ idol:g=>`<h2>Regla principal de ${g}: siempre con fuente</h2><ul>
+  <li>Para decir que un idol usa o recomienda un producto necesitas un enlace verificable: una entrevista, una publicación oficial o un video del propio artista.</li>
+  <li>Las publicaciones sin fuente o con rumores se ocultan.</li>
+  <li>No subas fotos de idols tomadas de otras cuentas; comparte el enlace a la publicación original.</li>
+  <li>No se permiten anuncios ni ventas disfrazadas de recomendación.</li></ul>`,
+ ofertas:g=>`<h2>Cómo publicar una oferta en ${g}</h2><ul>
+  <li>Incluye siempre el <b>precio</b>, la <b>tienda</b> y el <b>enlace directo</b> al producto.</li>
+  <li>Solo ofertas reales y disponibles en México. Revisa que el vendedor sea confiable antes de compartir.</li>
+  <li>Si una oferta se agota o cambia de precio, avisa en los comentarios o márcala como agotada.</li>
+  <li>Los precios cambian rápido: el precio publicado es el del momento en que se compartió. Verifica el precio final antes de comprar.</li>
+  <li>No se permiten códigos de referido, autopromoción no declarada ni productos de imitación.</li>
+  <li>Algunas ofertas pueden incluir enlaces de afiliado de GaleríaK; se indica en el sitio.</li></ul>`,
+ kpop:g=>`<h2>Bienvenida a la galería de ${g}</h2><ul>
+  <li>Esta es una galería de fans <b>no oficial</b>. No está afiliada al grupo ni a su agencia.</li>
+  <li>Prohibido compartir horarios privados, vuelos, direcciones, teléfonos o cualquier contenido tipo sasaeng.</li>
+  <li>Nada de fan wars ni ataques a otros grupos, integrantes o fans.</li>
+  <li>No compartas filtraciones, música pirata ni contenido de pago sin permiso. Comparte enlaces oficiales.</li>
+  <li>Las noticias y rumores deben incluir su fuente.</li></ul>`,
+ kdrama:g=>`<h2>Reglas de ${g}</h2><ul>
+  <li><b>Sin spoilers en el título.</b> Si tu publicación tiene spoilers, empieza el título con [Spoiler] e indica el capítulo.</li>
+  <li>Comparte dónde ver los dramas solo en plataformas legales.</li>
+  <li>Respeta las opiniones distintas sobre actores, finales y parejas.</li></ul>`,
+ viajes:g=>`<h2>Antes de publicar en ${g}</h2><ul>
+  <li>Comparte experiencias y consejos prácticos: compras, transporte, tax free, lugares.</li>
+  <li>Requisitos de entrada, visas y reglas aduanales cambian: confírmalos siempre en fuentes oficiales, como la Embajada de Corea.</li>
+  <li>No publiques tu pasaporte, boletos, reservaciones ni datos personales.</li>
+  <li>No se permite vender servicios de viaje ni compras por encargo sin autorización del equipo.</li></ul>`,
+ coreano:g=>`<h2>Bienvenida a ${g}</h2><ul>
+  <li>Pregunta sin miedo: aquí todos estamos aprendiendo. Escribe la frase en hangul si puedes.</li>
+  <li>Al corregir a alguien, explica la regla con amabilidad.</li>
+  <li>¿Buscas intercambio de idiomas? No publiques tu teléfono ni redes personales en abierto; usa los comentarios con precaución.</li>
+  <li>Mide tu nivel con el <a href="/examen-coreano/">examen de coreano gratis</a> y revisa las <a href="/guias/">guías</a> de hangul y frases útiles.</li></ul>`,
+ libre:g=>`<h2>Sobre ${g}</h2><ul>
+  <li>Aquí puedes hablar de todo un poco, siempre con respeto.</li>
+  <li>Si tu tema tiene una galería propia (ofertas, skincare, un grupo), publícalo allá para que más gente lo vea.</li>
+  <li>No se permite política partidista agresiva, contenido para adultos ni cadenas o spam.</li></ul>`,
+ solicitudes:g=>`<h2>Cómo pedir una nueva galería</h2><ul>
+  <li>Escribe en el título el nombre del grupo, artista, drama o marca que quieres.</li>
+  <li>Revisa antes en <a href="#galerias">Todas las galerías</a> que no exista.</li>
+  <li>Si ya alguien la pidió, deja tu ♥ en esa publicación en lugar de crear otra.</li>
+  <li>Abrimos nuevas galerías según la cantidad de solicitudes y de actividad.</li></ul>`
+};
+function avisoHTML(g){
+  const tipo=AVISO_TIPO[g.id]||(g.cat==='kpop'?'kpop':'libre'),nm=esc(g.name);
+  const niveles=g.deal?`<li><b>Publicación normal:</b> toda oferta nueva aparece en la lista.</li>
+  <li><span class="pill p-hot">🔥 Caliente</span> con ${HOT_DEAL} o más ♥ de la comunidad. Aparece en la pestaña <b>Calientes</b> y en el inicio.</li>
+  <li><span class="pill p-sold">Agotado</span> cuando la oferta ya no está disponible.</li>`
+  :`<li><b>Publicación normal:</b> todo lo que publicas aparece en la lista de la galería.</li>
+  <li><span class="pill p-best">Destacado</span> con ${BEST} o más ♥ de la comunidad. Aparece en la pestaña <b>Destacados</b> y en la página de <a href="#mejores">Destacados</a> de todo el sitio.</li>`;
+  return `<p>Este aviso explica las reglas de esta galería y cómo funcionan los niveles de las publicaciones. Léelo antes de escribir.</p>
+  ${AVISO_ESP[tipo](nm)}
+  <h2>Niveles de las publicaciones</h2><ul>${niveles}
+  <li><span class="pill p-pin">Aviso</span> publicaciones fijadas por el equipo de GaleríaK.</li>
+  <li><b>En revisión:</b> las publicaciones con varios reportes se revisan y pueden ocultarse si incumplen las reglas.</li></ul>
+  <h2>Reglas para toda la comunidad</h2><ul>
+  <li>Respeto ante todo: nada de insultos, acoso ni discriminación.</li>
+  <li>No publiques datos personales tuyos ni de otras personas.</li>
+  <li>Sin contenido sexual, violento o de odio: muchas personas de la comunidad son menores de edad.</li>
+  <li>Respeta los derechos de autor: comparte enlaces a fuentes oficiales.</li>
+  <li>Si ves algo que rompe las reglas, usa el botón de reporte.</li></ul>
+  <h2>Sanciones</h2>
+  <p>Según la gravedad, el equipo puede ocultar publicaciones o comentarios y suspender cuentas de forma temporal o permanente. Lee las <a href="#reglas">reglas completas</a>, los <a href="/terminos/">Términos y Condiciones</a> y la <a href="/privacidad/">Política de Privacidad</a>. Para dudas escríbenos a galeriakmx@gmail.com.</p>
+  <p>— Equipo de GaleríaK</p>
+  <p class="aviso-fin" lang="ko">감사합니다</p>`;
+}
+const avisoRow=g=>`<li class="row aviso-row"><span class="num">📌</span><div class="t"><span class="pill p-pin">Aviso</span><a href="#aviso-${g.id}">Reglas y niveles de ${esc(g.name)} · Léelo antes de publicar</a><div class="meta"><span>Equipo GaleríaK</span></div></div></li>`;
+function vAviso(gid){
+  const g=G[gid];if(!g)return vNotFound();
+  nav(g.deal?'g-ofertas':g.id==='kdramas'?'g-kdramas':'c-'+g.cat);document.title='Aviso: '+g.name+' – GaleríaK';
+  return `<div class="card article"><a href="#g-${g.id}" class="hint">← ${esc(g.name)}</a><h1><span class="pill p-pin">Aviso</span> Reglas y niveles de ${esc(g.name)}</h1>${avisoHTML(g)}</div>`;
 }
 let curPost=null;
 async function vPost(id){
@@ -589,6 +674,7 @@ async function route(){
     else if(m=h.match(/^g-([\w-]+)$/)){html=await vGal(m[1]);if(G[m[1]])document.title=G[m[1]].name+' – GaleríaK'}
     else if(m=h.match(/^p-(\d+)$/))html=await vPost(+m[1]);
     else if(m=h.match(/^w-([\w-]+)$/))html=vWrite(m[1]);
+    else if(m=h.match(/^aviso-([\w-]+)$/))html=vAviso(m[1]);
     else if(h==='entrar')html=vAuth();
     else if(h==='admin')html=await vAdmin();
     else if(h==='nueva-clave')html=vNewPass();

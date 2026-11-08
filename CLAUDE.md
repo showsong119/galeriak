@@ -117,3 +117,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 ## 15. AdSense 코드 넣기 (승인 신청 시)
 - 사용자가 `ca-pub-…`를 주면: `python3 scripts/set-adsense.py ca-pub-XXXX` → 모든 `site/**/*.html`의 `<head>`에 자동 광고 스크립트 삽입 + 시험 페이지 `ADS.client` 채움 + `site/ads.txt` 생성. 다시 실행해도 중복 없음. 그 뒤 커밋·푸시.
 - 2026-11-08 링크 점검: 정적 페이지 16개, 404 없음, 해시 경로 모두 존재.
+
+## 16. 갤러리 고정 공지 (📌 Aviso)
+- DB가 아니라 `site/index.html` 코드에 있음: `AVISO_TIPO`·`AVISO_ESP`(갤러리 유형별 주의사항), `avisoHTML(g)`(공통: 글 등급 Destacado ≥BEST(10)♥ / 핫딜 Caliente ≥HOT_DEAL(5)♥·Agotado / Aviso / 신고 검토, 공통 규칙, 제재), 경로 `#aviso-<갤러리id>`. 모든 갤러리 목록 맨 위에 `avisoRow`로 고정 표시.
+- 마지막 줄은 사용자 요청대로 한국어 "감사합니다". 새 갤러리 추가 시 K-pop은 자동으로 kpop 유형, 그 외는 AVISO_TIPO에 매핑 추가.
