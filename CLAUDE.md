@@ -95,3 +95,10 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 아이돌 사진을 홍보물에 쓰지 않는다(저작권·초상권). 공식 사이트처럼 보이게 하지 않는다("comunidad no oficial").
 - 봇·홍보 문구는 멕시코 스페인어. 제휴 링크에는 고지 문구 포함.
 - 테스트: `npm test` / 드라이런: `npm run deals:dry`
+
+## 12. 무료 한국어 시험 페이지 (/examen-coreano/)
+- `site/examen-coreano/index.html` 단일 파일. 30문항 CBT(어휘·문법 12 → 읽기 10 → 듣기 8), 30분, 영역마다 페이지 이동(`?p=V|pausa-V|R|pausa-R|L|resultado`), 상태는 localStorage `gk-examen-v1` (저장 불가 시 한 페이지 모드).
+- 문항 은행·채점은 `/* ===== CORE */` 구간 (koreano-cbt 저장소와 동일). 테스트: `scripts/examen.test.mjs`.
+- 수익화 설정은 파일 상단 `ADS={client, slots{top,infeed,bottom,side,examBottom,pause,result,review,resultBottom}}`, `AMAZON_TAG`. 비어 있으면 광고 안 보임. `?demo=ads`로 위치 확인.
+- AdSense 정책: 광고를 보기·버튼 바로 옆에 두지 않음, 라벨은 'Publicidad', 무관한 고단가 키워드 문단 금지. 전면광고는 Auto ads '비녜트'(페이지 이동 시)로.
+- 메뉴 `nav()`에 '/examen-coreano/' 항목, 푸터 링크 있음.
