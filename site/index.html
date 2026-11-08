@@ -59,6 +59,9 @@ nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:now
 .best .num.top{color:var(--brand);font-weight:800}
 .lv{display:inline-block;font-size:10px;font-weight:800;line-height:1;padding:3px 5px;border-radius:5px;margin-left:4px;vertical-align:1px;color:#fff;background:#9a9aa6}
 .lv0{background:#dcdce2;color:#666!important}.lv1{background:#b8b8c2}.lv2{background:#6bbf8a}.lv3{background:#3aa0d8}.lv4{background:#2f5bd8}.lv5{background:#8a4fd8}.lv6{background:#e5317d}.lv7{background:linear-gradient(90deg,#f5a623,#e5317d)}.lv-adm{background:#17171c}
+.qbar{max-width:1120px;margin:0 auto;padding:0 12px 8px;display:flex;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none;font-size:12px}.qbar b{color:var(--muted);white-space:nowrap;font-weight:700}.qbar a{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 10px;color:var(--ink)}.qbar a.fav{border-color:#f5c542;background:#fff8e1}
+.trend{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}.trend li a{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:7px 10px;background:#fff}.trend .rk{font-weight:800;width:18px;text-align:center;color:var(--muted)}.trend .rk.top{color:var(--hot)}.trend small{display:block;color:var(--muted);font-size:11px}.trend .av{width:26px;height:26px;font-size:11px;border-radius:8px}
+.mebox .lvbar{height:8px}.mebox .mrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.gh .favbtn{margin-left:auto}.gh .favbtn+.write{margin-left:0}.favbtn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font-weight:700;cursor:pointer;white-space:nowrap}.favbtn.on{background:#fff8e1;border-color:#f5c542}
 .lv-mgr{background:linear-gradient(90deg,#f5b400,#ff7a00);display:inline-flex;align-items:center;gap:3px;margin-left:3px}.lv-mgr svg{width:12px;height:12px;flex:none}.mgrs{font-size:12px;color:var(--muted);margin-top:4px}.mgrbox{border-top:1px solid var(--line);margin-top:12px;padding-top:10px;background:#fff8e6;border-radius:10px;padding:10px 12px}
 .lvt{border-collapse:collapse;width:100%;max-width:520px;font-size:14px}.lvt th,.lvt td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left}
 .lvme{background:var(--brand-soft);border-radius:12px;padding:12px 14px;margin:10px 0}.lvbar{height:8px;background:#fff;border-radius:99px;overflow:hidden;margin:8px 0 4px}.lvbar i{display:block;height:100%;background:var(--brand)}
@@ -149,6 +152,7 @@ footer a{margin:0 6px;text-decoration:underline}
     <span id="userBox" style="margin-left:auto;display:flex;gap:8px;align-items:center"></span><button class="write-top" id="writeTop" style="margin-left:0">Escribir</button>
   </div>
   <nav class="main" id="nav"></nav>
+  <div class="qbar" id="qbar" hidden></div>
 </header>
 
 <div class="wrap">
@@ -347,20 +351,59 @@ async function side(){
   const top=(ms,n,gals)=>{let q=listQ().gte('created_at',since(ms)).eq('is_pinned',false).neq('gallery_id','asistencia');if(gals)q=q.in('gallery_id',gals);return q.order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(n)};
   const [{data:day},{data:week},{data:bDay},{data:bWeek}]=await Promise.all([top(D,10),top(7*D,10),top(D,10,BEAUTY),top(7*D,10,BEAUTY)]);
   const best=(arr,empty)=>arr&&arr.length?`<ol class="list best">${arr.map((p,i)=>`<li class="row"><span class="num ${i<3?'top':''}">${i+1}</span><div class="t"><a href="#p-${p.id}">${esc(p.title)}</a>${p.comment_count?`<span class="cc">[${p.comment_count}]</span>`:''}<div class="meta"><span>${esc((G[p.gallery_id]||{name:p.gallery_id}).name)}</span><span>♥ ${p.up_count}</span></div></div></li>`).join('')}</ol>`:`<div class="hint">${empty}</div>`;
-  $('#side').innerHTML=`${location.hash==='#g-asistencia'||location.hash==='#home'||location.hash===''?'':attendNudge()}
-  ${location.hash==='#hoy'?'':`  <div class="card"><h2 style="color:var(--hot)">🏆 Mejores de hoy · TOP 10 <a class="more" href="#hoy">Ver todo</a></h2>${best(day,'Todavía no hay publicaciones hoy. ¡<a href="#w-libre" style="color:var(--blue)">Escribe la primera</a>!')}</div>`}
+  const H0=location.hash,isHome=H0==='#home'||H0==='',trend=isHome||H0==='#galerias'?[]:await loadTrend();
+  $('#side').innerHTML=`${meBox()}
+  ${H0==='#hoy'||isHome?'':`  <div class="card"><h2 style="color:var(--hot)">🏆 Mejores de hoy · TOP 10 <a class="more" href="#hoy">Ver todo</a></h2>${best(day,'Todavía no hay publicaciones hoy. ¡<a href="#w-libre" style="color:var(--blue)">Escribe la primera</a>!')}</div>`}
   ${ad('rect')}
   <div class="card"><h2>📅 Mejores de la semana · TOP 10</h2>${best(week,'Todavía no hay publicaciones esta semana.')}</div>
   <div class="card"><h2 style="color:var(--brand)">💄 Lo mejor de K-Beauty <a class="more" href="#c-beauty">Ver más</a></h2>
    <h3>🔥 Hoy · TOP 10</h3>${best(bDay,'Todavía no hay publicaciones de K-Beauty hoy.')}
    <h3>📅 Esta semana · TOP 10</h3>${best(bWeek,'Todavía no hay publicaciones de K-Beauty esta semana.')}</div>
+  ${isHome||H0==='#galerias'?'':`<div class="card"><h2>📈 Galerías en tendencia <a class="more" href="#galerias">Todas</a></h2>${trendList(trend,5)}</div>`}
   <div class="card"><h2>📘 Guías <a class="more" href="/guias/">Ver todas</a></h2>${STATIC_GUIDES.slice(0,5).map(g=>`<div class="row"><div class="t"><a href="${g.u}">${esc(g.t)}</a></div></div>`).join('')}</div>`;
 }
 
 /* ---------------- vistas ---------------- */
+/* ---------------- recientes y favoritas (como "최근 방문 갤러리" de DC Inside) ---------------- */
+const LSJ={get(k){try{const v=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(v)?v:[]}catch(_){return []}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}};
+function visitGal(id){if(!G[id]||G[id].attend)return;const r=LSJ.get('gk_recent').filter(x=>x!==id);r.unshift(id);LSJ.set('gk_recent',r.slice(0,8))}
+const isFav=id=>LSJ.get('gk_favs').includes(id);
+function toggleFav(id){let f=LSJ.get('gk_favs');f=f.includes(id)?f.filter(x=>x!==id):[id,...f].slice(0,12);LSJ.set('gk_favs',f);return f.includes(id)}
+function renderQbar(){
+  const el=$('#qbar');if(!el)return;const f=LSJ.get('gk_favs').filter(x=>G[x]),r=LSJ.get('gk_recent').filter(x=>G[x]&&!f.includes(x)).slice(0,6);
+  if(!f.length&&!r.length){el.hidden=true;return}
+  el.hidden=false;el.innerHTML=(f.length?`<b>★ Favoritas</b>${f.map(x=>`<a class="fav" href="#g-${x}">${esc(G[x].name)}</a>`).join('')}`:'')+(r.length?`<b style="margin-left:${f.length?8:0}px">🕘 Recientes</b>${r.map(x=>`<a href="#g-${x}">${esc(G[x].name)}</a>`).join('')}`:'');
+}
+/* ---------------- galerías en tendencia (como "흥한 갤러리" de DC Inside) ---------------- */
+let TREND={at:0,list:[]};
+async function loadTrend(){
+  if(Date.now()-TREND.at<5*60e3)return TREND.list;
+  const {data,error}=await sb.from('posts').select('gallery_id,comment_count,up_count').eq('is_deleted',false).eq('is_hidden',false).neq('gallery_id','asistencia').gte('created_at',new Date(Date.now()-7*D).toISOString()).limit(2000);
+  if(error)return TREND.list;
+  const m={};(data||[]).forEach(p=>{if(!G[p.gallery_id])return;const x=m[p.gallery_id]||(m[p.gallery_id]={id:p.gallery_id,posts:0,score:0});x.posts++;x.score+=3+(p.comment_count||0)+(p.up_count||0)});
+  TREND={at:Date.now(),list:Object.values(m).sort((a,b)=>b.score-a.score)};return TREND.list;
+}
+function trendList(list,n){
+  const L=list.slice(0,n);
+  if(!L.length)return `<div class="hint" style="margin-bottom:8px">Esta semana todavía no hay actividad. ¡Escribe en tu galería favorita y ponla en el ranking!</div><ul class="trend">${['skincare','bts','blackpink','kdramas','coreano','libre'].slice(0,Math.min(n,6)).map((k,i)=>`<li><a href="#g-${k}"><span class="rk">·</span>${av(G[k])}<span><b>${esc(G[k].name)}</b><small>Sugerida</small></span></a></li>`).join('')}</ul>`;
+  return `<ul class="trend">${L.map((x,i)=>`<li><a href="#g-${x.id}"><span class="rk ${i<3?'top':''}">${i+1}</span>${av(G[x.id])}<span><b>${esc(G[x.id].name)}</b><small>${x.posts} ${x.posts===1?'publicación':'publicaciones'} esta semana</small></span></a></li>`).join('')}</ul>`;
+}
+/* ---------------- caja de mi cuenta (barra lateral, como la caja de login de los foros coreanos) ---------------- */
+function meBox(){
+  if(!ME)return `<div class="card mebox"><h2>👋 Únete a GaleríaK</h2><p class="hint" style="margin:0 0 8px">Publica, comenta y vota. Empiezas en Lv.0: pasa lista cada día y sube de nivel.</p><a class="btn btn-brand" href="#entrar" style="display:block;text-align:center">Entrar o crear cuenta</a></div>`;
+  const adm=MYLV&&MYLV.admin,lv=MYLV?levelOf(MYLV.puntos,MYLV.asistencias):null,nx=lv?nextLevel(lv):null;
+  const pct=lv&&nx?Math.max(0,Math.min(100,Math.round((MYLV.puntos-lv[1])/(nx[1]-lv[1])*100))):100;
+  const mg=myMgrGals();
+  return `<div class="card mebox"><h2><a href="#mi-cuenta">${esc(MYNICK||'Mi cuenta')}</a> ${MYLV?lvBadge(MYLV):''}${mg.length?' '+mgrBadge(mg[0]):''}</h2>
+   ${lv&&!adm?`<div class="hint">${Number(MYLV.puntos).toLocaleString('es-MX')} puntos · Lv.${lv[0]} ${esc(lv[2])}</div>${nx?`<div class="lvbar"><i style="width:${pct}%"></i></div><div class="hint" style="font-size:11px">${faltaTxt(MYLV.puntos,MYLV.asistencias,nx)}</div>`:''}`:''}
+   ${ATT.loaded&&!adm?(ATT.today?`<div class="hint" style="margin-top:6px;color:var(--ok);font-weight:700">✅ Asistencia de hoy lista · racha ${ATT.streak}</div>`:`<a class="btn btn-ok" href="#g-asistencia" style="display:block;text-align:center;margin-top:8px">✅ Pasar lista (+${ATT_PTS})</a>`):''}
+   <div class="mrow"><a class="btn" href="#mi-cuenta">Mi cuenta</a><a class="btn" href="#mensajes">✉️ Mensajes</a></div></div>`;
+}
+
 function nav(cur){
   const items=[['home','Inicio'],['hoy','🔥 Mejores de hoy'],['g-asistencia','✅ Asistencia'],['g-libre','💬 Foro libre'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y coreano'],['guias','Guías'],['/examen-coreano/','Examen de coreano'],['galerias','Galerías']];
   if(MYROLE==='admin')items.push(['admin','관리자']);
+  renderQbar();
   $('#nav').innerHTML=items.map(([h,n])=>`<a href="${h[0]==='/'?h:'#'+h}" class="${cur===h?'on':''}${h==='hoy'?' nav-hoy':''}${h==='g-asistencia'?' nav-att':''}">${n}</a>`).join('');
 }
 const galCard=g=>`<a class="gal" href="#g-${g.id}">${av(g)}<div><b>${esc(g.name)}</b><small>${esc(g.desc)}</small></div></a>`;
@@ -370,17 +413,22 @@ const hotCard=()=>`<a class="gal gal-hot" href="#hoy"><span class="av flame">${F
 const welcome=()=>ME?'':`<div class="card" style="background:var(--brand-soft);border-color:#f6c3d8"><b>¡Bienvenida, bienvenido a GaleríaK!</b> La comunidad en español de K-Beauty y K-Pop. <a href="#entrar" style="color:var(--brand);font-weight:700">Crea tu cuenta</a> para publicar, comentar y votar.</div>`;
 
 async function vHome(){
-  nav('home');
-  const [best,deals,recent]=await Promise.all([
-    listQ().gte('up_count',BEST).neq('gallery_id','ofertas').order('created_at',{ascending:false}).limit(8),
+  nav('home');document.title='GaleríaK – Comunidad de K-Beauty y K-Pop en México';
+  const since=ms=>new Date(Date.now()-ms).toISOString();
+  const top=ms=>listQ().gte('created_at',since(ms)).eq('is_pinned',false).neq('gallery_id','asistencia').order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(10);
+  const [day,week,deals,recent,trend]=await Promise.all([
+    top(D),top(7*D),
     listQ().eq('gallery_id','ofertas').eq('deal_sold',false).order('created_at',{ascending:false}).limit(5),
-    listQ().eq('is_pinned',false).neq('gallery_id','asistencia').order('created_at',{ascending:false}).limit(10)
+    listQ().eq('is_pinned',false).neq('gallery_id','asistencia').order('created_at',{ascending:false}).limit(10),
+    loadTrend()
   ]);
   if(recent.error)return fail(recent.error);
-  const B=best.data||[],Dl=deals.data||[],R=recent.data||[];
-  return ad('leader')+welcome()+attendNudge()+`
-  ${B.length?`<div class="card"><h2>⭐ Destacados <a class="more" href="#mejores">Ver más</a></h2>${listWithAds(B,1,true)}</div>`:''}
-  <div class="card"><h2>🔥 Ofertas K-Beauty <a class="more" href="#g-ofertas">Ver todas</a></h2>${Dl.length?`<ul class="list">${Dl.map((p,i)=>row(p,i+1,false)).join('')}</ul>`:'<div class="empty">¿Viste un buen precio? <a href="#w-ofertas" style="color:var(--blue)">Compártelo</a></div>'}</div>
+  const Dy=day.data||[],Wk=week.data||[],Dl=deals.data||[],R=recent.data||[];
+  const bestL=Dy.length?Dy:Wk,bestT=Dy.length?'hoy':'esta semana';
+  return ad('leader')+welcome()+(isNewbie()?attendNudge():'')+`
+  <div class="card"><h2 style="color:var(--hot)">🔥 Mejores de ${bestT} <span class="hint" style="font-weight:400">· lo más votado de todas las galerías</span> <a class="more" href="#hoy">Ver todo</a></h2>${bestL.length?listWithAds(bestL,1,true):'<div class="empty">Todavía no hay publicaciones con ♥. Dale ♥ a lo que te guste y aparecerá aquí.</div>'}</div>
+  <div class="card"><h2>📈 Galerías en tendencia <span class="hint" style="font-weight:400">· más activas esta semana</span> <a class="more" href="#galerias">Todas</a></h2>${trendList(trend,8)}</div>
+  <div class="card"><h2>🏷️ Ofertas K-Beauty <a class="more" href="#g-ofertas">Ver todas</a></h2>${Dl.length?`<ul class="list">${Dl.map((p,i)=>row(p,i+1,false)).join('')}</ul>`:'<div class="empty">¿Viste un buen precio? <a href="#w-ofertas" style="color:var(--blue)">Compártelo</a></div>'}</div>
   <div class="card"><h2>🕒 Lo más nuevo</h2>${R.length?listWithAds(R,1,true):'<div class="empty">¡Sé la primera persona en publicar!</div>'}</div>
   <div class="card"><h2>📂 Galerías <a class="more" href="#galerias">Todas</a></h2><div class="galgrid">${hotCard()}${['asistencia','libre','skincare','ofertas'].map(k=>galCard(G[k])).join('')}${catCard('kpop')}${['kdramas','coreano'].map(k=>galCard(G[k])).join('')}</div></div>
   <div class="card"><h2>📘 Guías de K-Beauty, K-Pop y coreano <a class="more" href="/guias/">Ver todas</a></h2><div class="guides">${STATIC_GUIDES.slice(0,6).map(g=>`<a class="guide" href="${g.u}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}${Object.entries(GUIDES).map(([k,g])=>`<a class="guide" href="#${k}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}</div></div>`;
@@ -397,6 +445,7 @@ const navKey=g=>g.deal?'g-ofertas':['kdramas','asistencia','libre'].includes(g.i
 async function vGal(gid){
   const g=G[gid];if(!g)return vNotFound();
   if(lastGal!==gid){galTab='all';galPage=1;lastGal=gid}
+  visitGal(gid);
   nav(navKey(g));
   let q=listQ({count:'exact'}).eq('gallery_id',gid).eq('is_pinned',false);
   if(galTab==='best')q=q.gte('up_count',g.deal?HOT_DEAL:BEST);
@@ -405,7 +454,7 @@ async function vGal(gid){
   if(error)return fail(error);
   const pages=Math.max(1,Math.ceil((count||0)/PAGE));const P=pins.data||[];
   await mgrReady;const mg=[...(MGR.get(gid)||[])];const mgn=mg.length?await nicksOf(mg):{};
-  return ad('leader')+`<div class="card"><div class="gh">${av(g)}<div><h1>${esc(g.name)}</h1><p>${esc(g.desc)}</p>${mg.length?`<div class="mgrs">${mgrBadge(gid)} ${mg.map(u=>esc(mgn[u]||'usuario')).join(', ')}</div>`:''}</div>${g.attend?'':`<a class="btn btn-brand write" href="#w-${g.id}">Escribir</a>`}</div>
+  return ad('leader')+`<div class="card"><div class="gh">${av(g)}<div><h1>${esc(g.name)}</h1><p>${esc(g.desc)}</p>${mg.length?`<div class="mgrs">${mgrBadge(gid)} ${mg.map(u=>esc(mgn[u]||'usuario')).join(', ')}</div>`:''}</div>${g.attend?'':`<button class="favbtn ${isFav(g.id)?'on':''}" data-fav="${g.id}" title="Favorita">${isFav(g.id)?'★ Favorita':'☆ Favorita'}</button> <a class="btn btn-brand write" href="#w-${g.id}">Escribir</a>`}</div>
   ${g.attend?attendBox():''}
   <div class="tabs"><button data-tab="all" class="${galTab==='all'?'on':''}">Todo</button><button data-tab="best" class="${galTab==='best'?'on':''}">${g.deal?'🔥 Calientes':'⭐ Destacados'}</button></div>
   <ul class="list">${avisoRow(g)}${P.map(p=>row(p,0,false)).join('')}</ul>
@@ -768,7 +817,7 @@ async function vSearch(q){
   return `<div class="card"><h2>Resultados para “${esc(q)}” (${data.length})</h2>${data.length?listWithAds(data,1,true):'<div class="empty">No encontramos nada. Prueba otra palabra.</div>'}</div>`;
 }
 async function vBest(){nav('');const {data,error}=await listQ().gte('up_count',BEST).neq('gallery_id','ofertas').order('created_at',{ascending:false}).limit(50);if(error)return fail(error);return ad('leader')+`<div class="card"><h2>⭐ Destacados (${BEST}+ me gusta)</h2>${data.length?listWithAds(data,1,true):'<div class="empty">Aún no hay destacados.</div>'}</div>`}
-function vAllGals(){nav('galerias');document.title='Todas las galerías – GaleríaK';return `<div class="card"><h2>📂 Todas las galerías</h2><p class="hint" style="margin:0">${CATS.map(c=>`<a href="#galerias" onclick="document.getElementById('cat-${c.id}').scrollIntoView({behavior:'smooth'});return false" style="color:var(--blue);margin-right:10px;white-space:nowrap">${c.icon} ${esc(c.name)}</a>`).join('')}</p></div>`+CATS.map(c=>`<div class="card" id="cat-${c.id}"><h2>${c.icon} ${esc(c.name)} <span class="hint" style="font-weight:400">· ${esc(c.desc)}</span></h2><div class="galgrid">${c.id==='comunidad'?hotCard():''}${GALS.filter(g=>g.cat===c.id).map(galCard).join('')}</div></div>`).join('')}
+async function vAllGals(){nav('galerias');document.title='Todas las galerías – GaleríaK';const tr=await loadTrend();return `<div class="card"><h2>📂 Todas las galerías</h2><p class="hint" style="margin:0">${CATS.map(c=>`<a href="#galerias" onclick="document.getElementById('cat-${c.id}').scrollIntoView({behavior:'smooth'});return false" style="color:var(--blue);margin-right:10px;white-space:nowrap">${c.icon} ${esc(c.name)}</a>`).join('')}</p></div><div class="card"><h2>📈 En tendencia esta semana</h2>${trendList(tr,10)}</div>`+CATS.map(c=>`<div class="card" id="cat-${c.id}"><h2>${c.icon} ${esc(c.name)} <span class="hint" style="font-weight:400">· ${esc(c.desc)}</span></h2><div class="galgrid">${c.id==='comunidad'?hotCard():''}${GALS.filter(g=>g.cat===c.id).map(galCard).join('')}</div></div>`).join('')}
 function vGuides(){nav('guias');return `<div class="card"><h2>📘 Guías de K-Beauty, K-Pop y coreano <a class="more" href="/guias/">Ver todas</a></h2><div class="guides">${STATIC_GUIDES.map(g=>`<a class="guide" href="${g.u}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}</div></div><div class="card"><h2>🛍️ Para comprar en México</h2><div class="guides">${Object.entries(GUIDES).map(([k,g])=>`<a class="guide" href="#${k}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}</div></div>`}
 function vGuide(k){nav('guias');const g=GUIDES[k];document.title=g.t+' – GaleríaK';return ad('leader')+`<div class="card article"><a href="#guias" class="hint">← Guías</a><h1>${esc(g.t)}</h1>${g.html}${ad('post')}</div>`}
 function vRules(){nav('');return `<div class="card article"><h1>Reglas de GaleríaK</h1>
@@ -954,7 +1003,7 @@ async function route(){
     else if(h==='buscar')html=await vSearch($('#q').value);
     else if(h==='mejores')html=await vBest();
     else if(h==='hoy')html=await vHoy();
-    else if(h==='galerias')html=vAllGals();
+    else if(h==='galerias')html=await vAllGals();
     else if(h==='guias')html=vGuides();
     else if(GUIDES[h])html=vGuide(h);
     else if(h==='reglas')html=vRules();
@@ -977,6 +1026,7 @@ document.addEventListener('click',async e=>{
   if(t.dataset.hoytab){hoyTab=t.dataset.hoytab;route();return}
   if(t.dataset.page){galPage=+t.dataset.page;route();return}
   if(t.dataset.auth){authMode=t.dataset.auth;route();return}
+  if(t.dataset.fav){const on=toggleFav(t.dataset.fav);t.classList.toggle('on',on);t.textContent=on?'★ Favorita':'☆ Favorita';renderQbar();toast(on?'Agregada a favoritas':'Quitada de favoritas');return}
   if(t.dataset.mhide||t.dataset.mchide){await mgrClick(t);return}
   if(t.dataset.mgrdel&&MYROLE==='admin'){const [g,u]=t.dataset.mgrdel.split('|');if(!confirm('매니저를 해제할까요?'))return;t.disabled=true;const {error}=await sb.from('gk_managers').delete().eq('gallery_id',g).eq('user_id',u);toast(error?errMsg(error):'해제했습니다.');await loadManagers();route();return}
   if(t.dataset.admtab||t.dataset.pid||t.dataset.cid||t.dataset.ban||t.dataset.unban){await admClick(t);return}
