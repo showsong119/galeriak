@@ -108,3 +108,8 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 연락처 이메일: galeriakmx@gmail.com (사이트 공개용, 두 법적 페이지에 기재).
 - `site/robots.txt`, `site/sitemap.xml` (새 정적 페이지 생기면 sitemap에 추가).
 - 시험 페이지에 TOPIK 구조·배점·등급 표, 영역별 팁, 스페인어권 학습자 흔한 실수 섹션(`#guia-topik`). 수치 출처: NIIED 시행계획(UAB TOPIK 페이지·seoulstart 2026 확인).
+
+## 14. 가이드 글 (/guias/)
+- 원본: `content/guias/<slug>.html` (첫 줄 `<!-- {"title","short","desc","cat","order"} -->` + 본문 HTML). 생성: `python3 scripts/gen-guias.py` → `site/guias/<slug>/index.html`, `site/guias/index.html`, `site/index.html`의 `STATIC_GUIDES`(마커 사이), `site/sitemap.xml` 갱신. **생성 결과도 커밋**(Netlify 빌드 없음).
+- 2026-11-08: 10편 (K-Beauty 6: 루틴·더블클렌징·선크림·성분·라벨 읽기·피부타입 / 코리안·K-pop 4: 한글·팬 표현 20·용어집·TOPIK I 12주 계획). 메인 '가이드' 화면과 홈 카드에 연결.
+- 글 규칙: 의학적 단정 금지(피부 질환은 피부과 권유), 가격·매장 정보 지어내지 않기, 아이돌 실명·사진 사용 안 함, 글마다 내부 링크 2개 이상.
