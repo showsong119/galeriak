@@ -33,6 +33,7 @@ nav.main{max-width:1120px;margin:0 auto;display:flex;gap:4px;padding:0 12px 8px;
 nav.main::-webkit-scrollbar{display:none}
 nav.main a{padding:6px 12px;border-radius:999px;font-weight:600;color:var(--muted);white-space:nowrap}
 nav.main a.on{background:var(--ink);color:#fff}
+nav.main a.nav-hoy{color:var(--hot);font-weight:800}nav.main a.nav-hoy.on{background:var(--hot);color:#fff}
 .demo{background:#fff7d6;border-bottom:1px solid #f1e3a4;color:#7a5b00;font-size:12.5px;text-align:center;padding:6px 10px}
 .wrap{max-width:1120px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1fr 300px;gap:16px}
 @media(max-width:900px){.wrap{grid-template-columns:1fr}.side{order:2}}
@@ -334,7 +335,7 @@ async function side(){
   const [{data:day},{data:week}]=await Promise.all([top(D,10),top(7*D,10)]);
   const best=(arr,empty)=>arr&&arr.length?`<ol class="list best">${arr.map((p,i)=>`<li class="row"><span class="num ${i<3?'top':''}">${i+1}</span><div class="t"><a href="#p-${p.id}">${esc(p.title)}</a>${p.comment_count?`<span class="cc">[${p.comment_count}]</span>`:''}<div class="meta"><span>${esc((G[p.gallery_id]||{name:p.gallery_id}).name)}</span><span>♥ ${p.up_count}</span></div></div></li>`).join('')}</ol>`:`<div class="hint">${empty}</div>`;
   $('#side').innerHTML=`
-  <div class="card"><h2>🏆 Mejores de hoy <a class="more" href="#mejores">Destacados</a></h2>${best(day,'Todavía no hay publicaciones hoy. ¡<a href="#w-libre" style="color:var(--blue)">Escribe la primera</a>!')}</div>
+  <div class="card"><h2 style="color:var(--hot)">🏆 Mejores de hoy <a class="more" href="#hoy">Ver todo</a></h2>${best(day,'Todavía no hay publicaciones hoy. ¡<a href="#w-libre" style="color:var(--blue)">Escribe la primera</a>!')}</div>
   ${ad('rect')}
   <div class="card"><h2>🔥 Mejores de la semana</h2>${best(week,'Todavía no hay publicaciones esta semana.')}</div>
   <div class="card"><h2>📘 Guías <a class="more" href="/guias/">Ver todas</a></h2>${STATIC_GUIDES.slice(0,5).map(g=>`<div class="row"><div class="t"><a href="${g.u}">${esc(g.t)}</a></div></div>`).join('')}</div>`;
@@ -342,9 +343,9 @@ async function side(){
 
 /* ---------------- vistas ---------------- */
 function nav(cur){
-  const items=[['home','Inicio'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y más'],['guias','Guías'],['/examen-coreano/','Examen de coreano'],['galerias','Galerías']];
+  const items=[['home','Inicio'],['hoy','🔥 Mejores de hoy'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y más'],['guias','Guías'],['/examen-coreano/','Examen de coreano'],['galerias','Galerías']];
   if(MYROLE==='admin')items.push(['admin','관리자']);
-  $('#nav').innerHTML=items.map(([h,n])=>`<a href="${h[0]==='/'?h:'#'+h}" class="${cur===h?'on':''}">${n}</a>`).join('');
+  $('#nav').innerHTML=items.map(([h,n])=>`<a href="${h[0]==='/'?h:'#'+h}" class="${cur===h?'on':''}${h==='hoy'?' nav-hoy':''}">${n}</a>`).join('');
 }
 const galCard=g=>`<a class="gal" href="#g-${g.id}">${av(g)}<div><b>${esc(g.name)}</b><small>${esc(g.desc)}</small></div></a>`;
 const welcome=()=>ME?'':`<div class="card" style="background:var(--brand-soft);border-color:#f6c3d8"><b>¡Bienvenida, bienvenido a GaleríaK!</b> La comunidad en español de K-Beauty y K-Pop. <a href="#entrar" style="color:var(--brand);font-weight:700">Crea tu cuenta</a> para publicar, comentar y votar.</div>`;
@@ -554,6 +555,18 @@ async function vHilo(id){
   return `<div class="card"><a href="#mensajes" class="hint">← Mensajes</a><h2 style="margin-top:6px">${esc(root.asunto||'(sin asunto)')}</h2>
    <div class="thread">${data.map(m=>`<div class="bubble ${m.de_admin?'team':'me'}"><div class="who">${m.de_admin?'<b>Equipo GaleríaK</b> <span class="lv lv-adm">Admin</span>':`<b>${MYROLE==='admin'?esc(names[m.usuario]||'usuario'):'Tú'}</b>`}<span>${ago(m.created_at)}</span></div><p>${esc(m.cuerpo)}</p></div>`).join('')}</div>
    <form id="rform" data-hilo="${id}" data-usuario="${root.usuario}"><div class="f"><textarea id="rcuerpo" maxlength="2000" required placeholder="${MYROLE==='admin'?'Responder como equipo de GaleríaK':'Escribe tu respuesta'}"></textarea></div><div class="err" id="rerr"></div><button class="btn btn-brand">Enviar</button></form></div>`;
+}
+/* ---------------- tablero Mejores de hoy ---------------- */
+let hoyTab='hoy';
+async function vHoy(){
+  nav('hoy');document.title='Mejores de hoy – GaleríaK';
+  const ms=hoyTab==='hoy'?D:7*D;
+  const {data,error}=await listQ().gte('created_at',new Date(Date.now()-ms).toISOString()).eq('is_pinned',false).gte('up_count',1)
+    .order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(50);
+  if(error)return fail(error);
+  return ad('leader')+`<div class="card"><div class="gh"><div class="av" style="background:var(--hot)">🔥</div><div><h1 style="color:var(--hot)">Mejores de hoy</h1><p>Las publicaciones con más ♥ de todas las galerías. Se actualiza solo: ${hoyTab==='hoy'?'últimas 24 horas':'últimos 7 días'}.</p></div></div>
+  <div class="tabs"><button data-hoytab="hoy" class="${hoyTab==='hoy'?'on':''}">🔥 Hoy</button><button data-hoytab="semana" class="${hoyTab==='semana'?'on':''}">📅 Esta semana</button><a class="hint" href="#mejores" style="margin-left:auto;align-self:center">⭐ Destacados de siempre →</a></div>
+  ${data.length?listWithAds(data,1,true):`<div class="empty">${hoyTab==='hoy'?'Hoy todavía no hay publicaciones con ♥. Dale ♥ a lo que te guste para que aparezca aquí.':'Esta semana todavía no hay publicaciones con ♥.'}</div>`}</div>`;
 }
 let curPost=null;
 async function vPost(id){
@@ -777,6 +790,7 @@ async function route(){
     else if(h==='nueva-clave')html=vNewPass();
     else if(h==='buscar')html=await vSearch($('#q').value);
     else if(h==='mejores')html=await vBest();
+    else if(h==='hoy')html=await vHoy();
     else if(h==='galerias')html=vAllGals();
     else if(h==='guias')html=vGuides();
     else if(GUIDES[h])html=vGuide(h);
@@ -796,6 +810,7 @@ function go(h){if(location.hash==='#'+h)route();else location.hash=h}
 document.addEventListener('click',async e=>{
   const t=e.target.closest('button');if(!t)return;
   if(t.dataset.tab){galTab=t.dataset.tab;galPage=1;route();return}
+  if(t.dataset.hoytab){hoyTab=t.dataset.hoytab;route();return}
   if(t.dataset.page){galPage=+t.dataset.page;route();return}
   if(t.dataset.auth){authMode=t.dataset.auth;route();return}
   if(t.dataset.admtab||t.dataset.pid||t.dataset.cid||t.dataset.ban||t.dataset.unban){await admClick(t);return}
