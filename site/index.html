@@ -54,7 +54,15 @@ nav.main a.on{background:var(--ink);color:#fff}
 .row .meta{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;margin-top:2px}
 .row .up{flex:none;font-size:12px;font-weight:700;color:var(--brand);width:38px;text-align:right}
 .pill{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;margin-right:4px;vertical-align:1px}
-.aviso-row{background:#f6f8ff}.aviso-fin{font-size:20px;font-weight:700;color:var(--brand);margin-top:4px}
+.aviso-row{background:#f6f8ff}
+.lv{display:inline-block;font-size:10px;font-weight:800;line-height:1;padding:3px 5px;border-radius:5px;margin-left:4px;vertical-align:1px;color:#fff;background:#9a9aa6}
+.lv1{background:#b8b8c2}.lv2{background:#6bbf8a}.lv3{background:#3aa0d8}.lv4{background:#2f5bd8}.lv5{background:#8a4fd8}.lv6{background:#e5317d}.lv7{background:linear-gradient(90deg,#f5a623,#e5317d)}.lv-adm{background:#17171c}
+.lvt{border-collapse:collapse;width:100%;max-width:520px;font-size:14px}.lvt th,.lvt td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left}
+.lvme{background:var(--brand-soft);border-radius:12px;padding:12px 14px;margin:10px 0}.lvbar{height:8px;background:#fff;border-radius:99px;overflow:hidden;margin:8px 0 4px}.lvbar i{display:block;height:100%;background:var(--brand)}
+.msgbtn{position:relative}.badge{position:absolute;top:-6px;right:-6px;background:var(--hot);color:#fff;font-size:10px;font-weight:800;border-radius:99px;padding:2px 5px;line-height:1}
+.row.unread .t a{font-weight:800}.row.unread .num{color:var(--brand)}
+.thread{display:flex;flex-direction:column;gap:10px;margin:14px 0}.bubble{border:1px solid var(--line);border-radius:12px;padding:10px 12px;max-width:88%}.bubble p{margin:6px 0 0;white-space:pre-wrap}
+.bubble.me{align-self:flex-end;background:#f6f8ff}.bubble.team{align-self:flex-start;background:var(--brand-soft)}.bubble .who{display:flex;gap:8px;align-items:center;font-size:13px}.bubble .who span:last-child{color:var(--muted)}.aviso-fin{font-size:20px;font-weight:700;color:var(--brand);margin-top:4px}
 .p-hot{background:#ffe7e2;color:var(--hot)}.p-pin{background:#e8eefc;color:var(--blue)}.p-gal{background:#f1f1f4;color:#555}.p-sold{background:#eee;color:#888}.p-best{background:var(--brand-soft);color:var(--brand)}
 .price{font-weight:800;color:var(--hot)}
 .galgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
@@ -140,7 +148,7 @@ footer a{margin:0 6px;text-decoration:underline}
 
 <footer>
   <div>
-    <a href="#reglas">Reglas</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="#galerias">Todas las galerías</a> · <a href="/examen-coreano/">Examen de coreano gratis</a>
+    <a href="#reglas">Reglas</a> · <a href="#niveles">Niveles</a> · <a href="#mensajes">Contacto</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="#galerias">Todas las galerías</a> · <a href="/examen-coreano/">Examen de coreano gratis</a>
   </div>
   <p>GaleríaK es una comunidad de fans no oficial. No está afiliada a ninguna agencia, artista ni marca. Los nombres de artistas y marcas pertenecen a sus dueños. Para usar la comunidad debes tener 13 años o más.</p>
   <p>Como Afiliado de Amazon, GaleríaK obtiene ingresos por las compras adscritas que cumplen los requisitos aplicables.</p>
@@ -262,7 +270,7 @@ function ago(t){t=new Date(t).getTime();const d=Date.now()-t;if(d<60e3)return'ah
 const BOT='Bot de ofertas';
 // Ofertas del bot: el precio solo se muestra durante 24 h (regla de Amazon sobre precios)
 const priceShown=p=>!!p.deal_price&&!(p.anon_name===BOT&&Date.now()-new Date(p.created_at).getTime()>D);
-const nick=p=>esc(p.profiles&&p.profiles.nickname||p.anon_name||'usuario');
+const nick=p=>p.author_id?`<span class="nk" data-uid="${esc(p.author_id)}">${esc(p.profiles&&p.profiles.nickname||'usuario')}</span>`:(p.anon_name?`${esc(p.anon_name)} <span class="pill p-gal">Bot</span>`:'usuario');
 const ad=k=>`<div class="ad ad-${k}">Publicidad</div>`;
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2200)}
 function av(g){return `<span class="av" style="background:${g.c}">${esc(g.name.replace(/[^A-Za-z0-9ÁÉÍÓÚÑáéíóúñ]/g,'').slice(0,2).toUpperCase())}</span>`}
@@ -287,7 +295,7 @@ function row(p,i,showGal){
 function listWithAds(arr,start,showGal){
   let h='<ul class="list">';arr.forEach((p,k)=>{h+=row(p,start==null?null:start+k,showGal);if(k===4&&arr.length>6)h+='</ul>'+ad('feed')+'<ul class="list">'});return h+'</ul>';
 }
-const SEL='id,gallery_id,title,created_at,up_count,down_count,comment_count,deal_price,deal_sold,is_pinned,is_sponsored,is_hidden,anon_name,profiles(nickname)';
+const SEL='id,gallery_id,author_id,title,created_at,up_count,down_count,comment_count,deal_price,deal_sold,is_pinned,is_sponsored,is_hidden,anon_name,profiles(nickname)';
 
 /* ---------------- sesión ---------------- */
 // La sesión nunca bloquea la página: si getSession tarda (pasa en móviles al volver de Google), seguimos sin ella.
@@ -311,9 +319,10 @@ async function refreshSession(given){
     (v||[]).forEach(x=>myVotes.set(x.post_id,x.value));
   }
   renderUserBox();
+  if(ME){fetchLevels([ME.id]).then(()=>{MYLV=LV.get(ME.id)||null;renderUserBox();refreshMsgBadge()}).catch(()=>{})}else MYLV=null;
 }
 function renderUserBox(){
-  $('#userBox').innerHTML=ME?`<span class="hint" style="white-space:nowrap">Hola, <b>${esc(MYNICK)}</b></span> <button class="btn" id="logoutBtn">Salir</button>`:`<a class="btn" href="#entrar">Entrar</a>`;
+  $('#userBox').innerHTML=ME?`<a class="hint" href="#niveles" style="white-space:nowrap">Hola, <b>${esc(MYNICK)}</b> ${MYLV?lvBadge(MYLV):''}</a> <a class="btn msgbtn" href="#mensajes" title="Mensajes" aria-label="Mensajes">✉️<span class="badge" id="msgBadge" hidden>0</span></a> <button class="btn" id="logoutBtn">Salir</button>`:`<a class="btn" href="#entrar">Entrar</a>`;
   const lo=$('#logoutBtn');if(lo)lo.onclick=async()=>{await sb.auth.signOut();await refreshSession();toast('Sesión cerrada');route()};
 }
 
@@ -452,7 +461,7 @@ function avisoHTML(g){
   <li>Respeta los derechos de autor: comparte enlaces a fuentes oficiales.</li>
   <li>Si ves algo que rompe las reglas, usa el botón de reporte.</li></ul>
   <h2>Sanciones</h2>
-  <p>Según la gravedad, el equipo puede ocultar publicaciones o comentarios y suspender cuentas de forma temporal o permanente. Lee las <a href="#reglas">reglas completas</a>, los <a href="/terminos/">Términos y Condiciones</a> y la <a href="/privacidad/">Política de Privacidad</a>. Para dudas escríbenos a galeriakmx@gmail.com.</p>
+  <p>Según la gravedad, el equipo puede ocultar publicaciones o comentarios y suspender cuentas de forma temporal o permanente. Lee las <a href="#reglas">reglas completas</a>, los <a href="/terminos/">Términos y Condiciones</a> y la <a href="/privacidad/">Política de Privacidad</a>. Para dudas envíanos un <a href="#mensajes">mensaje</a> o escríbenos a galeriakmx@gmail.com. Consulta cómo funcionan los <a href="#niveles">niveles de usuario</a>.</p>
   <p>— Equipo de GaleríaK</p>
   <p class="aviso-fin" lang="ko">감사합니다</p>`;
 }
@@ -461,6 +470,88 @@ function vAviso(gid){
   const g=G[gid];if(!g)return vNotFound();
   nav(g.deal?'g-ofertas':g.id==='kdramas'?'g-kdramas':'c-'+g.cat);document.title='Aviso: '+g.name+' – GaleríaK';
   return `<div class="card article"><a href="#g-${g.id}" class="hint">← ${esc(g.name)}</a><h1><span class="pill p-pin">Aviso</span> Reglas y niveles de ${esc(g.name)}</h1>${avisoHTML(g)}</div>`;
+}
+/* ---------------- niveles de usuario (estilo DC Inside / Ppomppu) ---------------- */
+const LEVELS=[[1,0,'Nuevo'],[2,30,'Fan'],[3,100,'Fan activo'],[4,300,'Fan dedicado'],[5,800,'Experto'],[6,2000,'Veterano'],[7,5000,'Leyenda']];
+const levelOf=pts=>{let l=LEVELS[0];for(const x of LEVELS)if(pts>=x[1])l=x;return l};
+const LV=new Map();let LV_OFF=false,MYLV=null;
+function lvBadge(info){if(!info)return '';if(info.admin)return '<span class="lv lv-adm" title="Equipo de GaleríaK">Admin</span>';const [n,,name]=levelOf(info.puntos);return `<span class="lv lv${n}" title="Nivel ${n} · ${name} · ${info.puntos} puntos">Lv.${n}</span>`}
+async function fetchLevels(ids){
+  ids=[...new Set(ids)].filter(id=>id&&!LV.has(id));if(!ids.length||LV_OFF)return;
+  const {data,error}=await sb.rpc('gk_niveles',{p_ids:ids.slice(0,200)});
+  if(error){LV_OFF=true;return}
+  (data||[]).forEach(r=>LV.set(r.id,{puntos:r.puntos,admin:r.admin}));
+}
+async function decorateLevels(){
+  const els=[...document.querySelectorAll('.nk[data-uid]:not([data-lv])')].filter(e=>e.dataset.uid);if(!els.length)return;
+  await fetchLevels(els.map(e=>e.dataset.uid));
+  els.forEach(e=>{const i=LV.get(e.dataset.uid);if(!i)return;e.dataset.lv=1;e.insertAdjacentHTML('afterend',lvBadge(i))});
+}
+function vNiveles(){
+  nav('');document.title='Niveles de usuario – GaleríaK';
+  const me=MYLV?levelOf(MYLV.puntos):null,next=me?LEVELS.find(x=>x[1]>MYLV.puntos):null;
+  return `<div class="card article"><h1>Niveles de usuario</h1>
+  <p>En GaleríaK cada cuenta tiene un nivel según su actividad en la comunidad, como en los foros coreanos DC Inside y Ppomppu. Entre más aportes, más alto tu nivel. El nivel aparece junto a tu apodo en publicaciones y comentarios.</p>
+  ${ME?(MYLV?`<div class="lvme">${MYLV.admin?'<b>Eres parte del equipo de GaleríaK.</b>':`<div>Tu nivel: ${lvBadge(MYLV)} <b>${me[2]}</b> · ${MYLV.puntos} puntos</div>${next?`<div class="lvbar"><i style="width:${Math.min(100,Math.round((MYLV.puntos-me[1])/(next[1]-me[1])*100))}%"></i></div><div class="hint">Te faltan ${next[1]-MYLV.puntos} puntos para Lv.${next[0]} (${next[2]}).</div>`:'<div class="hint">¡Llegaste al nivel máximo!</div>'}`}</div>`:'<p class="hint">Tu nivel aparecerá aquí en cuanto se active el sistema.</p>'):`<p><a href="#entrar" style="color:var(--blue);font-weight:700">Entra</a> para ver tu nivel.</p>`}
+  <h2>Cómo se ganan puntos</h2>
+  <table class="lvt"><tr><th>Actividad</th><th>Puntos</th></tr>
+   <tr><td>Publicar en una galería</td><td>+10</td></tr><tr><td>Comentar</td><td>+3</td></tr>
+   <tr><td>Cada ♥ que reciben tus publicaciones</td><td>+2</td></tr><tr><td>Cada día desde que te registraste (máx. 365)</td><td>+1</td></tr></table>
+  <p class="hint">Las publicaciones y comentarios ocultos por moderación o eliminados no cuentan. Hacer spam o votos falsos para subir de nivel es motivo de suspensión.</p>
+  <h2>Tabla de niveles</h2>
+  <table class="lvt"><tr><th>Nivel</th><th>Nombre</th><th>Puntos</th></tr>${LEVELS.map(([n,min,name])=>`<tr><td>${lvBadge({puntos:min})}</td><td>${name}</td><td>${min.toLocaleString('es-MX')}+</td></tr>`).join('')}
+   <tr><td><span class="lv lv-adm">Admin</span></td><td>Equipo de GaleríaK</td><td>—</td></tr><tr><td><span class="pill p-gal">Bot</span></td><td>Bot de ofertas automático</td><td>—</td></tr></table>
+  <h2>Avisos fijos</h2><p>Solo el equipo de GaleríaK puede publicar avisos fijos (📌) en las galerías.</p></div>`;
+}
+
+/* ---------------- mensajes (consultas al equipo, estilo 쪽지) ---------------- */
+const MSG_CATS=['Mi cuenta','Reportar un problema','Sugerencia','Publicidad o colaboración','Otro'];
+let MSG_OFF=false;
+const msgOff=e=>e&&(/mensajes|42P01|PGRST20[0-9]|schema cache/i.test((e.message||'')+(e.code||'')));
+const msgUnavailable=()=>`<div class="card empty">Los mensajes estarán disponibles muy pronto. Mientras tanto, escríbenos a <b>galeriakmx@gmail.com</b>.</div>`;
+async function refreshMsgBadge(){
+  const b=$('#msgBadge');if(!b||!ME||MSG_OFF)return;
+  let q=sb.from('mensajes').select('id',{count:'exact',head:true});
+  q=MYROLE==='admin'?q.eq('de_admin',false).eq('leido_admin',false):q.eq('usuario',ME.id).eq('de_admin',true).eq('leido_usuario',false);
+  const {count,error}=await q;if(error){if(msgOff(error))MSG_OFF=true;return}
+  b.textContent=count>99?'99+':String(count||0);b.hidden=!count;
+}
+async function nicksOf(ids){
+  ids=[...new Set(ids)];if(!ids.length)return {};
+  const {data}=await sb.from('profiles').select('id,nickname').in('id',ids);
+  return Object.fromEntries((data||[]).map(p=>[p.id,p.nickname]));
+}
+async function vMensajes(){
+  nav('');document.title='Mensajes – GaleríaK';
+  if(!ME)return `<div class="card empty">Para enviar un mensaje al equipo necesitas una cuenta. <a href="#entrar" style="color:var(--blue);font-weight:700">Entrar o registrarse</a><br><span class="hint">También puedes escribirnos a galeriakmx@gmail.com</span></div>`;
+  const adm=MYROLE==='admin';
+  let q=sb.from('mensajes').select('id,hilo,usuario,de_admin,asunto,cuerpo,leido_usuario,leido_admin,created_at').order('created_at',{ascending:false}).limit(adm?500:200);
+  if(!adm)q=q.eq('usuario',ME.id);
+  const {data,error}=await q;
+  if(error){if(msgOff(error)){MSG_OFF=true;return msgUnavailable()}return fail(error)}
+  const th=new Map();
+  for(const m of data.slice().reverse()){const k=m.hilo||m.id;const t=th.get(k)||{id:k,msgs:[]};t.msgs.push(m);if(!m.hilo)t.root=m;th.set(k,t)}
+  const list=[...th.values()].filter(t=>t.root).map(t=>{const last=t.msgs[t.msgs.length-1];return {...t,last,unread:t.msgs.some(m=>adm?(!m.de_admin&&!m.leido_admin):(m.de_admin&&!m.leido_usuario)),answered:last.de_admin}}).sort((a,b)=>b.last.created_at.localeCompare(a.last.created_at));
+  const names=adm?await nicksOf(list.map(t=>t.root.usuario)):{};
+  return `<div class="card"><h2>✉️ Mensajes${adm?' · consultas de usuarios':''}</h2>
+   <p class="hint">${adm?'Responde las consultas de la comunidad. Las no leídas aparecen marcadas.':'Escribe al equipo de GaleríaK: dudas sobre tu cuenta, reportes, sugerencias o publicidad. Te responderemos aquí mismo.'}</p>
+   ${adm?'':`<form id="mform"><div class="two"><div class="f"><label>Tema</label><select id="mcat">${MSG_CATS.map(c=>`<option>${c}</option>`).join('')}</select></div><div class="f"><label>Asunto</label><input id="masunto" maxlength="90" required placeholder="Resume tu consulta"></div></div>
+     <div class="f"><label>Mensaje</label><textarea id="mcuerpo" maxlength="2000" required placeholder="Cuéntanos con detalle. No incluyas contraseñas ni datos bancarios."></textarea></div><div class="err" id="merr"></div><button class="btn btn-brand">Enviar mensaje</button></form>`}
+   <h3 style="margin-top:18px">${adm?'Consultas':'Mis consultas'}</h3>
+   ${list.length?`<ul class="list">${list.map(t=>`<li class="row ${t.unread?'unread':''}"><span class="num">${t.unread?'●':'✉️'}</span><div class="t">${t.answered?'<span class="pill p-best">Respondido</span>':'<span class="pill p-sold">Pendiente</span>'}<a href="#mensaje-${t.id}">${esc(t.root.asunto||'(sin asunto)')}</a> <span class="cc">[${t.msgs.length}]</span><div class="meta">${adm?`<span>${esc(names[t.root.usuario]||'usuario')}</span>`:''}<span>${ago(t.last.created_at)}</span></div></div></li>`).join('')}</ul>`:'<div class="empty">Todavía no hay mensajes.</div>'}</div>`;
+}
+async function vHilo(id){
+  nav('');
+  if(!ME)return `<div class="card empty"><a href="#entrar" style="color:var(--blue);font-weight:700">Entra</a> para ver tus mensajes.</div>`;
+  const {data,error}=await sb.from('mensajes').select('id,hilo,usuario,autor,de_admin,asunto,cuerpo,created_at').or(`id.eq.${id},hilo.eq.${id}`).order('created_at');
+  if(error){if(msgOff(error)){MSG_OFF=true;return msgUnavailable()}return fail(error)}
+  const root=data.find(m=>m.id===id&&!m.hilo);if(!root)return vNotFound('Este mensaje no existe o no tienes acceso.');
+  document.title=(root.asunto||'Mensaje')+' – GaleríaK';
+  sb.rpc('gk_mensajes_leidos',{p_hilo:id}).then(()=>refreshMsgBadge());
+  const names=MYROLE==='admin'?await nicksOf([root.usuario]):{};
+  return `<div class="card"><a href="#mensajes" class="hint">← Mensajes</a><h2 style="margin-top:6px">${esc(root.asunto||'(sin asunto)')}</h2>
+   <div class="thread">${data.map(m=>`<div class="bubble ${m.de_admin?'team':'me'}"><div class="who">${m.de_admin?'<b>Equipo GaleríaK</b> <span class="lv lv-adm">Admin</span>':`<b>${MYROLE==='admin'?esc(names[m.usuario]||'usuario'):'Tú'}</b>`}<span>${ago(m.created_at)}</span></div><p>${esc(m.cuerpo)}</p></div>`).join('')}</div>
+   <form id="rform" data-hilo="${id}" data-usuario="${root.usuario}"><div class="f"><textarea id="rcuerpo" maxlength="2000" required placeholder="${MYROLE==='admin'?'Responder como equipo de GaleríaK':'Escribe tu respuesta'}"></textarea></div><div class="err" id="rerr"></div><button class="btn btn-brand">Enviar</button></form></div>`;
 }
 let curPost=null;
 async function vPost(id){
@@ -500,6 +591,7 @@ function vWrite(gid){
    <div id="dealFields" style="display:none"><div class="two"><div class="f"><label>Precio</label><input id="wprice" maxlength="20" placeholder="$299 MXN"></div><div class="f"><label>Tienda</label><input id="wstore" maxlength="40" placeholder="Amazon MX, Sephora…"></div></div><div class="f"><label>Enlace de la oferta</label><input id="wurl" placeholder="https://"></div></div>
    <div id="srcField" style="display:none" class="f"><label>Fuente (obligatoria)</label><input id="wsrc" placeholder="Enlace a entrevista, video oficial o publicación del artista/marca"></div>
    <div class="f"><label>Contenido</label><textarea id="wbody" maxlength="5000" required></textarea><div class="hint">No compartas datos personales. Máximo 3 enlaces.</div></div>
+   ${MYROLE==='admin'?'<div class="f"><label style="font-weight:600"><input type="checkbox" id="wpin" style="width:auto"> 📌 Publicar como aviso fijo (solo administradores)</label></div>':''}
    <div class="err" id="werr"></div>
    <button class="btn btn-brand" id="wsend">Publicar</button> <a class="btn" href="#g-${g.id}">Cancelar</a>
   </form></div>`;
@@ -633,7 +725,7 @@ async function vAdmin(){
         +'<div class="meta"><span>가입 '+ago(u.created_at)+'</span></div>'+admBox(admBanCtl(u.id,u.role))+'</div></li>';
      },'사용자가 없습니다.');
   }
-  return '<div class="card"><h2>관리자</h2><div class="tabs" style="flex-wrap:wrap">'+TABS.map(([k,n])=>'<button data-admtab="'+k+'" class="'+(admTab===k?'on':'')+'">'+n+'</button>').join('')+'</div>'+body+'</div>';
+  return '<div class="card"><h2>관리자 <a class="more" href="#mensajes">✉️ 쪽지 문의 보기</a></h2><div class="tabs" style="flex-wrap:wrap">'+TABS.map(([k,n])=>'<button data-admtab="'+k+'" class="'+(admTab===k?'on':'')+'">'+n+'</button>').join('')+'</div>'+body+'</div>';
 }
 async function admClick(t){
   if(t.dataset.admtab){admTab=t.dataset.admtab;route();return}
@@ -675,6 +767,9 @@ async function route(){
     else if(m=h.match(/^p-(\d+)$/))html=await vPost(+m[1]);
     else if(m=h.match(/^w-([\w-]+)$/))html=vWrite(m[1]);
     else if(m=h.match(/^aviso-([\w-]+)$/))html=vAviso(m[1]);
+    else if(h==='mensajes')html=await vMensajes();
+    else if(m=h.match(/^mensaje-(\d+)$/))html=await vHilo(+m[1]);
+    else if(h==='niveles')html=vNiveles();
     else if(h==='entrar')html=vAuth();
     else if(h==='admin')html=await vAdmin();
     else if(h==='nueva-clave')html=vNewPass();
@@ -690,7 +785,8 @@ async function route(){
   if(seq!==routeSeq)return;
   $('#main').innerHTML=html;window.scrollTo(0,0);
   if($('#wg')){$('#wg').onchange=syncWriteFields;syncWriteFields()}
-  side().catch(()=>{});
+  decorateLevels().catch(()=>{});
+  side().then(()=>decorateLevels()).catch(()=>{});
 }
 function go(h){if(location.hash==='#'+h)route();else location.hash=h}
 
@@ -761,9 +857,23 @@ document.addEventListener('submit',async e=>{
     const row={gallery_id:g.id,author_id:ME.id,title,body};
     if(g.deal){const price=$('#wprice').value.trim(),store=$('#wstore').value.trim(),url=$('#wurl').value.trim();if(!price||!store)return err.textContent='Las ofertas necesitan precio y tienda.';if(!okUrl(url))return err.textContent='Agrega un enlace válido a la oferta (https://…).';Object.assign(row,{deal_price:price,deal_store:store,deal_url:url})}
     if(g.needSource){const s=$('#wsrc').value.trim();if(!okUrl(s))return err.textContent='En esta galería la fuente es obligatoria (enlace https://…).';row.source_url=s}
+    if(MYROLE==='admin'&&$('#wpin')&&$('#wpin').checked)row.is_pinned=true;
     busy(true);const {data,error}=await sb.from('posts').insert(row).select('id').single();busy(false);
     if(error)return err.textContent=errMsg(error);
     toast('¡Publicado!');go('p-'+data.id);return;
+  }
+  if(f.id==='mform'){
+    const err=$('#merr');err.textContent='';const as=$('#masunto').value.trim(),cu=$('#mcuerpo').value.trim();
+    if(as.length<2)return err.textContent='Escribe un asunto.';if(cu.length<10)return err.textContent='Cuéntanos un poco más en el mensaje.';
+    busy(true);const {data,error}=await sb.from('mensajes').insert({usuario:ME.id,autor:ME.id,asunto:('['+$('#mcat').value+'] '+as).slice(0,120),cuerpo:cu}).select('id').single();busy(false);
+    if(error)return err.textContent=msgOff(error)?'Los mensajes aún no están activos. Escríbenos a galeriakmx@gmail.com':errMsg(error);
+    toast('Mensaje enviado. Te responderemos aquí.');go('mensaje-'+data.id);return;
+  }
+  if(f.id==='rform'){
+    const err=$('#rerr');err.textContent='';const cu=$('#rcuerpo').value.trim();if(cu.length<2)return err.textContent='El mensaje está vacío.';
+    busy(true);const {error}=await sb.from('mensajes').insert({hilo:+f.dataset.hilo,usuario:f.dataset.usuario,autor:ME.id,de_admin:MYROLE==='admin'&&f.dataset.usuario!==ME.id,cuerpo:cu});busy(false);
+    if(error)return err.textContent=errMsg(error);
+    toast('Mensaje enviado');route();return;
   }
   if(f.id==='cform'){
     const b=$('#cbody').value.trim();if(b.length<2)return $('#cerr').textContent='El comentario está vacío.';

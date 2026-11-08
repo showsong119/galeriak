@@ -38,7 +38,7 @@ OPS.md                   운영 연동 절차
 SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 ```
 
-## 4. 기존 Supabase 스키마 — 절대 새로 만들거나 바꾸지 말 것
+## 4. 기존 Supabase 스키마 — 절대 새로 만들거나 바꾸지 말 것 (추가 전용 마이그레이션은 `supabase/`에, 사용자가 SQL Editor에서 실행)
 이전 세션이 만든 테이블을 그대로 쓴다(스키마 파일은 저장소에 없음).
 - `posts(id, gallery_id, author_id, anon_name, title, body, source_url, deal_price[text], deal_store, deal_url, deal_sold, is_pinned, is_sponsored, is_hidden, is_deleted, needs_review, views, up_count, down_count, comment_count, created_at)`
 - `profiles(id, nickname, role['admin'|...], age_confirmed_at, banned_until)` — 프로필은 클라이언트가 첫 로그인 때 insert
@@ -121,3 +121,11 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 ## 16. 갤러리 고정 공지 (📌 Aviso)
 - DB가 아니라 `site/index.html` 코드에 있음: `AVISO_TIPO`·`AVISO_ESP`(갤러리 유형별 주의사항), `avisoHTML(g)`(공통: 글 등급 Destacado ≥BEST(10)♥ / 핫딜 Caliente ≥HOT_DEAL(5)♥·Agotado / Aviso / 신고 검토, 공통 규칙, 제재), 경로 `#aviso-<갤러리id>`. 모든 갤러리 목록 맨 위에 `avisoRow`로 고정 표시.
 - 마지막 줄은 사용자 요청대로 한국어 "감사합니다". 새 갤러리 추가 시 K-pop은 자동으로 kpop 유형, 그 외는 AVISO_TIPO에 매핑 추가.
+
+## 17. 쪽지(문의)·회원 등급·공지 권한 (2026-11-08)
+- SQL: `supabase/2026-11-08-mensajes-niveles.sql` (추가 전용, 재실행 안전, 로컬 Postgres 16에서 RLS 테스트 통과). **사용자가 Supabase SQL Editor에서 실행해야 활성화.** 실행 전에는 사이트가 자동으로 기능을 숨김/안내(이메일)로 대체.
+  - `gk_is_admin()`, posts에 restrictive 정책 2개(is_pinned=true는 관리자만 insert/update).
+  - `mensajes(id,hilo,usuario,autor,de_admin,asunto,cuerpo,leido_usuario,leido_admin,created_at)` + RLS(본인/관리자만 읽기, 사용자는 본인 대화만·관리자 사칭 불가, 정지 계정 차단, 하루 20건), `gk_mensajes_leidos(hilo)`.
+  - `gk_niveles(uuid[])` → (id, puntos, admin). 점수: 글 +10, 댓글 +3, 받은 ♥ +2, 가입일수 +1(최대 365). 숨김/삭제 제외.
+- 사이트: `LEVELS`(Lv1 Nuevo 0 · Lv2 Fan 30 · Lv3 Fan activo 100 · Lv4 Fan dedicado 300 · Lv5 Experto 800 · Lv6 Veterano 2000 · Lv7 Leyenda 5000, 관리자=Admin, 봇=Bot), 닉네임 옆 배지(`.nk[data-uid]` → `decorateLevels()`), `#niveles` 설명 페이지, `#mensajes`·`#mensaje-<id>` 쪽지, 상단 ✉️ 안읽음 배지, 관리자 글쓰기에 '📌 aviso fijo' 체크박스, 관리자 화면에 쪽지 링크.
+- 사용자 간 쪽지는 일부러 만들지 않음(13세 이상 커뮤니티 — 미성년자 보호). 문의는 운영팀과만.
