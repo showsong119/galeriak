@@ -192,36 +192,36 @@ document.addEventListener('click',e=>{ if(!e.target.closest('#fixReload'))return
 let ME=null, MYNICK='', MYROLE='', myVotes=new Map();
 
 const CATS=[
- {id:'comunidad',name:'Comunidad'},
- {id:'beauty',name:'K-Beauty'},
- {id:'deals',name:'Ofertas'},
- {id:'kpop',name:'K-Pop'},
- {id:'kdrama',name:'K-Drama'},
- {id:'vida',name:'Corea y más'}
+ {id:'comunidad',name:'Comunidad',icon:'💬',desc:'Lo de todos los días: lo más votado, asistencia y charla libre'},
+ {id:'beauty',name:'K-Beauty',icon:'💄',desc:'Skincare, maquillaje, reseñas y ofertas'},
+ {id:'kpop',name:'K-Pop',icon:'🎤',desc:'Una galería por grupo, en orden alfabético'},
+ {id:'kdrama',name:'K-Drama',icon:'🎬',desc:'Recomendaciones y comentarios'},
+ {id:'vida',name:'Corea y coreano',icon:'🇰🇷',desc:'Aprende coreano y planea tu viaje'}
 ];
+// Orden de las galerías = orden en que se muestran (categoría por categoría; K-Pop de la A a la Z).
 const GALS=[
  {id:'asistencia',cat:'comunidad',name:'Asistencia diaria',desc:'Pasa lista cada día y gana +5 puntos',c:'#1d8a5a',icon:'✅',attend:true},
  {id:'libre',cat:'comunidad',name:'Foro libre',desc:'Habla de lo que quieras: K-Beauty, K-Pop, tu día…',c:'#636e72',icon:'💬'},
+ {id:'solicitudes',cat:'comunidad',name:'Solicitar galería',desc:'Pide nuevas galerías de grupos, actores o marcas',c:'#2f5bd8',icon:'🙋'},
  {id:'skincare',cat:'beauty',name:'Skincare coreano',desc:'Rutinas, ingredientes y dudas de cuidado de la piel',c:'#e5317d'},
  {id:'maquillaje',cat:'beauty',name:'Maquillaje coreano',desc:'Cushions, tints, tonos para piel latina',c:'#d94f9a'},
  {id:'resenas',cat:'beauty',name:'Reseñas',desc:'Reseñas honestas después de usar el producto',c:'#b83f7a'},
  {id:'idol-picks',cat:'beauty',name:'Productos de idols',desc:'Lo que usan los idols — siempre con fuente',c:'#8e44ad',needSource:true},
- {id:'ofertas',cat:'deals',name:'Ofertas K-Beauty',desc:'Precios bajos en México, con enlace y tienda',c:'#e5482b',deal:true},
- {id:'bts',cat:'kpop',name:'BTS',desc:'Galería de fans de BTS',c:'#6c4bd8'},
- {id:'blackpink',cat:'kpop',name:'BLACKPINK',desc:'Galería de fans de BLACKPINK',c:'#e0457b'},
- {id:'stray-kids',cat:'kpop',name:'Stray Kids',desc:'Galería de fans de Stray Kids',c:'#c0392b'},
- {id:'twice',cat:'kpop',name:'TWICE',desc:'Galería de fans de TWICE',c:'#ff7a59'},
- {id:'seventeen',cat:'kpop',name:'SEVENTEEN',desc:'Galería de fans de SEVENTEEN',c:'#5c7cfa'},
- {id:'ateez',cat:'kpop',name:'ATEEZ',desc:'Galería de fans de ATEEZ',c:'#d35400'},
- {id:'enhypen',cat:'kpop',name:'ENHYPEN',desc:'Galería de fans de ENHYPEN',c:'#34495e'},
- {id:'txt',cat:'kpop',name:'TXT',desc:'Galería de fans de TOMORROW X TOGETHER',c:'#3498db'},
+ {id:'ofertas',cat:'beauty',name:'Ofertas K-Beauty',desc:'Precios bajos en México, con enlace y tienda',c:'#e5482b',deal:true},
  {id:'aespa',cat:'kpop',name:'aespa',desc:'Galería de fans de aespa',c:'#16a085'},
+ {id:'ateez',cat:'kpop',name:'ATEEZ',desc:'Galería de fans de ATEEZ',c:'#d35400'},
+ {id:'blackpink',cat:'kpop',name:'BLACKPINK',desc:'Galería de fans de BLACKPINK',c:'#e0457b'},
+ {id:'bts',cat:'kpop',name:'BTS',desc:'Galería de fans de BTS',c:'#6c4bd8'},
+ {id:'enhypen',cat:'kpop',name:'ENHYPEN',desc:'Galería de fans de ENHYPEN',c:'#34495e'},
  {id:'ive',cat:'kpop',name:'IVE',desc:'Galería de fans de IVE',c:'#e84393'},
  {id:'le-sserafim',cat:'kpop',name:'LE SSERAFIM',desc:'Galería de fans de LE SSERAFIM',c:'#2d3436'},
+ {id:'seventeen',cat:'kpop',name:'SEVENTEEN',desc:'Galería de fans de SEVENTEEN',c:'#5c7cfa'},
+ {id:'stray-kids',cat:'kpop',name:'Stray Kids',desc:'Galería de fans de Stray Kids',c:'#c0392b'},
+ {id:'twice',cat:'kpop',name:'TWICE',desc:'Galería de fans de TWICE',c:'#ff7a59'},
+ {id:'txt',cat:'kpop',name:'TXT',desc:'Galería de fans de TOMORROW X TOGETHER',c:'#3498db'},
  {id:'kdramas',cat:'kdrama',name:'K-Dramas',desc:'Recomendaciones y comentarios (sin spoilers en el título)',c:'#00a383'},
- {id:'viajes',cat:'vida',name:'Viaje a Corea',desc:'Compras, tax free y consejos para tu viaje',c:'#0984e3'},
  {id:'coreano',cat:'vida',name:'Aprender coreano',desc:'Frases útiles, hangul y recursos',c:'#6d4c41'},
- {id:'solicitudes',cat:'vida',name:'Solicitar galería',desc:'Pide nuevas galerías de grupos, actores o marcas',c:'#2f5bd8'}
+ {id:'viajes',cat:'vida',name:'Viaje a Corea',desc:'Compras, tax free y consejos para tu viaje',c:'#0984e3'}
 ];
 
 const G=Object.fromEntries(GALS.map(g=>[g.id,g]));
@@ -359,12 +359,13 @@ async function side(){
 
 /* ---------------- vistas ---------------- */
 function nav(cur){
-  const items=[['home','Inicio'],['hoy','🔥 Mejores de hoy'],['g-asistencia','✅ Asistencia'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['g-libre','💬 Foro libre'],['c-vida','Corea y más'],['guias','Guías'],['/examen-coreano/','Examen de coreano'],['galerias','Galerías']];
+  const items=[['home','Inicio'],['hoy','🔥 Mejores de hoy'],['g-asistencia','✅ Asistencia'],['g-libre','💬 Foro libre'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y coreano'],['guias','Guías'],['/examen-coreano/','Examen de coreano'],['galerias','Galerías']];
   if(MYROLE==='admin')items.push(['admin','관리자']);
   $('#nav').innerHTML=items.map(([h,n])=>`<a href="${h[0]==='/'?h:'#'+h}" class="${cur===h?'on':''}${h==='hoy'?' nav-hoy':''}${h==='g-asistencia'?' nav-att':''}">${n}</a>`).join('');
 }
 const galCard=g=>`<a class="gal" href="#g-${g.id}">${av(g)}<div><b>${esc(g.name)}</b><small>${esc(g.desc)}</small></div></a>`;
 const FLAME='<svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="flg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e5482b"/><stop offset="1" stop-color="#ff9a3c"/></linearGradient></defs><path fill="url(#flg)" d="M16 1.5c1.2 5-1.6 7.6-4.2 10.4C9.3 14.6 7 17.4 7 21.4 7 26.6 11 30.5 16 30.5s9-3.9 9-9.1c0-4.6-2.4-7.6-4.6-10.3-.5 2.3-1.6 4-3.3 4.9.6-5.2-.4-10.4-1.1-14.5z"/><path fill="#ffd25e" d="M16.3 17c.5 2.6-.9 3.8-2.1 5.1-.9 1-1.6 2-1.6 3.4 0 2 1.6 3.5 3.5 3.5s3.5-1.5 3.5-3.5c0-1.9-1.1-3.2-2.1-4.3-.3 1-.8 1.6-1.4 1.9.3-2.2 0-4.3-.2-6.1z"/></svg>';
+const catCard=cid=>{const c=CATS.find(x=>x.id===cid),n=GALS.filter(g=>g.cat===cid).length;return `<a class="gal" href="#c-${cid}"><span class="av" style="background:#6c4bd8;font-size:16px">${c.icon}</span><div><b>${esc(c.name)}</b><small>${n} galerías de grupos, de la A a la Z</small></div></a>`};
 const hotCard=()=>`<a class="gal gal-hot" href="#hoy"><span class="av flame">${FLAME}</span><div><b>Mejores de hoy</b><small>Lo más votado de todas las galerías</small></div></a>`;
 const welcome=()=>ME?'':`<div class="card" style="background:var(--brand-soft);border-color:#f6c3d8"><b>¡Bienvenida, bienvenido a GaleríaK!</b> La comunidad en español de K-Beauty y K-Pop. <a href="#entrar" style="color:var(--brand);font-weight:700">Crea tu cuenta</a> para publicar, comentar y votar.</div>`;
 
@@ -381,14 +382,14 @@ async function vHome(){
   ${B.length?`<div class="card"><h2>⭐ Destacados <a class="more" href="#mejores">Ver más</a></h2>${listWithAds(B,1,true)}</div>`:''}
   <div class="card"><h2>🔥 Ofertas K-Beauty <a class="more" href="#g-ofertas">Ver todas</a></h2>${Dl.length?`<ul class="list">${Dl.map((p,i)=>row(p,i+1,false)).join('')}</ul>`:'<div class="empty">¿Viste un buen precio? <a href="#w-ofertas" style="color:var(--blue)">Compártelo</a></div>'}</div>
   <div class="card"><h2>🕒 Lo más nuevo</h2>${R.length?listWithAds(R,1,true):'<div class="empty">¡Sé la primera persona en publicar!</div>'}</div>
-  <div class="card"><h2>📂 Galerías <a class="more" href="#galerias">Todas</a></h2><div class="galgrid">${hotCard()}${GALS.slice(0,7).map(galCard).join('')}</div></div>
+  <div class="card"><h2>📂 Galerías <a class="more" href="#galerias">Todas</a></h2><div class="galgrid">${hotCard()}${['asistencia','libre','skincare','ofertas'].map(k=>galCard(G[k])).join('')}${catCard('kpop')}${['kdramas','coreano'].map(k=>galCard(G[k])).join('')}</div></div>
   <div class="card"><h2>📘 Guías de K-Beauty, K-Pop y coreano <a class="more" href="/guias/">Ver todas</a></h2><div class="guides">${STATIC_GUIDES.slice(0,6).map(g=>`<a class="guide" href="${g.u}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}${Object.entries(GUIDES).map(([k,g])=>`<a class="guide" href="#${k}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}</div></div>`;
 }
 async function vCat(cid){
   nav('c-'+cid);const c=CATS.find(x=>x.id===cid);const gs=GALS.filter(g=>g.cat===cid);
   const {data,error}=await listQ().in('gallery_id',gs.map(g=>g.id)).eq('is_pinned',false).order('created_at',{ascending:false}).limit(20);
   if(error)return fail(error);
-  return ad('leader')+`<div class="card"><h2>${esc(c.name)}: galerías</h2><div class="galgrid">${gs.map(galCard).join('')}</div></div>
+  return ad('leader')+`<div class="card"><h2>${c.icon} ${esc(c.name)} <span class="hint" style="font-weight:400">· ${esc(c.desc)}</span></h2><div class="galgrid">${gs.map(galCard).join('')}</div></div>
   <div class="card"><h2>Publicaciones recientes</h2>${data.length?listWithAds(data,1,true):'<div class="empty">Aún no hay publicaciones.</div>'}</div>`;
 }
 let galTab='all',galPage=1,lastGal='';
@@ -733,7 +734,7 @@ function vWrite(gid){
   return `<div class="card"><div class="gh">${av(g)}<div><h1>Escribir en ${esc(g.name)}</h1><p>Publicas como <b>${esc(MYNICK)}</b>. Lee las <a href="#reglas" style="color:var(--blue)">reglas</a>.</p></div></div>
   ${isNewbie()&&!ATT.today?`<div class="att att-new"><b>💡 Consejo:</b> tu cuenta está en Lv.0. Empieza <a href="#g-asistencia" style="color:var(--ok);font-weight:700">pasando lista en Asistencia diaria</a> (+${ATT_PTS} puntos) y luego vuelve a escribir aquí.</div>`:''}
   <form id="wform">
-   <div class="f"><label>Galería</label><select id="wg">${GALS.filter(x=>!x.attend).map(x=>`<option value="${x.id}" ${x.id===g.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>
+   <div class="f"><label>Galería</label><select id="wg">${CATS.map(c=>`<optgroup label="${c.icon} ${esc(c.name)}">${GALS.filter(x=>x.cat===c.id&&!x.attend).map(x=>`<option value="${x.id}" ${x.id===g.id?'selected':''}>${esc(x.name)}</option>`).join('')}</optgroup>`).join('')}</select></div>
    <div class="f"><label>Título</label><input id="wtitle" maxlength="80" required></div>
    <div id="dealFields" style="display:none"><div class="two"><div class="f"><label>Precio</label><input id="wprice" maxlength="20" placeholder="$299 MXN"></div><div class="f"><label>Tienda</label><input id="wstore" maxlength="40" placeholder="Amazon MX, Sephora…"></div></div><div class="f"><label>Enlace de la oferta</label><input id="wurl" placeholder="https://"></div></div>
    <div id="srcField" style="display:none" class="f"><label>Fuente (obligatoria)</label><input id="wsrc" placeholder="Enlace a entrevista, video oficial o publicación del artista/marca"></div>
@@ -767,7 +768,7 @@ async function vSearch(q){
   return `<div class="card"><h2>Resultados para “${esc(q)}” (${data.length})</h2>${data.length?listWithAds(data,1,true):'<div class="empty">No encontramos nada. Prueba otra palabra.</div>'}</div>`;
 }
 async function vBest(){nav('');const {data,error}=await listQ().gte('up_count',BEST).neq('gallery_id','ofertas').order('created_at',{ascending:false}).limit(50);if(error)return fail(error);return ad('leader')+`<div class="card"><h2>⭐ Destacados (${BEST}+ me gusta)</h2>${data.length?listWithAds(data,1,true):'<div class="empty">Aún no hay destacados.</div>'}</div>`}
-function vAllGals(){nav('galerias');return `<div class="card"><h2>🔥 Tablero especial</h2><div class="galgrid">${hotCard()}</div></div>`+CATS.map(c=>`<div class="card"><h2>${esc(c.name)}</h2><div class="galgrid">${GALS.filter(g=>g.cat===c.id).map(galCard).join('')}</div></div>`).join('')+`<div class="card"><h2>¿Falta tu grupo?</h2><p>Pídelo en <a href="#g-solicitudes" style="color:var(--blue)">Solicitar galería</a>.</p></div>`}
+function vAllGals(){nav('galerias');document.title='Todas las galerías – GaleríaK';return `<div class="card"><h2>📂 Todas las galerías</h2><p class="hint" style="margin:0">${CATS.map(c=>`<a href="#galerias" onclick="document.getElementById('cat-${c.id}').scrollIntoView({behavior:'smooth'});return false" style="color:var(--blue);margin-right:10px;white-space:nowrap">${c.icon} ${esc(c.name)}</a>`).join('')}</p></div>`+CATS.map(c=>`<div class="card" id="cat-${c.id}"><h2>${c.icon} ${esc(c.name)} <span class="hint" style="font-weight:400">· ${esc(c.desc)}</span></h2><div class="galgrid">${c.id==='comunidad'?hotCard():''}${GALS.filter(g=>g.cat===c.id).map(galCard).join('')}</div></div>`).join('')}
 function vGuides(){nav('guias');return `<div class="card"><h2>📘 Guías de K-Beauty, K-Pop y coreano <a class="more" href="/guias/">Ver todas</a></h2><div class="guides">${STATIC_GUIDES.map(g=>`<a class="guide" href="${g.u}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}</div></div><div class="card"><h2>🛍️ Para comprar en México</h2><div class="guides">${Object.entries(GUIDES).map(([k,g])=>`<a class="guide" href="#${k}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}</div></div>`}
 function vGuide(k){nav('guias');const g=GUIDES[k];document.title=g.t+' – GaleríaK';return ad('leader')+`<div class="card article"><a href="#guias" class="hint">← Guías</a><h1>${esc(g.t)}</h1>${g.html}${ad('post')}</div>`}
 function vRules(){nav('');return `<div class="card article"><h1>Reglas de GaleríaK</h1>
