@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Burbujas con frases en coreano">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ece3ff"/><stop offset="1" stop-color="#ffd6f0"/></linearGradient>
+<filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity=".12"/></filter></defs>
+<rect width="1200" height="630" fill="url(#bg)"/>
+<circle cx="1080" cy="90" r="160" fill="#f7f3ff" opacity=".55"/><circle cx="120" cy="560" r="200" fill="#f7f3ff" opacity=".5"/>
+<circle cx="980" cy="520" r="60" fill="#e5317d" opacity=".12"/><circle cx="210" cy="120" r="40" fill="#6c4bd8" opacity=".12"/>
+<g transform="translate(-190 0)"><g filter="url(#sh)"><rect x="540" y="150" width="330" height="140" rx="34" fill="#fff"/>
+<path d="M562 288l-6 46 44-46z" fill="#fff"/>
+<text x="705.0" y="239.44" text-anchor="middle" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',Inter,Arial,sans-serif" font-size="54" font-weight="900" fill="#6c4bd8">안녕!</text></g><g filter="url(#sh)"><rect x="800" y="320" width="360" height="140" rx="34" fill="#6c4bd8"/>
+<path d="M1102 458l-6 46 44-46z" fill="#6c4bd8"/>
+<text x="980.0" y="409.44" text-anchor="middle" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',Inter,Arial,sans-serif" font-size="54" font-weight="900" fill="#fff">사랑해 💜</text></g><path transform="translate(640 470) scale(0.9)" d="M0 30C-40 0-60-20-60-42c0-18 14-32 32-32 12 0 22 6 28 16 6-10 16-16 28-16 18 0 32 14 32 32 0 22-20 42-60 72z" fill="#e5317d" opacity="0.8"/></g>
+<text x="1168" y="606" text-anchor="end" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',Inter,Arial,sans-serif" font-size="22" font-weight="800" fill="#6c4bd8" opacity=".55">Galería<tspan fill="#e5317d">K</tspan></text>
+</svg>

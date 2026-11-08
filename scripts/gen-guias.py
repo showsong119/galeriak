@@ -36,11 +36,17 @@ li{margin:4px 0}
 @media (max-width:600px){.list{grid-template-columns:minmax(0,1fr)}}
 .list a{display:block;border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-decoration:none;color:var(--ink);background:#fff;height:100%}
 .list a b{display:block;font-size:15px;line-height:1.35}.list a span{display:block;font-size:13px;color:var(--muted);margin-top:4px;line-height:1.45}
+.hero{margin:6px 0 18px}.hero img{display:block;width:100%;height:auto;border-radius:16px;aspect-ratio:1200/630;background:#fde8f1}
+.list a img{display:block;width:100%;height:auto;aspect-ratio:1200/630;border-radius:8px;margin-bottom:8px;background:#f4f4f6}
+.top nav a.exam{background:#2f5bd8;color:#fff;border-radius:999px;padding:3px 12px;font-weight:800}.top nav a.exam em{font-style:normal;background:#ffd400;color:#17171c;border-radius:999px;padding:0 6px;margin-left:4px;font-size:11px}
+.exam-banner{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:center;background:#e8efff;border:2px solid #2f5bd8;border-radius:16px;padding:16px;margin:18px 0;text-decoration:none;color:#17171c}
+.exam-banner img{width:100%;height:auto;border-radius:12px}.exam-banner b{display:block;font-size:22px;line-height:1.25;color:#2f5bd8}.exam-banner span{display:block;font-size:15px;margin:6px 0 10px;color:#33333d}.exam-banner i{display:inline-block;font-style:normal;background:#ff7a00;color:#fff;font-weight:800;border-radius:999px;padding:8px 16px}
+@media (max-width:600px){.exam-banner{grid-template-columns:1fr}}
 .cta{display:inline-block;background:var(--brand);color:#fff;text-decoration:none;font-weight:700;border-radius:10px;padding:11px 18px;margin-top:6px}
 footer{max-width:820px;margin:8px auto 32px;padding:0 16px;font-size:13px;color:var(--muted);text-align:center}footer a{color:var(--muted)}
 """
 
-def head(title, desc, url, extra=''):
+def head(title, desc, url, extra='', og='/icons/icon-512.png'):
     return f"""<!DOCTYPE html>
 <html lang="es-MX">
 <head>
@@ -51,14 +57,14 @@ def head(title, desc, url, extra=''):
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="article"><meta property="og:locale" content="es_MX">
 <meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}">
-<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/icons/icon-512.png">
+<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}{og}"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/icons/icon-192.png" type="image/png">
 <meta name="theme-color" content="#e5317d">
 <!-- AdSense: pega aquí el script de tu cuenta cuando sea aprobada -->
 {extra}<style>{CSS}</style>
 </head>
 <body>
-<header class="top"><div class="top-in"><a class="logo" href="/">Galería<b>K</b></a><nav><a href="/guias/">Guías</a><a href="/examen-coreano/">Examen de coreano</a></nav></div></header>
+<header class="top"><div class="top-in"><a class="logo" href="/">Galería<b>K</b></a><nav><a href="/guias/">Guías</a><a class="exam" href="/examen-coreano/">📝 Examen gratis<em>GRATIS</em></a></nav></div></header>
 """
 
 FOOT = """<footer>GaleríaK es una comunidad de fans no oficial. No está afiliada a ninguna agencia, artista ni marca.<br>
@@ -67,7 +73,16 @@ FOOT = """<footer>GaleríaK es una comunidad de fans no oficial. No está afilia
 </html>
 """
 
-def card(g): return f'<li><a href="/guias/{g["slug"]}/"><b>{html.escape(g["short"])}</b><span>{html.escape(g["desc"])}</span></a></li>'
+IMG = ROOT / 'site/img'
+def img_of(slug): return f'/img/guias/{slug}.svg' if (IMG / 'guias' / f'{slug}.svg').exists() else ''
+def og_of(slug): return f'/img/og/{slug}.jpg' if (IMG / 'og' / f'{slug}.jpg').exists() else '/icons/icon-512.png'
+def card(g):
+    im = img_of(g['slug'])
+    pic = f'<img src="{im}" alt="" loading="lazy" width="1200" height="630">' if im else ''
+    return f'<li><a href="/guias/{g["slug"]}/">{pic}<b>{html.escape(g["short"])}</b><span>{html.escape(g["desc"])}</span></a></li>'
+EXAM_BANNER = ('<a class="exam-banner" href="/examen-coreano/"><div><b>Examen de coreano GRATIS</b>'
+               '<span>30 preguntas estilo TOPIK, nivel del 1 al 6 y explicación de cada respuesta en español. Sin crear cuenta.</span>'
+               '<i>Hacer el examen →</i></div><img src="/img/examen.svg" alt="Examen de coreano gratis" loading="lazy" width="1200" height="630"></a>')
 
 guides = []
 for f in sorted(SRC.glob('*.html')):
@@ -89,14 +104,18 @@ for g in guides:
                      "author": {"@type": "Organization", "name": "Equipo GaleríaK"}, "publisher": {"@type": "Organization", "name": "GaleríaK"}}, ensure_ascii=False)
     others = [o for o in guides if o['slug'] != g['slug']]
     same = [o for o in others if o['cat'] == g['cat']] + [o for o in others if o['cat'] != g['cat']]
-    page = head(g['title'], g['desc'], url, f'<script type="application/ld+json">{ld}</script>\n') + f"""<div class="wrap">
+    im = img_of(g['slug'])
+    hero = f'<figure class="hero"><img src="{im}" alt="{html.escape(g["short"])}" width="1200" height="630"></figure>' if im else ''
+    page = head(g['title'], g['desc'], url, f'<script type="application/ld+json">{ld}</script>\n', og_of(g['slug'])) + f"""<div class="wrap">
 <article>
 <div class="crumb"><a href="/">Inicio</a> › <a href="/guias/">Guías</a> › {html.escape(g['cat'])}</div>
 <span class="cat">{html.escape(g['cat'])}</span>
 <h1>{html.escape(g['title'])}</h1>
 <p class="meta">Por el equipo de GaleríaK · Actualizado el {DATE_TXT}</p>
+{hero}
 <div class="ad">Publicidad</div>
 {body}
+{EXAM_BANNER}
 <div class="ad">Publicidad</div>
 </article>
 <section class="box more"><h2>Más guías</h2><ul class="list">{''.join(card(o) for o in same[:4])}</ul>
@@ -109,7 +128,7 @@ for g in guides:
 cats = []
 for g in guides:
     if g['cat'] not in cats: cats.append(g['cat'])
-idx = head('Guías de K-Beauty, K-Pop y coreano', 'Guías en español para cuidar tu piel con K-Beauty, entender el K-pop y aprender coreano: rutinas, ingredientes, hangul, frases y preparación para el TOPIK.', f'{SITE}/guias/') + '<div class="wrap"><article>\n<div class="crumb"><a href="/">Inicio</a> › Guías</div>\n<h1>Guías de K-Beauty, K-Pop y coreano</h1>\n<p class="meta">Guías prácticas en español escritas por el equipo de GaleríaK.</p>\n'
+idx = head('Guías de K-Beauty, K-Pop y coreano', 'Guías en español para cuidar tu piel con K-Beauty, entender el K-pop y aprender coreano: rutinas, ingredientes, hangul, frases y preparación para el TOPIK.', f'{SITE}/guias/') + '<div class="wrap"><article>\n<div class="crumb"><a href="/">Inicio</a> › Guías</div>\n<h1>Guías de K-Beauty, K-Pop y coreano</h1>\n<p class="meta">Guías prácticas en español escritas por el equipo de GaleríaK.</p>\n' + EXAM_BANNER + '\n'
 for i, c in enumerate(cats):
     idx += f'<h2>{html.escape(c)}</h2><ul class="list">' + ''.join(card(g) for g in guides if g['cat'] == c) + '</ul>\n'
     if i == 0: idx += '<div class="ad">Publicidad</div>\n'
@@ -122,7 +141,7 @@ idx += '<h2>Para comprar en México</h2><ul class="list">' \
 
 # Lista para el sitio principal (entre marcadores)
 idxf = ROOT / 'site/index.html'; s = idxf.read_text()
-arr = 'const STATIC_GUIDES=' + json.dumps([{"u": f'/guias/{g["slug"]}/', "t": g['short'], "d": g['desc']} for g in guides], ensure_ascii=False) + ';'
+arr = 'const STATIC_GUIDES=' + json.dumps([{"u": f'/guias/{g["slug"]}/', "t": g['short'], "d": g['desc'], "i": img_of(g['slug'])} for g in guides], ensure_ascii=False) + ';'
 s = re.sub(r'/\* STATIC_GUIDES:start \*/.*?/\* STATIC_GUIDES:end \*/', lambda m: '/* STATIC_GUIDES:start */' + arr + '/* STATIC_GUIDES:end */', s, flags=re.S)
 idxf.write_text(s)
 

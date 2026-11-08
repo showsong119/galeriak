@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Rostro con zona T">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe3ec"/><stop offset="1" stop-color="#ffd0bf"/></linearGradient>
+<filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity=".12"/></filter></defs>
+<rect width="1200" height="630" fill="url(#bg)"/>
+<circle cx="1080" cy="90" r="160" fill="#fff6f9" opacity=".55"/><circle cx="120" cy="560" r="200" fill="#fff6f9" opacity=".5"/>
+<circle cx="980" cy="520" r="60" fill="#ff7a59" opacity=".12"/><circle cx="210" cy="120" r="40" fill="#e5317d" opacity=".12"/>
+<g transform="translate(-190 0)"><g transform="translate(820 330) scale(1.05)" filter="url(#sh)"><ellipse rx="170" ry="210" fill="#ffe9dc"/>
+<path d="M-110-80h220v50h-80v170h-60v-170h-80z" fill="#ff7a59" opacity=".13"/>
+<circle cx="-110" cy="60" r="40" fill="#e5317d" opacity=".18"/><circle cx="110" cy="60" r="40" fill="#e5317d" opacity=".18"/>
+<ellipse cx="-60" cy="-20" rx="16" ry="20" fill="#3b2a28"/><ellipse cx="60" cy="-20" rx="16" ry="20" fill="#3b2a28"/>
+<path d="M-40 90q40 30 80 0" stroke="#c45a63" stroke-width="10" fill="none" stroke-linecap="round"/>
+<text x="0" y="-120" text-anchor="middle" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',Inter,Arial,sans-serif" font-size="30" font-weight="900" fill="#ff7a59">T존</text></g><path transform="translate(1060 200) scale(0.9)" d="M0-60C22-28 40-6 40 16a40 40 0 0 1-80 0c0-22 18-44 40-76z" fill="#5ab0ff" opacity="0.9"/><path transform="translate(560 200) scale(1.4)" d="M0-20C2-6 6-2 20 0 6 2 2 6 0 20-2 6-6 2-20 0-6-2-2-6 0-20z" fill="#ff7a59" opacity="1"/></g>
+<text x="1168" y="606" text-anchor="end" font-family="'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',Inter,Arial,sans-serif" font-size="22" font-weight="800" fill="#e5317d" opacity=".55">Galería<tspan fill="#ff7a59">K</tspan></text>
+</svg>

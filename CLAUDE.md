@@ -103,7 +103,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 
 ## 12. 무료 한국어 시험 페이지 (/examen-coreano/)
 - `site/examen-coreano/index.html` 단일 파일. 30문항 CBT(어휘·문법 12 → 읽기 10 → 듣기 8), 30분, 영역마다 페이지 이동(`?p=V|pausa-V|R|pausa-R|L|resultado`), 상태는 localStorage `gk-examen-v1` (저장 불가 시 한 페이지 모드).
-- 문제은행: `/* ===== CORE */` 구간의 `BANK`(90문항 = 영역·급마다 시험 1회분의 3배). 응시 때 `pickExam()`이 `BLUEPRINT`대로 30문항을 뽑고, localStorage `gk-examen-vistas`(문항별 노출 횟수)로 덜 본 문제부터 출제 → 3회까지 중복 없음. 문항 추가는 BANK에 넣기만 하면 됨(정답은 항상 o[0], 화면에서 섞임). 테스트: `scripts/examen.test.mjs`.
+- 문제은행: `/* ===== CORE */` 구간의 `BANK`(**180문항** = 영역·급마다 시험 1회분의 6배, 2026-11-08 23시 +90 `v1x1` 형식 id). 응시 때 `pickExam()`이 `BLUEPRINT`대로 30문항을 뽑고, localStorage `gk-examen-vistas`(문항별 노출 횟수)로 덜 본 문제부터 출제 → 6회까지 중복 없음(테스트도 6회). 문항 추가는 BANK에 넣기만 하면 됨(정답은 항상 o[0], 화면에서 섞임). 테스트: `scripts/examen.test.mjs`.
 - 수익화 설정은 파일 상단 `ADS={client, slots{top,infeed,bottom,side,examBottom,pause,result,review,resultBottom}}`. 아마존 링크는 사용자 요청으로 제거(넣지 말 것). `ADS.client`가 비어 있으면 메인 사이트처럼 'Publicidad' 자리 표시 상자가 보이고, 넣으면 실제 광고로 바뀜(`client`만 있고 slot이 빈 자리는 숨김). `?demo=ads`는 자리 이름까지 표시.
 - AdSense 정책: 광고를 보기·버튼 바로 옆에 두지 않음, 라벨은 'Publicidad', 무관한 고단가 키워드 문단 금지. 전면광고는 Auto ads '비녜트'(페이지 이동 시)로.
 - 메뉴 `nav()`에 '/examen-coreano/' 항목, 푸터 링크 있음.
@@ -154,3 +154,9 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 법·안전: 약관 `#derechos`·`#moderacion`, 개인정보 신법(2025-03-20) 반영. `REP_MOTIVOS`/`repPicker`(reports.reason), honeypot `#aweb`, `TURNSTILE_SITEKEY`(비면 꺼짐; 켤 때 사이트 먼저 → Supabase CAPTCHA 나중).
 - Supabase SQL Editor 사용 시 **브라우저 자동 번역을 끄게** 안내할 것(번역된 SQL이 붙여넣어져 42601 오류, 대시보드도 removeChild 오류로 멈춤). 복사는 GitHub blob 페이지의 「Copy raw file」 버튼이 안전.
 - Actions 수동 실행: `gh workflow run`은 GraphQL이라 막힘 → `gh api -X POST repos/showsong119/galeriak/actions/workflows/pages.yml/dispatches -f ref=main`.
+
+## 22. 가이드 확장·일러스트·시험 강조 (2026-11-08 23시)
+- 가이드 16편(새 6편: skincare-clima-calido, glass-skin, apoyar-kpop-oficial, particulas-coreanas, numeros-coreanos, formal-informal-coreano).
+- 일러스트: `scripts/gen-illustrations.py`(슬러그별 모티프, 사진·아이돌 이미지 미사용) → `site/img/guias/<slug>.svg`, `site/img/examen.svg`. 공유 이미지: `PLAYWRIGHT=/opt/npm-tools/node_modules/playwright CHROME=/usr/bin/google-chrome node scripts/render-og.cjs` → `site/img/og/*.jpg`. 새 가이드 추가 시 ART에 항목 추가 → 두 스크립트 → `gen-guias.py` → **`set-adsense.py ca-pub-2340316018998356` 다시 실행(gen-guias가 AdSense 태그를 지움)**.
+- gen-guias: 표지(figure.hero), 목록 썸네일, og:image, 시험 배너(EXAM_BANNER), 헤더 시험 버튼. STATIC_GUIDES에 `i`(썸네일).
+- 사이트: 메뉴 2번째 `📝 Examen de coreano GRATIS`(.nav-exam 파란 배경·흰 글씨·노란 배지), 홈 맨 위 `.exambar`, 가이드 카드 썸네일(.guide img, .gmini).

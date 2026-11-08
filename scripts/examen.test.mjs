@@ -8,7 +8,7 @@ const ctx = vm.createContext({});
 vm.runInContext('/*' + core + ';Object.assign(this,{BANK,BLUEPRINT,EXAM_N,pickExam,grade,BYID});', ctx);
 const { BANK, BLUEPRINT, EXAM_N, pickExam, grade, BYID } = ctx;
 
-test('banco: ids únicos, 4 opciones distintas, al menos 3 veces lo que pide cada examen', () => {
+test('banco: ids únicos, 4 opciones distintas, al menos 6 veces lo que pide cada examen', () => {
   assert.equal(new Set(BANK.map(q => q.id)).size, BANK.length);
   for (const q of BANK) {
     assert.equal(q.o.length, 4, q.id);
@@ -16,7 +16,7 @@ test('banco: ids únicos, 4 opciones distintas, al menos 3 veces lo que pide cad
     assert.ok(q.e && (q.t || q.a), q.id);
   }
   for (const [s, o] of Object.entries(BLUEPRINT)) for (const [lv, n] of Object.entries(o))
-    assert.ok(BANK.filter(q => q.s === s && q.lv === +lv).length >= 3 * n, `${s}${lv}`);
+    assert.ok(BANK.filter(q => q.s === s && q.lv === +lv).length >= 6 * n, `${s}${lv}`);
 });
 test('examen: 30 preguntas según el plan', () => {
   const ids = pickExam({});
@@ -25,9 +25,9 @@ test('examen: 30 preguntas según el plan', () => {
   for (const [s, o] of Object.entries(BLUEPRINT)) for (const [lv, n] of Object.entries(o))
     assert.equal(ids.filter(id => BYID[id].s === s && BYID[id].lv === +lv).length, n);
 });
-test('tres intentos seguidos no repiten ninguna pregunta', () => {
+test('seis intentos seguidos no repiten ninguna pregunta', () => {
   const seen = {}; const all = [];
-  for (let k = 0; k < 3; k++) { const ids = pickExam(seen); ids.forEach(id => seen[id] = (seen[id] || 0) + 1); all.push(...ids); }
+  for (let k = 0; k < 6; k++) { const ids = pickExam(seen); ids.forEach(id => seen[id] = (seen[id] || 0) + 1); all.push(...ids); }
   assert.equal(new Set(all).size, all.length);
 });
 test('nivel: acertar hasta L da nivel L con cualquier examen', () => {
