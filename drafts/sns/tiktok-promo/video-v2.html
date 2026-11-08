@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es-MX"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#111116}
+body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff}
+#s{position:absolute;inset:0;overflow:hidden}
+.ko{font-family:"Noto Sans CJK KR","Noto Sans CJK JP",sans-serif}
+.pink{color:#e5317d}.hot{color:#ff5a36}
+.abs{position:absolute;left:0;right:0}
+.pill{display:inline-block;border-radius:999px;font-weight:800}
+.tile{position:absolute;border-radius:28px;background:#fff;color:#17171c;display:flex;align-items:center;gap:20px;padding:0 26px;box-shadow:0 14px 40px rgba(0,0,0,.18)}
+.av{width:76px;height:76px;border-radius:20px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:30px;flex:none}
+.row{position:absolute;left:70px;right:150px;height:150px;border-radius:28px;background:#1d1d25;display:flex;align-items:center;gap:26px;padding:0 30px}
+.num{font-size:56px;font-weight:900;width:60px;text-align:center}
+.card{position:absolute;border-radius:36px;background:#fff;color:#17171c;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.opt{height:104px;border-radius:24px;border:3px solid #e6e6ec;display:flex;align-items:center;padding:0 30px;font-size:44px;font-weight:700;margin-top:18px}
+.lv{display:inline-grid;place-items:center;border-radius:20px;font-weight:900;color:#fff}
+.small{font-size:30px;color:#9a9aa6;font-weight:600}
+</style></head>
+<body><div id="s"></div>
+<script>
+// Zona segura de TikTok: arriba 160px, abajo 420px (texto y botones), derecha 140px.
+const S=document.getElementById('s');
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>{x=cl(x);return 1-Math.pow(1-x,3)};
+const back=x=>{x=cl(x);const c=1.9;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const inn=(t,a,d=.4)=>ease((t-a)/d);
+const pop=(t,a,d=.45)=>back((t-a)/d);
+const up=(o,y=60)=>`opacity:${cl(o*1.4)};transform:translateY(${(1-o)*y}px)`;
+const zoom=(o)=>`opacity:${cl(o*2)};transform:scale(${.6+.4*o})`;
+const pulse=t=>1+.04*Math.sin(t*Math.PI*4);
+const logo=(size=56,o=1)=>`<div style="font-weight:900;font-size:${size}px;letter-spacing:-2px;opacity:${o}">Galería<span class="pink">K</span></div>`;
+const FLAME=(w)=>`<svg width="${w}" height="${w}" viewBox="0 0 32 32"><defs><linearGradient id="fl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e5482b"/><stop offset="1" stop-color="#ffa53c"/></linearGradient></defs><path fill="url(#fl)" d="M16 1.5c1.2 5-1.6 7.6-4.2 10.4C9.3 14.6 7 17.4 7 21.4 7 26.6 11 30.5 16 30.5s9-3.9 9-9.1c0-4.6-2.4-7.6-4.6-10.3-.5 2.3-1.6 4-3.3 4.9.6-5.2-.4-10.4-1.1-14.5z"/><path fill="#ffd25e" d="M16.3 17c.5 2.6-.9 3.8-2.1 5.1-.9 1-1.6 2-1.6 3.4 0 2 1.6 3.5 3.5 3.5s3.5-1.5 3.5-3.5c0-1.9-1.1-3.2-2.1-4.3-.3 1-.8 1.6-1.4 1.9.3-2.2 0-4.3-.2-6.1z"/></svg>`;
+const ilus=`<div class="abs small" style="top:1460px;padding:0 70px;font-size:24px;color:rgba(255,255,255,.45)">Imagen ilustrativa</div>`;
+// barra de progreso superior (cuánto falta del video)
+let TOTAL=0;
+const prog=(T)=>`<div style="position:absolute;left:70px;right:150px;top:150px;height:8px;border-radius:9px;background:rgba(255,255,255,.18)"><i style="display:block;height:100%;border-radius:9px;background:#fff;width:${T/TOTAL*100}%"></i></div>`;
+
+const GALS=[['Skincare coreano','SK','#e5317d'],['Maquillaje','MA','#d94f9a'],['Reseñas','RE','#b83f7a'],['BTS','BT','#6c4bd8'],['BLACKPINK','BL','#e0457b'],['Stray Kids','ST','#c0392b'],['TWICE','TW','#ff7a59'],['SEVENTEEN','SE','#5c7cfa'],['K-Dramas','KD','#00a383'],['Aprender coreano','한','#6d4c41']];
+const BEST=[['Mi rutina para piel grasa en 5 pasos','Skincare coreano',48],['Cushion para piel morena: mis favoritos','Maquillaje',41],['Frases en coreano para el concierto','Aprender coreano',37],['¿Qué K-Drama empiezo este mes?','K-Dramas',33],['Mi primera compra de K-Beauty en México','Reseñas',29]];
+
+const SCENES=[
+ // 0. Gancho
+ {d:2.8,f:(t,T)=>{const o2=inn(t,1.25);return `<div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 35%,#3a1027 0,#111116 60%)"></div>${prog(T)}
+  <div class="abs" style="top:240px;padding:0 70px">${logo(54,inn(t,0))}</div>
+  <div class="abs" style="top:520px;padding:0 70px">
+   <div style="font-size:70px;font-weight:700;color:#d6d6de;${up(inn(t,.05))}">¿Fan del</div>
+   <div style="font-size:190px;font-weight:900;line-height:.92;letter-spacing:-8px;${up(pop(t,.3),80)}"><span class="pink">K-Beauty</span></div>
+   <div style="font-size:190px;font-weight:900;line-height:.92;letter-spacing:-8px;${up(pop(t,.65),80)}">y K-Pop?</div>
+   <div style="margin-top:70px;font-size:66px;font-weight:800;${up(o2)}">Tu comunidad <span style="background:#e5317d;padding:4px 18px;border-radius:16px">en español</span><br>ya existe 🇲🇽</div>
+  </div>`}},
+ // 1. Galerías
+ {d:3.6,f:(t,T)=>{const tiles=GALS.map((g,i)=>{const col=i%2,row=Math.floor(i/2),o=pop(t,.35+i*.12,.4);return `<div class="tile" style="left:${70+col*440}px;top:${560+row*150}px;width:420px;height:128px;${zoom(o)}"><span class="av ${g[1]==='한'?'ko':''}" style="background:${g[2]}">${g[1]}</span><b style="font-size:36px;line-height:1.1">${g[0]}</b></div>`}).join('');
+  return `<div style="position:absolute;inset:0;background:#e5317d"></div>${prog(T)}
+  <div class="abs" style="top:230px;padding:0 70px"><div style="font-size:42px;font-weight:800;opacity:.85;${up(inn(t,0))}">📂 Galerías</div>
+  <div style="font-size:96px;font-weight:900;line-height:1;letter-spacing:-3px;margin-top:14px;${up(inn(t,.1))}">Una galería para<br>cada fandom</div></div>
+  ${tiles}
+  <div class="abs" style="top:1330px;padding:0 70px;font-size:52px;font-weight:900;${up(pop(t,1.9))}">21 galerías · skincare, idols y K-Dramas</div>`}},
+ // 2. Mejores de hoy
+ {d:3.6,f:(t,T)=>{const rows=BEST.map((b,i)=>{const o=inn(t,.45+i*.18,.35),h=Math.round(b[2]*ease((t-.6-i*.18)/1.2));return `<div class="row" style="top:${560+i*168}px;opacity:${o};transform:translateX(${(1-o)*-200}px)"><span class="num" style="color:${i<3?'#ff5a36':'#8c8c98'}">${i+1}</span><div style="flex:1;min-width:0"><div style="font-size:38px;font-weight:800;line-height:1.15">${b[0]}</div><div class="small" style="margin-top:8px">${b[1]}</div></div><div style="font-size:40px;font-weight:900;color:#ff5a36;white-space:nowrap">♥ ${h}</div></div>`}).join('');
+  return `<div style="position:absolute;inset:0;background:#111116"></div>${prog(T)}
+  <div class="abs" style="top:220px;padding:0 70px;display:flex;align-items:center;gap:26px">
+   <div style="transform:scale(${pop(t,0)*pulse(t)})">${FLAME(150)}</div>
+   <div style="${up(inn(t,.1))}"><div style="font-size:92px;font-weight:900;letter-spacing:-3px;line-height:1" class="hot">Mejores de hoy</div><div style="font-size:40px;font-weight:700;color:#c9c9d3;margin-top:12px">Lo más votado de todas las galerías</div></div></div>
+  ${rows}${ilus}`}},
+ // 3. Examen de coreano
+ {d:4.2,f:(t,T)=>{const pick=t>1.55,res=inn(t,2.25,.5),ring=ease((t-2.4)/1.1);const C=2*Math.PI*120;
+  return `<div style="position:absolute;inset:0;background:#f4f4f6"></div>${prog(T).replace('rgba(255,255,255,.18)','rgba(0,0,0,.1)').replace('background:#fff;width','background:#17171c;width')}
+  <div class="abs" style="top:220px;padding:0 70px;color:#17171c">
+   <div style="${up(inn(t,0))}"><span class="pill" style="background:#1d8a5a;color:#fff;font-size:44px;padding:10px 28px">GRATIS</span></div>
+   <div style="font-size:104px;font-weight:900;letter-spacing:-4px;line-height:1;margin-top:22px;${up(inn(t,.1))}">Examen de<br>coreano</div>
+   <div style="font-size:40px;font-weight:700;color:#55555f;margin-top:18px;${up(inn(t,.3))}">30 preguntas · 30 min · vocabulario, lectura y audio</div></div>
+  <div class="card" style="left:70px;right:150px;top:${790}px;padding:44px;opacity:${1-res};transform:translateY(${(1-inn(t,.45))*120}px)">
+   <div class="small" style="color:#8c8c98">Pregunta 1 de 30</div>
+   <div style="font-size:52px;font-weight:800;margin-top:14px">¿Qué significa <span class="ko" style="color:#e5317d">감사합니다</span>?</div>
+   <div class="opt" style="${pick?'border-color:#1d8a5a;background:#e7f6ee':''}">A) Gracias ${pick?'<span style="margin-left:auto;color:#1d8a5a">✔</span>':''}</div>
+   <div class="opt">B) Hola</div><div class="opt">C) Perdón</div></div>
+  <div class="card" style="left:70px;right:150px;top:790px;height:560px;display:flex;align-items:center;gap:50px;padding:0 54px;${zoom(res)}">
+   <svg width="270" height="270" viewBox="0 0 270 270"><circle cx="135" cy="135" r="120" fill="none" stroke="#eee" stroke-width="26"/><circle cx="135" cy="135" r="120" fill="none" stroke="#e5317d" stroke-width="26" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-.62*ring)}" transform="rotate(-90 135 135)"/><text x="135" y="160" text-anchor="middle" font-size="76" font-weight="900" fill="#17171c" font-family="Inter">${Math.round(62*ring)}%</text></svg>
+   <div><div class="small" style="color:#8c8c98">Tu resultado</div><div style="font-size:66px;font-weight:900;line-height:1.05;margin-top:8px">Nivel<br>estimado <span class="pink">2</span></div><div style="font-size:34px;color:#55555f;margin-top:14px;font-weight:600">+ explicación de<br>cada error</div></div></div>
+  <div class="abs" style="top:1400px;padding:0 70px;font-size:28px;color:#8c8c98">Imagen ilustrativa · tipo TOPIK, no oficial</div>`}},
+ // 4. Niveles
+ {d:3.4,f:(t,T)=>{const L=[['Nuevo','#9aa0a6'],['Fan','#3aa76d'],['Fan activo','#2f8fd8'],['Fan dedicado','#6c4bd8'],['Experto','#d63384'],['Veterano','#e5482b'],['Leyenda','#d4a017']];const k=Math.min(6,Math.floor(cl((t-.5)/1.9)*7));const bar=cl((t-.5)/1.9);
+  return `<div style="position:absolute;inset:0;background:linear-gradient(160deg,#2a1d5c,#111116 70%)"></div>${prog(T)}
+  <div class="abs" style="top:230px;padding:0 70px"><div style="font-size:100px;font-weight:900;letter-spacing:-3px;line-height:1;${up(inn(t,0))}">Gana puntos<br>y sube de nivel</div></div>
+  <div class="abs" style="top:600px;padding:0 70px;display:flex;align-items:center;gap:34px">
+   <span class="lv" style="width:250px;height:250px;font-size:96px;background:${L[k][1]};border-radius:60px;transform:scale(${.9+.1*pulse(t*2)})">Lv.${k+1}</span>
+   <div><div style="font-size:78px;font-weight:900">${L[k][0]}</div><div class="small" style="margin-top:8px;font-size:34px">de Nuevo a Leyenda</div></div></div>
+  <div class="abs" style="top:920px;margin:0 150px 0 70px;height:34px;border-radius:20px;background:rgba(255,255,255,.15)"><i style="display:block;height:100%;width:${bar*100}%;border-radius:20px;background:linear-gradient(90deg,#e5317d,#ffa53c)"></i></div>
+  <div class="abs" style="top:1020px;padding:0 70px;display:grid;gap:22px">
+   ${[['📝 Publicar','+10'],['💬 Comentar','+3'],['♥ Cada me gusta','+2']].map((r,i)=>`<div style="display:flex;justify-content:space-between;margin-right:80px;font-size:52px;font-weight:800;background:rgba(255,255,255,.08);border-radius:24px;padding:24px 32px;${up(inn(t,.9+i*.2))}"><span>${r[0]}</span><span class="pink">${r[1]}</span></div>`).join('')}
+  </div>`}},
+ // 5. Ofertas y guías
+ {d:3.4,f:(t,T)=>{const offs=[['Protector solar coreano','🧴'],['Tóner hidratante','💧'],['Cushion para piel morena','💄']];const guides=['Rutina de skincare coreana','Doble limpieza paso a paso','Aprende hangul rápido'];
+  return `<div style="position:absolute;inset:0;background:#ff5a36"></div>${prog(T)}
+  <div class="abs" style="top:220px;padding:0 70px"><div style="font-size:98px;font-weight:900;letter-spacing:-3px;line-height:1;${up(inn(t,0))}">Ofertas K-Beauty<br>+ guías gratis</div></div>
+  ${offs.map((o,i)=>{const p=pop(t,.35+i*.15);return `<div class="tile" style="left:70px;right:150px;top:${560+i*150}px;height:130px;${zoom(p)}"><span style="font-size:60px">${o[1]}</span><b style="font-size:40px;flex:1">${o[0]}</b><span class="pill" style="background:#ffe7e2;color:#e5482b;font-size:30px;padding:8px 18px">🔥 Oferta</span></div>`}).join('')}
+  <div class="abs" style="top:1040px;padding:0 70px;font-size:40px;font-weight:900;${up(inn(t,1.2))}">📘 Guías en español</div>
+  ${guides.map((g,i)=>`<div class="abs" style="top:${1110+i*86}px;margin:0 150px 0 70px;background:rgba(255,255,255,.18);border-radius:20px;padding:16px 26px;font-size:40px;font-weight:700;${up(inn(t,1.35+i*.15))}">${g}</div>`).join('')}`}},
+ // 6. Llamada a la acción
+ {d:4.0,f:(t,T)=>`<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#3a1027 0,#111116 65%)"></div>${prog(T)}
+  <div class="abs" style="top:330px;text-align:center;padding-right:80px;${zoom(pop(t,0))}">${logo(170)}</div>
+  <div class="abs" style="top:620px;text-align:center;padding-right:80px;${up(inn(t,.35))}"><div style="font-size:60px;font-weight:800;color:#e5e5ec;line-height:1.3">Galerías · Mejores de hoy<br>Examen de coreano · Ofertas</div></div>
+  <div class="abs" style="top:900px;text-align:center;padding-right:80px"><span class="pill" style="background:#e5317d;font-size:84px;padding:26px 56px;display:inline-block;transform:scale(${pop(t,.7)*pulse(t)})">galeriakmx.com</span></div>
+  <div class="abs" style="top:1140px;text-align:center;padding-right:80px;font-size:62px;font-weight:900;${up(inn(t,1.2))}">👉 Link en mi perfil</div>
+  <div class="abs" style="top:1260px;text-align:center;padding-right:80px;font-size:42px;font-weight:700;color:#c9c9d3;${up(inn(t,1.5))}">Gratis · En español · Desde México 🇲🇽</div>
+  <div class="abs" style="top:1400px;text-align:center;padding-right:80px;font-size:26px;color:rgba(255,255,255,.45)">Comunidad de fans no oficial</div>`}
+];
+TOTAL=SCENES.reduce((a,s)=>a+s.d,0);
+window.SCENES=SCENES.map(s=>s.d);
+const START=SCENES.map((_,i)=>SCENES.slice(0,i).reduce((a,s)=>a+s.d,0));
+function draw(i,t){S.innerHTML=SCENES[i].f(t,START[i]+t)}
+draw(0,1.5);
+</script></body></html>
