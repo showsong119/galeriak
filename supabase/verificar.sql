@@ -18,7 +18,9 @@ with c(orden, revision, ok, archivo) as (values
   (9, 'Advertencias (tabla gk_advertencias)',  to_regclass('public.gk_advertencias') is not null,                          '2026-11-08-lideres-advertencias.sql'),
   (10,'Comentarios pausados con advertencia',  exists (select 1 from pg_policies where tablename = 'comments' and policyname = 'gk_cmt_no_advertidos'),
                                                                                                                              '2026-11-08-lideres-advertencias.sql'),
-  (11,'Al menos 1 administrador',              exists (select 1 from public.profiles where role = 'admin'),                '5장 SQL: 관리자 추가')
+  (11,'Galerías nuevas registradas (kpop-general, asistencia)', to_regclass('public.galleries') is null or (select count(*) = 2 from public.galleries g where to_jsonb(g) ->> coalesce((select a.attname from pg_constraint c join pg_attribute a on a.attrelid = c.confrelid and a.attnum = c.confkey[1] where c.conname = 'posts_gallery_id_fkey' limit 1), 'id') in ('kpop-general', 'asistencia')),
+                                                                                                                             '2026-11-08-galerias-faltantes.sql'),
+  (12,'Al menos 1 administrador',              exists (select 1 from public.profiles where role = 'admin'),                '5장 SQL: 관리자 추가')
 )
 select orden as "#", revision as "Revisión", case when ok then '✅ listo' else '❌ falta' end as "Estado",
        case when ok then '' else archivo end as "Ejecutar"
