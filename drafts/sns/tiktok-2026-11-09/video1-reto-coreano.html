@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es-MX"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#111116}
+body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff}
+#s{position:absolute;inset:0;overflow:hidden}
+.ko{font-family:"Noto Sans CJK KR",sans-serif}
+.pink{color:#e5317d}
+.abs{position:absolute;left:0;right:0}
+.pill{display:inline-block;border-radius:999px;font-weight:800}
+.card{position:absolute;border-radius:40px;background:#fff;color:#17171c;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.opt{height:118px;border-radius:26px;border:4px solid #e6e6ec;display:flex;align-items:center;padding:0 34px;font-size:50px;font-weight:800;margin-top:22px;background:#fff;color:#17171c}
+.opt b{width:70px;color:#9a9aa6}
+</style></head>
+<body><div id="s"></div>
+<script src="lib.js"></script>
+<script>
+// Preguntas tomadas de la guía «20 frases en coreano» del sitio.
+const Q=[
+ {ko:'대박',rom:'de-bak',ops:['¡Increíble!','Buenas noches','Lo siento'],ok:0,bg:'#e5317d'},
+ {ko:'화이팅',rom:'jwa-i-ting',ops:['Te extraño','¡Ánimo! ¡Tú puedes!','Está rico'],ok:1,bg:'#6c4bd8'},
+ {ko:'막내',rom:'mang-ne',ops:['El líder','La fan número 1','El más joven del grupo'],ok:2,bg:'#1d8a5a'},
+];
+function qScene(k){return {d:4.6,f:(t,T)=>{
+  const q=Q[k],rev=t>3.15,ro=inn(t,3.15,.3);
+  const left=cl(3-Math.floor(cl((t-.9)/2.25)*3),1,3);const C=2*Math.PI*62,ring=cl((t-.9)/2.25);
+  const opts=q.ops.map((o,i)=>{const good=i===q.ok;const st=rev?(good?'border-color:#1d8a5a;background:#e7f6ee;':'opacity:.45;'):'';
+   return `<div class="opt" style="${st}${up(pop(t,.45+i*.12,.4),70)};${rev&&good?`transform:scale(${1+.04*ro})`:''}"><b>${'ABC'[i]}</b>${o}${rev&&good?'<span style="margin-left:auto;color:#1d8a5a;font-size:60px">✓</span>':''}</div>`}).join('');
+  return `<div style="position:absolute;inset:0;background:${q.bg}"></div>${prog(T)}
+  <div class="abs" style="top:220px;padding:0 70px;display:flex;justify-content:space-between;align-items:center;padding-right:150px">
+   <div style="font-size:50px;font-weight:900;${up(inn(t,0))}">Pregunta ${k+1} de 3</div>
+   <div style="position:relative;width:150px;height:150px;${zoom(inn(t,.2))}">
+    <svg width="150" height="150" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="rgba(0,0,0,.18)" stroke="rgba(255,255,255,.3)" stroke-width="12"/><circle cx="75" cy="75" r="62" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*ring}" transform="rotate(-90 75 75)"/></svg>
+    <div style="position:absolute;inset:0;display:grid;place-items:center;font-size:${rev?62:70}px;font-weight:900">${rev?'✓':left}</div></div></div>
+  <div class="abs" style="top:420px;padding:0 70px;padding-right:150px;font-size:54px;font-weight:800;${up(inn(t,.05))}">¿Qué significa…?</div>
+  <div class="abs" style="top:510px;padding:0 70px;padding-right:150px">
+   <div class="ko" style="font-size:210px;font-weight:900;line-height:1.05;letter-spacing:-4px;${up(pop(t,.15),90)}">${q.ko}</div>
+   <div style="font-size:44px;font-weight:700;opacity:.85;margin-top:6px;${up(inn(t,.35))}">se pronuncia «${q.rom}»</div></div>
+  <div class="abs" style="top:930px;padding:0 150px 0 70px">${opts}</div>`}}}
+const SCENES=[
+ // 0. Gancho
+ {d:2.6,f:(t,T)=>`<div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,#3a1027 0,#111116 62%)"></div>${prog(T)}
+  <div class="abs" style="top:240px;padding:0 70px">${logo(54,inn(t,0))}</div>
+  <div class="abs" style="top:500px;padding:0 150px 0 70px">
+   <div style="font-size:74px;font-weight:800;color:#d6d6de;${up(inn(t,.05))}"><span style="white-space:nowrap">RETO K-Pop 🎤</span></div>
+   <div style="font-size:170px;font-weight:900;line-height:.95;letter-spacing:-7px;margin-top:30px;${up(pop(t,.3),80)}">¿Cuánto<br><span class="pink">coreano</span><br>sabes?</div>
+   <div style="margin-top:60px;font-size:60px;font-weight:800;${up(inn(t,1.1))}">3 preguntas · <span style="background:#e5317d;padding:4px 18px;border-radius:16px">3 segundos</span> cada una ⏱️</div>
+  </div>`},
+ qScene(0),qScene(1),qScene(2),
+ // 4. Resultado + examen
+ {d:3.8,f:(t,T)=>`<div style="position:absolute;inset:0;background:#f4f4f6"></div>${prog(T,1)}
+  <div class="abs" style="top:230px;padding:0 150px 0 70px;color:#17171c">
+   <div style="font-size:108px;font-weight:900;letter-spacing:-4px;line-height:1;${up(inn(t,0))}">¿Cuántas<br>acertaste?</div>
+   <div style="font-size:64px;font-weight:900;margin-top:30px;${up(inn(t,.3))}">Escríbelo en los<br>comentarios 👇</div></div>
+  <div class="abs" style="top:780px;padding:0 150px 0 70px;display:flex;gap:22px">
+   ${['0/3','1/3','2/3','3/3'].map((x,i)=>`<div style="flex:1;height:170px;border-radius:30px;background:${i===3?'#e5317d':'#fff'};color:${i===3?'#fff':'#17171c'};display:grid;place-items:center;font-size:64px;font-weight:900;box-shadow:0 12px 30px rgba(0,0,0,.08);${zoom(pop(t,.6+i*.12))}">${x}</div>`).join('')}</div>
+  <div class="abs" style="top:1060px;padding:0 150px 0 70px;color:#17171c;font-size:46px;font-weight:700;line-height:1.35;${up(inn(t,1.4))}">¿Las 3? Pon a prueba tu nivel<br>con el <b>examen completo</b> 👉</div>`},
+ // 5. CTA examen
+ {d:4.4,f:(t,T)=>`<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,#16306b 0,#111116 68%)"></div>${prog(T)}
+  <div class="abs" style="top:250px;text-align:center;padding-right:80px;${up(inn(t,0))}"><span class="pill" style="background:#ffd23f;color:#17171c;font-size:56px;padding:12px 36px">GRATIS</span></div>
+  <div class="abs" style="top:370px;text-align:center;padding-right:80px;font-size:112px;font-weight:900;letter-spacing:-4px;line-height:1;${zoom(pop(t,.15))}">Examen de<br>coreano</div>
+  <div class="abs" style="top:630px;padding:0 150px 0 110px;display:grid;gap:16px">
+   ${[['📝','30 preguntas en 30 min'],['🎧','Vocabulario, lectura y audio'],['📊','Nivel estimado + explicación de cada error'],['🔁','Hasta 6 intentos sin repetir preguntas']].map((r,i)=>`<div style="display:flex;gap:24px;align-items:center;background:rgba(255,255,255,.1);border-radius:24px;padding:18px 28px;font-size:40px;font-weight:800;${up(inn(t,.5+i*.15))}"><span style="font-size:54px">${r[0]}</span>${r[1]}</div>`).join('')}</div>
+  <div class="abs" style="top:1215px;text-align:center;padding-right:80px"><span class="pill" style="background:#e5317d;font-size:66px;padding:22px 46px;transform:scale(${pop(t,1.3)*pulse(t)})">galeriakmx.com</span></div>
+  <div class="abs" style="top:1345px;text-align:center;padding-right:80px;font-size:54px;font-weight:900;${up(inn(t,1.7))}">👉 Link en mi perfil</div>
+  <div class="abs" style="top:1440px;text-align:center;padding-right:80px;font-size:26px;color:rgba(255,255,255,.5)">Tipo TOPIK, no oficial · Comunidad de fans no oficial</div>`},
+];
+setup(SCENES);
+draw(0,1.6);
+</script></body></html>

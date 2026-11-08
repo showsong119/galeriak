@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es-MX"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#111116}
+body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff}
+#s{position:absolute;inset:0;overflow:hidden}
+.ko{font-family:"Noto Sans CJK KR",sans-serif}
+.pink{color:#e5317d}
+.abs{position:absolute;left:0;right:0}
+.pill{display:inline-block;border-radius:999px;font-weight:800}
+.box{border-radius:32px;padding:34px 38px;font-size:48px;font-weight:800;line-height:1.25}
+.bad{background:rgba(0,0,0,.22)}
+.good{background:#fff;color:#17171c}
+.tag{display:inline-block;font-size:32px;font-weight:900;border-radius:14px;padding:6px 16px;margin-bottom:14px}
+</style></head>
+<body><div id="s"></div>
+<script src="lib.js"></script>
+<script>
+// Contenido tomado de las guías «Doble limpieza» y «Protector solar coreano» del sitio.
+const E=[
+ {n:1,ico:'🫧',tema:'Doble limpieza',bad:'Pones el aceite limpiador con la cara mojada',good:'Manos y cara secas: así el aceite disuelve protector y maquillaje',bg:'#e5317d'},
+ {n:2,ico:'💧',tema:'Doble limpieza',bad:'Enjuagas el aceite sin emulsionar',good:'Moja un poco las manos y masajea hasta que se ponga lechoso',bg:'#d94f9a'},
+ {n:3,ico:'☀️',tema:'Protector solar',bad:'Te pones muy poquito protector',good:'Regla de los dos dedos para cara y cuello',bg:'#ff7a2f'},
+ {n:4,ico:'⏰',tema:'Protector solar',bad:'Te lo pones en la mañana y ya',good:'Al aire libre, reaplica cada 2 horas y después de sudar o nadar',bg:'#e5482b'},
+];
+function eScene(k){return {d:3.9,f:(t,T)=>{const e=E[k],g=inn(t,1.55,.45);
+  return `<div style="position:absolute;inset:0;background:${e.bg}"></div>${prog(T)}
+  <div class="abs" style="top:220px;padding:0 150px 0 70px;display:flex;align-items:center;gap:28px">
+   <div style="width:170px;height:170px;border-radius:44px;background:rgba(255,255,255,.95);color:${e.bg};display:grid;place-items:center;font-size:110px;font-weight:900;${zoom(pop(t,0))}">${e.n}</div>
+   <div style="${up(inn(t,.1))}"><div style="font-size:40px;font-weight:800;opacity:.85">Error #${e.n} de 4</div><div style="font-size:66px;font-weight:900;line-height:1.05;margin-top:6px">${e.ico} ${e.tema}</div></div></div>
+  <div class="abs" style="top:520px;padding:0 150px 0 70px">
+   <div style="${shake(t,.75)}"><div class="box bad" style="${up(inn(t,.3),80)}"><span class="tag" style="background:#17171c;color:#ff6b6b">❌ ERROR</span><br>${e.bad}</div></div></div>
+  <div class="abs" style="top:${880}px;padding:0 150px 0 70px">
+   <div class="box good" style="${up(g,80)}"><span class="tag" style="background:#e7f6ee;color:#1d8a5a">✓ MEJOR ASÍ</span><br>${e.good}</div></div>
+  ${k===2?`<div class="abs" style="top:1270px;padding:0 150px 0 70px;display:flex;gap:18px;align-items:flex-end;${up(inn(t,2.2))}">${[0,1].map(i=>`<div style="width:70px;height:${210-i*10}px;border-radius:35px;background:rgba(255,255,255,.3);position:relative"><i style="position:absolute;left:24px;right:24px;top:14px;bottom:24px;border-radius:12px;background:#fff8e6;transform-origin:top;transform:scaleY(${inn(t,2.3+i*.2,.5)})"></i></div>`).join('')}<span style="font-size:36px;font-weight:800;margin-left:14px;opacity:.9">2 líneas de producto<br>en índice y medio</span></div>`:''}`}}}
+const SCENES=[
+ // 0. Gancho
+ {d:2.8,f:(t,T)=>`<div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,#3a1027 0,#111116 62%)"></div>${prog(T)}
+  <div class="abs" style="top:240px;padding:0 70px">${logo(54,inn(t,0))}</div>
+  <div class="abs" style="top:480px;padding:0 150px 0 70px">
+   <div style="${shake(t,1.3)}"><div style="font-size:84px;font-weight:900;line-height:1;${up(inn(t,.05))}">⚠️ 4 errores de</div></div>
+   <div style="font-size:190px;font-weight:900;line-height:.92;letter-spacing:-8px;margin-top:20px;${up(pop(t,.25),80)}"><span class="pink">K-Beauty</span></div>
+   <div style="font-size:84px;font-weight:900;line-height:1.05;margin-top:24px;${up(pop(t,.55),80)}">que arruinan<br>tu rutina</div>
+   <div style="margin-top:60px;font-size:56px;font-weight:800;color:#d6d6de;${up(inn(t,1.2))}">El #3 lo hace casi todo mundo 👀</div>
+  </div>`},
+ eScene(0),eScene(1),eScene(2),eScene(3),
+ // 5. Guías + comunidad
+ {d:3.6,f:(t,T)=>`<div style="position:absolute;inset:0;background:#f4f4f6"></div>${prog(T,1)}
+  <div class="abs" style="top:230px;padding:0 150px 0 70px;color:#17171c">
+   <div style="font-size:100px;font-weight:900;letter-spacing:-3px;line-height:1;${up(inn(t,0))}">Aprende la rutina<br><span class="pink">paso a paso</span></div>
+   <div style="font-size:44px;font-weight:700;color:#55555f;margin-top:22px;${up(inn(t,.2))}">Guías gratis en español 📘</div></div>
+  <div class="abs" style="top:650px;padding:0 150px 0 70px;display:grid;gap:20px">
+   ${['🧴 Rutina de skincare coreana','🫧 Doble limpieza paso a paso','☀️ Protector solar: SPF y PA','🌡️ Skincare para clima cálido'].map((g,i)=>`<div style="background:#fff;color:#17171c;border-radius:26px;padding:28px 32px;font-size:46px;font-weight:800;box-shadow:0 10px 26px rgba(0,0,0,.07);${up(pop(t,.4+i*.13),60)}">${g}</div>`).join('')}</div>
+  <div class="abs" style="top:1230px;padding:0 150px 0 70px;color:#17171c;font-size:46px;font-weight:800;line-height:1.3;${up(inn(t,1.3))}">💬 Y pregunta tus dudas en la<br>galería <span class="pink">Skincare coreano</span></div>`},
+ // 6. CTA
+ {d:3.8,f:(t,T)=>`<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#3a1027 0,#111116 65%)"></div>${prog(T)}
+  <div class="abs" style="top:330px;text-align:center;padding-right:80px;${zoom(pop(t,0))}">${logo(170)}</div>
+  <div class="abs" style="top:610px;text-align:center;padding-right:80px;${up(inn(t,.35))}"><div style="font-size:58px;font-weight:800;color:#e5e5ec;line-height:1.3">La comunidad K-Beauty<br>en español 🇲🇽</div></div>
+  <div class="abs" style="top:880px;text-align:center;padding-right:80px"><span class="pill" style="background:#e5317d;font-size:84px;padding:26px 56px;transform:scale(${pop(t,.7)*pulse(t)})">galeriakmx.com</span></div>
+  <div class="abs" style="top:1120px;text-align:center;padding-right:80px;font-size:62px;font-weight:900;${up(inn(t,1.1))}">👉 Link en mi perfil</div>
+  <div class="abs" style="top:1240px;text-align:center;padding-right:80px;font-size:42px;font-weight:700;color:#c9c9d3;${up(inn(t,1.4))}">Guarda este video para tu rutina 🔖</div>
+  <div class="abs" style="top:1400px;text-align:center;padding:0 120px 0 40px;font-size:26px;color:rgba(255,255,255,.5)">Contenido informativo. Si tienes una condición de la piel, consulta a tu dermatólogo.</div>`},
+];
+setup(SCENES);
+draw(0,1.6);
+</script></body></html>

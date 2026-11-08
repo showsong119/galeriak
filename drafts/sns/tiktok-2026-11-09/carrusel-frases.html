@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es-MX"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden}
+body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#17171c;background:#fff6fa}
+.ko{font-family:"Noto Sans CJK KR",sans-serif}
+.pink{color:#e5317d}
+#s{position:absolute;inset:0;padding:180px 150px 0 80px}
+.top{display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:40px}
+.cnt{font-size:32px;font-weight:800;background:#17171c;color:#fff;border-radius:999px;padding:8px 22px}
+.cat{display:inline-block;margin-top:40px;font-size:40px;font-weight:900;border-radius:16px;padding:10px 22px;color:#fff}
+h2{font-size:80px;font-weight:900;letter-spacing:-3px;line-height:1;margin-top:22px}
+.fr{background:#fff;border-radius:32px;padding:26px 36px;margin-top:22px;box-shadow:0 14px 40px rgba(229,49,125,.12);border:3px solid #fde3ee}
+.fr .k{font-size:80px;font-weight:900;line-height:1.1;letter-spacing:-2px}
+.fr .r{font-size:32px;font-weight:700;color:#8c8c98;margin-top:6px}
+.fr .e{font-size:44px;font-weight:900;margin-top:8px}
+.fr .n{font-size:31px;font-weight:600;color:#55555f;margin-top:10px;line-height:1.3}
+.foot{margin-top:28px;font-size:30px;font-weight:700;color:#8c8c98;display:flex;justify-content:space-between}
+</style></head>
+<body><div id="s"></div>
+<script>
+// Frases de la guía «20 frases en coreano» de galeriakmx.com/guias/frases-coreanas-kpop/
+const logo=s=>`<span style="font-weight:900;font-size:${s}px;letter-spacing:-2px">Galería<span class="pink">K</span></span>`;
+const fr=(k,r,e,n)=>`<div class="fr"><div class="k ko">${k}</div><div class="r">se pronuncia «${r}»</div><div class="e">${e}</div>${n?`<div class="n">${n}</div>`:''}</div>`;
+const SL=[
+ // 1. Portada
+ ()=>{document.body.style.background='radial-gradient(circle at 75% 25%,#4a1232 0,#111116 60%)';document.body.style.color='#fff';return `
+  <div class="top">${logo(54)}<span class="cnt" style="background:#e5317d">1/7</span></div>
+  <div style="margin-top:120px;font-size:58px;font-weight:800;color:#d6d6de">Para fans del <span style="white-space:nowrap">K-Pop</span> y los <span style="white-space:nowrap">K-Dramas</span></div>
+  <div style="font-size:150px;font-weight:900;letter-spacing:-6px;line-height:.95;margin-top:30px;white-space:nowrap"><span class="pink">10 frases</span><br>en coreano</div>
+  <div style="font-size:80px;font-weight:900;line-height:1.05;margin-top:30px">que todo fan<br>debe saber</div>
+  <div class="ko" style="margin-top:40px;font-size:56px;font-weight:900;color:rgba(255,255,255,.22);letter-spacing:4px">사랑해요 · 화이팅 · 대박</div>
+  <div style="margin-top:40px;display:inline-block;background:#fff;color:#17171c;border-radius:999px;padding:18px 36px;font-size:46px;font-weight:900">🔖 Guárdalo · desliza 👉</div>`},
+ // 2. Saludos
+ ()=>`<div class="top">${logo(44)}<span class="cnt">2/7</span></div>
+  <span class="cat" style="background:#2f8fd8">👋 Saludos</span><h2>Para empezar<br>con buen pie</h2>
+  ${fr('안녕하세요','an-nyeong-ja-se-yo','Hola','Forma cortés. Sirve a cualquier hora del día.')}
+  ${fr('감사합니다','gam-sa-jam-ni-da','Muchas gracias','Forma formal. Más cercano: 고마워요.')}`,
+ // 3. Concierto
+ ()=>`<div class="top">${logo(44)}<span class="cnt">3/7</span></div>
+  <span class="cat" style="background:#e5317d">🎤 En el concierto</span><h2>Para gritarle<br>a tu bias</h2>
+  ${fr('사랑해요','sa-rang-je-yo','¡Te quiero!')}
+  ${fr('보고 싶어요','bo-go si-po-yo','Te extraño / quiero verte')}
+  ${fr('화이팅','jwa-i-ting','¡Ánimo! ¡Tú puedes!','Viene del inglés «fighting».')}`,
+ // 4. Celebrar
+ ()=>`<div class="top">${logo(44)}<span class="cnt">4/7</span></div>
+  <span class="cat" style="background:#d4a017">🎉 Para celebrar</span><h2>Cumpleaños,<br>premios y comebacks</h2>
+  ${fr('축하해요','chu-ka-je-yo','¡Felicidades!','Ideal para cumpleaños o premios.')}
+  ${fr('수고하셨습니다','su-go-ja-syeot-seum-ni-da','Gracias por tu esfuerzo','Se dice al terminar un concierto o una etapa.')}`,
+ // 5. Reacciones
+ ()=>`<div class="top">${logo(44)}<span class="cnt">5/7</span></div>
+  <span class="cat" style="background:#6c4bd8">😱 Reacciones</span><h2>Las que más<br>oyes en K-Dramas</h2>
+  ${fr('대박','de-bak','¡Increíble! ¡Qué fuerte!')}
+  ${fr('진짜?','chin-cha','¿En serio?')}
+  ${fr('괜찮아요','gwen-cha-na-yo','Está bien / no pasa nada')}`,
+ // 6. Consejo
+ ()=>{document.body.style.background='#17171c';document.body.style.color='#fff';return `
+  <div class="top">${logo(44)}<span class="cnt" style="background:#e5317d">6/7</span></div>
+  <span class="cat" style="background:#1d8a5a">💡 Truco de cortesía</span>
+  <h2 style="font-size:100px">¿Formal o<br>informal?</h2>
+  <div style="margin-top:50px;font-size:50px;font-weight:700;line-height:1.35;color:#e5e5ec">Si termina en <b class="ko pink" style="font-size:64px">-요</b> o <b class="ko pink" style="font-size:64px">-습니다</b>, es <b style="color:#fff">cortés</b>.</div>
+  <div style="margin-top:40px;font-size:50px;font-weight:700;line-height:1.35;color:#e5e5ec">Sin esa terminación es habla informal (<span class="ko">반말</span>): solo con amigos cercanos o personas menores.</div>
+  <div style="margin-top:56px;background:#fff;color:#17171c;border-radius:32px;padding:34px 40px;font-size:52px;font-weight:900;line-height:1.25">¿No estás seguro?<br>Usa siempre <span class="ko pink">-요</span> ✓</div>`},
+ // 7. CTA
+ ()=>{document.body.style.background='radial-gradient(circle at 50% 35%,#4a1232 0,#111116 62%)';document.body.style.color='#fff';return `
+  <div class="top">${logo(44)}<span class="cnt" style="background:#e5317d">7/7</span></div>
+  <div style="margin-top:90px;font-size:90px;font-weight:900;letter-spacing:-3px;line-height:1">¿Quieres<br><span class="pink">aprender más?</span></div>
+  <div style="margin-top:40px;display:grid;gap:18px">
+   ${[['📘','Las 20 frases completas con notas'],['🔤','Guía para leer hangul rápido'],['📝','Examen de coreano GRATIS con tu nivel'],['💬','Comunidad de fans en español']].map(r=>`<div style="display:flex;gap:24px;align-items:center;background:rgba(255,255,255,.1);border-radius:28px;padding:20px 30px;font-size:40px;font-weight:800"><span style="font-size:50px">${r[0]}</span>${r[1]}</div>`).join('')}</div>
+  <div style="margin-top:44px;text-align:center"><span style="display:inline-block;background:#e5317d;border-radius:999px;padding:24px 50px;font-size:76px;font-weight:900">galeriakmx.com</span></div>
+  <div style="margin-top:30px;text-align:center;font-size:54px;font-weight:900">👉 Link en mi perfil</div>`},
+];
+window.N=SL.length;
+window.show=i=>{document.body.style.background='#fff6fa';document.body.style.color='#17171c';const h=SL[i]();document.getElementById('s').innerHTML=h+(i>0&&i<6?`<div class="foot"><span>Pronunciación aproximada</span><span>galeriakmx.com</span></div>`:i===0||i===6?`<div class="foot" style="color:rgba(255,255,255,.45)"><span>Comunidad de fans no oficial</span><span></span></div>`:'')};
+show(0);
+</script></body></html>
