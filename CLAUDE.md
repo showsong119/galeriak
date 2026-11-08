@@ -98,7 +98,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 
 ## 12. 무료 한국어 시험 페이지 (/examen-coreano/)
 - `site/examen-coreano/index.html` 단일 파일. 30문항 CBT(어휘·문법 12 → 읽기 10 → 듣기 8), 30분, 영역마다 페이지 이동(`?p=V|pausa-V|R|pausa-R|L|resultado`), 상태는 localStorage `gk-examen-v1` (저장 불가 시 한 페이지 모드).
-- 문항 은행·채점은 `/* ===== CORE */` 구간 (koreano-cbt 저장소와 동일). 테스트: `scripts/examen.test.mjs`.
-- 수익화 설정은 파일 상단 `ADS={client, slots{top,infeed,bottom,side,examBottom,pause,result,review,resultBottom}}`, `AMAZON_TAG`. 비어 있으면 광고 안 보임. `?demo=ads`로 위치 확인.
+- 문제은행: `/* ===== CORE */` 구간의 `BANK`(90문항 = 영역·급마다 시험 1회분의 3배). 응시 때 `pickExam()`이 `BLUEPRINT`대로 30문항을 뽑고, localStorage `gk-examen-vistas`(문항별 노출 횟수)로 덜 본 문제부터 출제 → 3회까지 중복 없음. 문항 추가는 BANK에 넣기만 하면 됨(정답은 항상 o[0], 화면에서 섞임). 테스트: `scripts/examen.test.mjs`.
+- 수익화 설정은 파일 상단 `ADS={client, slots{top,infeed,bottom,side,examBottom,pause,result,review,resultBottom}}`. 아마존 링크는 사용자 요청으로 제거(넣지 말 것). 비어 있으면 광고 안 보임. `?demo=ads`로 위치 확인.
 - AdSense 정책: 광고를 보기·버튼 바로 옆에 두지 않음, 라벨은 'Publicidad', 무관한 고단가 키워드 문단 금지. 전면광고는 Auto ads '비녜트'(페이지 이동 시)로.
 - 메뉴 `nav()`에 '/examen-coreano/' 항목, 푸터 링크 있음.

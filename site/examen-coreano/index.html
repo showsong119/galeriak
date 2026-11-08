@@ -211,17 +211,15 @@ footer a{color:var(--navy)}
    2) Crea bloques de anuncios "Display" en AdSense y pega cada ID de bloque (solo números) en slots.
       Un bloque vacío no se muestra. Para ver dónde va cada anuncio antes de tener IDs: añade ?demo=ads a la URL.
    3) En AdSense › Anuncios › Por sitio, activa Auto ads con "Anuncios de viñeta" (pantalla completa al cambiar de página)
-      y "Anuncios fijos" (barra inferior). Este examen cambia de página entre secciones, lo que activa las viñetas.
-   AMAZON_TAG: tu ID de Amazon Afiliados México (termina en -20). */
+      y "Anuncios fijos" (barra inferior). Este examen cambia de página entre secciones, lo que activa las viñetas. */
 const ADS={client:"",slots:{top:"",infeed:"",bottom:"",side:"",examBottom:"",pause:"",result:"",review:"",resultBottom:""}};
-const AMAZON_TAG="";
 /* ===================================================== */
 </script>
 <script>
 /* ===== CORE (datos + calificación) ===== */
 const SECTIONS={V:"Vocabulario y gramática",R:"Lectura",L:"Comprensión auditiva"};
 // c = respuesta correcta (siempre la primera en el código; se reordena al mostrar)
-const QUESTIONS=[
+const BANK=[
 // --- Vocabulario y gramática ---
 {id:"v1a",s:"V",lv:1,p:"Elige la palabra correcta para el espacio.",t:"저는 학생( ).",o:["입니다","있습니다","합니다","갑니다"],ko:1,e:"«입니다» = «soy / es». 저는 학생입니다 = Soy estudiante."},
 {id:"v1b",s:"V",lv:1,p:"Elige la palabra correcta para el espacio.",t:"저는 아침에 빵을 ( ).",o:["먹어요","마셔요","읽어요","자요"],ko:1,e:"El pan (빵) se come: 먹어요. 마셔요 es para bebidas."},
@@ -254,9 +252,88 @@ const QUESTIONS=[
 {id:"l3",s:"L",lv:3,p:"Escucha. ¿Qué quiere el hombre?",a:["F|손님, 이 바지 어떠세요?","M|좀 작은 것 같아요. 한 치수 큰 걸로 주세요."],o:["Una talla más grande","Otro color","Un descuento","Devolver el pantalón"],ko:0,e:"한 치수 큰 걸로 = una talla más grande."},
 {id:"l4",s:"L",lv:4,p:"Escucha el aviso. ¿Qué deben hacer quienes querían bajar en esta estación?",a:["F|승객 여러분께 안내 말씀드립니다. 이번 역은 공사 관계로 열차가 정차하지 않습니다. 다음 역에서 내리셔서 반대 방향 열차를 이용해 주시기 바랍니다."],o:["Bajar en la siguiente y tomar el tren en sentido contrario","Bajar de inmediato","Quedarse en el tren hasta la terminal","Tomar un autobús en esta estación"],ko:0,e:"다음 역에서 내리셔서 반대 방향 열차를 이용 = bajar en la siguiente estación y usar el tren en dirección contraria."},
 {id:"l5",s:"L",lv:5,p:"Escucha. ¿Cuál es la opinión de la mujer?",a:["M|요즘 재택근무를 하는 회사가 많아졌는데, 어떻게 생각하세요?","F|출퇴근 시간이 줄어서 좋긴 하지만, 동료들과 소통하기가 어렵다는 단점도 있어요. 그래서 일주일에 두세 번은 사무실에 나가는 방식이 가장 현실적이라고 봐요."],o:["Lo más realista es combinar casa y oficina","Es mejor trabajar solo desde casa","Es mejor ir a la oficina todos los días","Le da igual dónde trabajar"],ko:0,e:"일주일에 두세 번은 사무실에 나가는 방식이 가장 현실적 = ir a la oficina 2 o 3 veces por semana es lo más realista."},
-{id:"l6",s:"L",lv:6,p:"Escucha. ¿Cuál es la idea central?",a:["M|흔히 기억은 저장된 정보를 그대로 꺼내는 것이라고 생각합니다. 하지만 연구에 따르면 우리는 기억을 떠올릴 때마다 그것을 새롭게 재구성합니다. 그래서 같은 사건에 대한 기억도 시간이 지나면서 조금씩 달라질 수 있습니다."],o:["Al recordar reconstruimos el recuerdo, por eso cambia con el tiempo","La memoria guarda una copia exacta de lo vivido","Con el tiempo olvidamos todo lo que vivimos","Solo recordamos los hechos emocionales"],ko:0,e:"떠올릴 때마다 새롭게 재구성합니다 = cada vez que recordamos, lo reconstruimos."}
+{id:"l6",s:"L",lv:6,p:"Escucha. ¿Cuál es la idea central?",a:["M|흔히 기억은 저장된 정보를 그대로 꺼내는 것이라고 생각합니다. 하지만 연구에 따르면 우리는 기억을 떠올릴 때마다 그것을 새롭게 재구성합니다. 그래서 같은 사건에 대한 기억도 시간이 지나면서 조금씩 달라질 수 있습니다."],o:["Al recordar reconstruimos el recuerdo, por eso cambia con el tiempo","La memoria guarda una copia exacta de lo vivido","Con el tiempo olvidamos todo lo que vivimos","Solo recordamos los hechos emocionales"],ko:0,e:"떠올릴 때마다 새롭게 재구성합니다 = cada vez que recordamos, lo reconstruimos."},
+// --- Banco ampliado: vocabulario y gramática ---
+{id:"v1c",s:"V",lv:1,p:"Elige la palabra correcta para el espacio.",t:"목이 말라요. 물을 ( ).",o:["마셔요","먹어요","봐요","써요"],ko:1,e:"El agua (물) se bebe: 마셔요. 목이 마르다 = tener sed."},
+{id:"v1d",s:"V",lv:1,p:"Elige la palabra correcta para el espacio.",t:"저는 매일 아침 7시에 ( ).",o:["일어나요","앉아요","열어요","닫아요"],ko:1,e:"일어나다 = levantarse. Me levanto todos los días a las 7."},
+{id:"v1e",s:"V",lv:1,p:"Elige la palabra correcta para el espacio.",t:"오늘은 날씨가 아주 ( ).",o:["좋아요","먹어요","가요","읽어요"],ko:1,e:"El clima (날씨) se describe con un adjetivo: 좋아요 = está bueno/agradable."},
+{id:"v1f",s:"V",lv:1,p:"Elige la partícula correcta.",t:"친구( ) 같이 영화를 봐요.",o:["하고","에서","을","에"],ko:1,e:"하고 = «con». 친구하고 같이 = junto con un amigo."},
+{id:"v2c",s:"V",lv:2,p:"Elige la forma correcta.",t:"내일 친구를 ( ) 거예요.",o:["만날","만난","만나서","만나고"],ko:1,e:"-(으)ㄹ 거예요 expresa futuro: 만날 거예요 = voy a ver (a mi amigo) mañana."},
+{id:"v2d",s:"V",lv:2,p:"Elige la forma correcta.",t:"배가 고파서 밥을 많이 ( ).",o:["먹었어요","잤어요","씻었어요","불렀어요"],ko:1,e:"배가 고프다 = tener hambre; por eso comió mucho: 먹었어요."},
+{id:"v2e",s:"V",lv:2,p:"Elige la terminación correcta.",t:"주말에 영화를 보( ) 싶어요.",o:["고","서","면","지"],ko:1,e:"-고 싶다 = querer hacer algo. 보고 싶어요 = quiero ver."},
+{id:"v2f",s:"V",lv:2,p:"Elige la partícula correcta.",t:"저는 지하철( ) 회사에 가요.",o:["로","를","이","와"],ko:1,e:"(으)로 marca el medio de transporte: 지하철로 = en metro."},
+{id:"v3c",s:"V",lv:3,p:"Elige la terminación correcta.",t:"비가 오( ) 우산을 가져가세요.",o:["니까","는데도","려고","다가"],ko:1,e:"-(으)니까 da una razón antes de un consejo u orden: como llueve, lleva paraguas."},
+{id:"v3d",s:"V",lv:3,p:"Elige la partícula correcta.",t:"한국에 온 지 1년( ) 됐어요.",o:["이","을","에서","로"],ko:1,e:"-(으)ㄴ 지 … 이/가 되다 = ha pasado (tiempo) desde… 1년이 됐어요."},
+{id:"v3e",s:"V",lv:3,p:"Elige la terminación correcta.",t:"책을 읽( ) 잠이 들었어요.",o:["다가","으려면","으러","도록"],ko:1,e:"-다가 = una acción se interrumpe por otra: estaba leyendo y me quedé dormido."},
+{id:"v3f",s:"V",lv:3,p:"Elige la palabra correcta.",t:"시험이 끝나서 마음이 아주 ( ).",o:["홀가분해요","복잡해요","부족해요","시끄러워요"],ko:1,e:"홀가분하다 = sentirse aliviado/ligero, como al terminar un examen."},
+{id:"v4c",s:"V",lv:4,p:"Elige la expresión correcta.",t:"이 식당은 음식이 맛있( ) 값도 싸요.",o:["을 뿐만 아니라","는 대신에","기는커녕","을까 봐"],ko:1,e:"-(으)ㄹ 뿐만 아니라 = no solo… sino también. No solo es rica la comida, también es barata."},
+{id:"v4d",s:"V",lv:4,p:"Elige la expresión correcta.",t:"약속에 늦( ) 택시를 탔어요.",o:["을까 봐","더라도","을수록","던"],ko:1,e:"-(으)ㄹ까 봐 = por miedo a que… Tomé un taxi por miedo a llegar tarde."},
+{id:"v4e",s:"V",lv:4,p:"Elige la palabra correcta.",t:"사장님이 바쁘셔서 회의를 다음 주로 ( ).",o:["미뤘어요","줄였어요","늘었어요","모였어요"],ko:1,e:"미루다 = posponer. Pospusieron la reunión a la próxima semana."},
+{id:"v4f",s:"V",lv:4,p:"Elige la palabra correcta.",t:"건강을 위해 담배를 ( ).",o:["끊었어요","잘랐어요","닫았어요","껐어요"],ko:1,e:"담배를 끊다 = dejar de fumar. 끊다 también se usa con alcohol o hábitos."},
+{id:"v5c",s:"V",lv:5,p:"Elige la expresión correcta.",t:"너무 피곤해서 옷을 입( ) 잠이 들었다.",o:["은 채로","는 김에","을 겸","는 셈으로"],ko:1,e:"-(으)ㄴ 채로 = en el estado de… Se durmió con la ropa puesta."},
+{id:"v5d",s:"V",lv:5,p:"Elige la expresión correcta.",t:"시장에 가( ) 과일도 좀 사 오세요.",o:["는 김에","는 바람에","은 채로","을수록"],ko:1,e:"-는 김에 = aprovechando que… Ya que vas al mercado, trae también fruta."},
+{id:"v5e",s:"V",lv:5,p:"Elige la palabra correcta.",t:"여러분의 다양한 의견을 ( ) 최종 결정을 내리겠습니다.",o:["수렴해서","소비해서","수술해서","출발해서"],ko:1,e:"의견을 수렴하다 = reunir y considerar opiniones."},
+{id:"v5f",s:"V",lv:5,p:"Elige la palabra correcta.",t:"경기가 나빠지면서 실업률이 크게 ( ).",o:["증가했다","증명했다","증정했다","증축했다"],ko:1,e:"증가하다 = aumentar. 증명 = demostrar, 증정 = obsequiar, 증축 = ampliar un edificio."},
+{id:"v6c",s:"V",lv:6,p:"¿Qué significa la expresión subrayada?",t:"그 사람은 발이 넓어서 모르는 사람이 없다.",o:["Conoce a mucha gente","Tiene los pies grandes","Camina mucho todos los días","Viaja por todo el país"],ko:0,e:"발이 넓다 (tener los pies anchos) = tener muchos contactos, conocer a mucha gente."},
+{id:"v6d",s:"V",lv:6,p:"Elige la expresión correcta.",t:"꾸준히 준비하면 좋은 결과가 나오( ).",o:["기 마련이다","기 일쑤이다","ㄹ 리가 없다","는 둥 마는 둥 한다"],ko:1,e:"-기 마련이다 = es natural / suele ocurrir que… Si te preparas con constancia, es natural obtener buenos resultados."},
+{id:"v6e",s:"V",lv:6,p:"¿Qué significa la expresión subrayada?",t:"시험이 코앞인데 아직 공부를 하나도 못 했어.",o:["El examen está muy cerca","El examen fue muy fácil","Olvidó la fecha del examen","El examen se canceló"],ko:0,e:"코앞 (frente a la nariz) = algo que está a punto de llegar."},
+{id:"v6f",s:"V",lv:6,p:"¿Qué significa la oración?",t:"그는 사과는커녕 오히려 화를 냈다.",o:["No solo no se disculpó, sino que se enojó","Se disculpó y después se enojó","Se disculpó porque estaba enojado","Se enojó antes de disculparse"],ko:0,e:"-는커녕 = lejos de… (no ocurrió lo esperado y pasó lo contrario)."},
+// --- Banco ampliado: lectura ---
+{id:"r1b",s:"R",lv:1,p:"Lee y responde: ¿Qué hace hoy esta persona?",t:"오늘은 토요일이에요. 저는 친구하고 공원에 가요.\n공원에서 자전거를 타요.",o:["Anda en bicicleta en el parque con un amigo","Estudia en la biblioteca","Trabaja todo el día","Va de compras al mercado"],ko:0,e:"공원에서 자전거를 타요 = anda en bicicleta en el parque."},
+{id:"r1c",s:"R",lv:1,p:"Lee y responde: ¿Cuántas personas hay en su familia?",t:"제 가족은 네 명이에요.\n아버지, 어머니, 언니, 그리고 저예요.",o:["Cuatro","Tres","Cinco","Dos"],ko:0,e:"네 명 = cuatro personas: papá, mamá, hermana mayor y yo."},
+{id:"r2b",s:"R",lv:2,p:"Lee el aviso. ¿Qué es correcto?",t:"〈수영장 안내〉\n이용 시간: 06:00~21:00\n매주 월요일은 쉽니다.\n수영 모자를 꼭 쓰세요.",o:["Hay que usar gorro de natación","Abre todos los lunes","Cierra a las 6 de la tarde","Se puede nadar sin gorro"],ko:0,e:"수영 모자를 꼭 쓰세요 = use siempre gorro de natación. 월요일은 쉽니다 = cerrado los lunes."},
+{id:"r2c",s:"R",lv:2,p:"Lee el mensaje. ¿Por qué llegará tarde?",t:"지수 씨, 저 지금 버스 안이에요. 길이 막혀서 20분쯤 늦을 것 같아요. 먼저 식당에 들어가 계세요.",o:["Porque hay tráfico","Porque perdió el autobús","Porque está enfermo","Porque olvidó la cita"],ko:0,e:"길이 막혀서 = como hay tráfico (el camino está congestionado)."},
+{id:"r3c",s:"R",lv:3,p:"¿Qué es correcto según el texto?",t:"저는 지난달부터 요리 학원에 다니고 있어요. 처음에는 칼질도 잘 못했는데 지금은 간단한 한국 음식을 만들 수 있어요. 다음 달에는 친구들을 초대해서 직접 만든 음식을 대접하려고 해요.",o:["Planea invitar a sus amigos el próximo mes","Ya cocinaba bien desde el principio","Trabaja como maestro de cocina","Empezó a estudiar cocina hace un año"],ko:0,e:"다음 달에는 친구들을 초대해서 … 대접하려고 해요 = el próximo mes piensa invitar a sus amigos."},
+{id:"r3d",s:"R",lv:3,p:"Lee el aviso. ¿Qué perdió esta persona?",t:"〈분실물을 찾습니다〉\n어제 오후 3시쯤 학생 식당에서 검은색 지갑을 잃어버렸습니다. 안에 학생증이 있습니다. 찾으신 분은 학생회실로 가져다 주세요.",o:["Una cartera negra con su credencial","Un celular negro","Una mochila con libros","Su credencial y su celular"],ko:0,e:"검은색 지갑 = cartera negra; 안에 학생증이 있습니다 = adentro está la credencial de estudiante."},
+{id:"r3e",s:"R",lv:3,p:"¿Qué va a hacer este fin de semana?",t:"이번 주말에 등산을 가려고 했는데 일기예보를 보니 비가 많이 온다고 해요. 그래서 등산 대신 친구와 박물관에 가기로 했어요.",o:["Ir a un museo con un amigo","Subir a la montaña","Quedarse en casa por la lluvia","Ver el pronóstico del tiempo"],ko:0,e:"등산 대신 친구와 박물관에 가기로 했어요 = en lugar de la montaña, decidió ir al museo con un amigo."},
+{id:"r3f",s:"R",lv:3,p:"¿Por qué pasean muchos oficinistas en el parque?",t:"요즘 회사 근처 공원에서 점심시간에 산책하는 직장인이 많아졌다. 짧은 시간이지만 걸으면서 스트레스를 풀고 건강도 챙길 수 있기 때문이다.",o:["Para quitarse el estrés y cuidar su salud","Porque el parque es nuevo","Porque la comida es cara","Porque la empresa lo exige"],ko:0,e:"스트레스를 풀고 건강도 챙길 수 있기 때문이다 = porque pueden liberar estrés y cuidar su salud."},
+{id:"r4c",s:"R",lv:4,p:"Elige lo que va en el espacio.",t:"중고 거래 앱을 이용하면 필요 없는 물건을 팔아 돈을 벌 수 있다. 또한 물건을 버리지 않고 다시 사용하게 되므로 ( ).",o:["환경 보호에도 도움이 된다","새 물건이 더 많이 팔린다","물건값이 계속 오른다","쓰레기가 더 많이 생긴다"],ko:1,e:"Reutilizar en vez de tirar (버리지 않고 다시 사용) ayuda al medio ambiente."},
+{id:"r4d",s:"R",lv:4,p:"¿Cuál es la idea principal?",t:"많은 사람들이 바쁘다는 이유로 아침을 거른다. 하지만 아침 식사는 하루를 시작하는 데 필요한 에너지를 준다. 아침을 먹으면 집중력이 높아지고 점심에 과식하는 것도 막을 수 있다. 바쁘더라도 간단하게라도 아침을 먹는 것이 좋다.",o:["Conviene desayunar aunque sea algo ligero","El desayuno hace subir de peso","Comer mucho al mediodía es saludable","Hay que desayunar mucho todos los días"],ko:0,e:"La conclusión: 바쁘더라도 간단하게라도 아침을 먹는 것이 좋다 = aunque estés ocupado, desayuna algo sencillo."},
+{id:"r4e",s:"R",lv:4,p:"Lee el aviso. ¿Qué es correcto?",t:"〈주민 여러분께〉\n다음 주 화요일 오전 10시부터 오후 4시까지 엘리베이터 점검이 있습니다. 이 시간에는 엘리베이터를 이용하실 수 없으니 양해 부탁드립니다.",o:["El martes no se podrá usar el elevador de 10 a 4","El elevador funcionará con normalidad","La revisión durará toda la semana","Ese día se revisarán las escaleras"],ko:0,e:"화요일 오전 10시부터 오후 4시까지 … 이용하실 수 없으니 = el martes de 10 a 16 h no se podrá usar."},
+{id:"r4f",s:"R",lv:4,p:"¿Qué es correcto según el texto?",t:"한국에서는 이사를 하면 이웃에게 떡을 돌리는 문화가 있었다. 새로 온 사람이 인사를 하며 좋은 관계를 맺기 위해서였다. 요즘은 이 문화가 많이 사라졌지만 작은 선물로 인사하는 사람은 여전히 있다.",o:["Todavía hay quien saluda a sus vecinos con un pequeño regalo","La costumbre sigue igual que antes","Los vecinos le regalan tteok a quien llega","Se regala tteok al irse de un lugar"],ko:0,e:"작은 선물로 인사하는 사람은 여전히 있다 = todavía hay quien saluda con un pequeño regalo. Era el recién llegado quien repartía tteok."},
+{id:"r5c",s:"R",lv:5,p:"¿Qué es correcto según el texto?",t:"최근 반려동물을 가족처럼 여기는 사람이 늘면서 관련 산업도 빠르게 성장하고 있다. 반려동물 전용 보험과 호텔, 장례 서비스까지 등장했다. 하지만 반려동물을 쉽게 입양했다가 버리는 문제는 여전히 심각하다는 지적도 있다.",o:["Aunque la industria crece, el abandono de mascotas sigue siendo grave","Ya nadie abandona a sus mascotas","No existen seguros para mascotas","La industria de mascotas está disminuyendo"],ko:0,e:"버리는 문제는 여전히 심각하다 = el problema del abandono sigue siendo grave."},
+{id:"r5d",s:"R",lv:5,p:"¿Cuál es la actitud del autor?",t:"일회용 컵 사용을 줄이기 위해 매장 안에서 일회용 컵 사용을 금지하는 정책이 시행되었다. 처음에는 불편하다는 의견도 많았지만, 환경을 생각한다면 이 정도의 불편은 감수할 필요가 있다.",o:["Apoya la política aunque sea incómoda","Pide eliminar la política","Le resulta indiferente","Cree que no ayuda al medio ambiente"],ko:0,e:"이 정도의 불편은 감수할 필요가 있다 = vale la pena aceptar esta incomodidad."},
+{id:"r5e",s:"R",lv:5,p:"Elige lo que va en el espacio.",t:"우리는 흔히 실패를 부정적으로만 생각한다. 그러나 많은 발명품은 수많은 실패 끝에 탄생했다. 실패는 무엇이 잘못되었는지 알려 주기 때문에 ( ).",o:["성공으로 가는 과정이 될 수 있다","반드시 피해야 한다","아무 의미가 없다","다시 반복해서는 안 된다"],ko:1,e:"그러나 + 발명품은 실패 끝에 탄생 → el fracaso puede ser parte del camino al éxito."},
+{id:"r5f",s:"R",lv:5,p:"¿Qué es correcto según el texto?",t:"고령화가 빠르게 진행되면서 노인 일자리 문제가 사회적 과제로 떠오르고 있다. 전문가들은 단순한 일자리 제공을 넘어 노인들이 그동안 쌓아 온 경험과 지식을 활용할 수 있는 일자리를 만들어야 한다고 강조한다.",o:["Los expertos piden empleos que aprovechen la experiencia de los mayores","Ya hay suficientes empleos para personas mayores","Los mayores no quieren trabajar","El envejecimiento de la población se detuvo"],ko:0,e:"경험과 지식을 활용할 수 있는 일자리 = empleos que aprovechen su experiencia y conocimientos."},
+{id:"r6c",s:"R",lv:6,p:"¿Cuál es la idea principal?",t:"과학 기술의 발전은 인류에게 풍요를 가져다주었지만, 동시에 그 기술이 초래할 결과에 대한 책임의 문제를 제기한다. 기술 그 자체는 가치 중립적일지 모르나, 그것을 어떻게 사용할지는 결국 인간의 선택에 달려 있다.",o:["Cómo se usa la tecnología depende de la decisión humana","La tecnología es mala por naturaleza","La tecnología decide por sí sola","El progreso solo trae problemas"],ko:0,e:"어떻게 사용할지는 결국 인간의 선택에 달려 있다 = cómo usarla depende, al final, de la elección humana."},
+{id:"r6d",s:"R",lv:6,p:"Elige lo que va en el espacio.",t:"독서는 단순히 지식을 얻는 행위가 아니다. 책을 읽으며 우리는 타인의 삶과 생각을 간접적으로 경험하고, 이를 통해 ( ) 기회를 얻는다.",o:["자신을 돌아보고 세상을 이해하는","책을 더 빨리 읽는","시험 점수를 올리는","다른 사람과 경쟁하는"],ko:1,e:"Vivir indirectamente otras vidas (타인의 삶을 간접적으로 경험) permite reflexionar sobre uno mismo y entender el mundo."},
+{id:"r6e",s:"R",lv:6,p:"¿Qué es correcto según el texto?",t:"'빨리빨리' 문화는 흔히 한국 사회의 조급함을 드러내는 부정적 특성으로 거론된다. 그러나 이러한 속도 중시 문화가 짧은 기간에 경제 성장과 정보 통신 기술의 발전을 이끈 원동력이 되었다는 평가도 적지 않다.",o:["Hay quienes ven la cultura «ppalli ppalli» como motor del desarrollo","Todos la consideran solo algo negativo","Frenó el crecimiento económico","Ya desapareció de la sociedad coreana"],ko:0,e:"원동력이 되었다는 평가도 적지 않다 = no son pocos quienes la valoran como fuerza impulsora."},
+{id:"r6f",s:"R",lv:6,p:"¿Qué es correcto según el texto?",t:"도시 재생은 낡은 건물을 허물고 새로 짓는 재개발과 달리, 지역이 가진 역사와 공동체를 보존하면서 활력을 되찾는 데 초점을 둔다. 따라서 그 성패는 주민의 참여에 크게 좌우된다.",o:["El éxito de la regeneración urbana depende de la participación vecinal","Consiste en demoler los edificios viejos","No toma en cuenta la historia del lugar","Es lo mismo que la reurbanización"],ko:0,e:"성패는 주민의 참여에 크게 좌우된다 = su éxito depende en gran medida de la participación de los vecinos."},
+// --- Banco ampliado: comprensión auditiva ---
+{id:"l1c",s:"L",lv:1,p:"Escucha. ¿Qué hora es?",a:["M|지금 몇 시예요?","F|세 시 반이에요."],o:["Las 3:30","Las 3:00","Las 4:30","Las 2:30"],ko:0,e:"세 시 반 = tres y media."},
+{id:"l1d",s:"L",lv:1,p:"Escucha. ¿Qué celebran?",a:["F|생일 축하해요! 이거 선물이에요.","M|와, 정말 고마워요."],o:["Un cumpleaños","Navidad","Una boda","Una graduación"],ko:0,e:"생일 축하해요 = feliz cumpleaños."},
+{id:"l1e",s:"L",lv:1,p:"Escucha. ¿Cuánto cuesta una manzana?",a:["M|이 사과 얼마예요?","F|한 개에 천 원이에요."],o:["1,000 wones","100 wones","10,000 wones","1,500 wones"],ko:0,e:"한 개에 천 원 = mil wones cada una."},
+{id:"l1f",s:"L",lv:1,p:"Escucha. ¿Adónde va el hombre?",a:["F|어디에 가요?","M|은행에 가요. 돈을 찾아야 해요."],o:["Al banco","Al hospital","A la escuela","Al mercado"],ko:0,e:"은행에 가요 = voy al banco; 돈을 찾다 = sacar dinero."},
+{id:"l2c",s:"L",lv:2,p:"Escucha. ¿Qué hizo la mujer el fin de semana?",a:["M|주말에 뭐 했어요?","F|친구하고 바다에 갔어요. 수영도 했어요."],o:["Fue al mar con una amiga","Fue a la montaña","Se quedó en casa","Trabajó todo el fin de semana"],ko:0,e:"친구하고 바다에 갔어요 = fui al mar con un amigo/una amiga."},
+{id:"l2d",s:"L",lv:2,p:"Escucha. ¿Para cuántas personas es la reservación?",a:["F|여보세요, 거기 한국 식당이죠? 오늘 저녁 7시에 네 명 예약하고 싶어요.","M|네, 7시에 네 분이요. 성함이 어떻게 되세요?"],o:["Cuatro","Dos","Siete","Tres"],ko:0,e:"네 명 = cuatro personas. 7시 es la hora."},
+{id:"l2e",s:"L",lv:2,p:"Escucha. ¿Qué le aconseja la mujer?",a:["M|머리가 너무 아파요.","F|그럼 약을 먹고 좀 쉬세요."],o:["Tomar medicina y descansar","Ir a trabajar","Hacer ejercicio","Comer algo"],ko:0,e:"약을 먹고 좀 쉬세요 = toma medicina y descansa un poco."},
+{id:"l2f",s:"L",lv:2,p:"Escucha. ¿Qué quiere tomar el hombre?",a:["F|커피 마실래요?","M|아니요, 저는 커피를 안 마셔요. 녹차 주세요."],o:["Té verde","Café","Agua","Jugo"],ko:0,e:"녹차 주세요 = deme té verde."},
+{id:"l3b",s:"L",lv:3,p:"Escucha. ¿Por cuánto tiempo se puede pedir prestado el libro?",a:["F|이 책을 빌리고 싶은데요.","M|학생증 있으세요? 2주 동안 빌릴 수 있어요."],o:["Dos semanas","Dos días","Un mes","Una semana"],ko:0,e:"2주 동안 = durante dos semanas."},
+{id:"l3c",s:"L",lv:3,p:"Escucha. ¿Qué responde la mujer?",a:["M|다음 주에 이사를 하는데 좀 도와줄 수 있어요?","F|그럼요. 토요일 오전에는 시간이 있어요."],o:["Puede ayudar el sábado por la mañana","No puede ayudar","Ayudará el domingo","Ella también se va a mudar"],ko:0,e:"그럼요 = claro; 토요일 오전에는 시간이 있어요 = el sábado en la mañana tengo tiempo."},
+{id:"l4b",s:"L",lv:4,p:"Escucha el anuncio. ¿Qué es correcto?",a:["F|고객 여러분께 안내 말씀드립니다. 오늘 오후 6시부터 한 시간 동안 1층 식품 매장에서 과일을 30퍼센트 할인된 가격에 판매합니다."],o:["Hoy de 6 a 7 de la tarde hay 30% de descuento en fruta","El descuento dura todo el día","El descuento es en ropa","La venta es en el tercer piso"],ko:0,e:"오후 6시부터 한 시간 동안 … 과일을 30퍼센트 할인 = desde las 6 por una hora, fruta con 30% de descuento en el 1er piso."},
+{id:"l4c",s:"L",lv:4,p:"Escucha. ¿Por qué recomienda la mujer la natación?",a:["M|운동을 시작하려고 하는데 헬스장이 좋을까요, 수영이 좋을까요?","F|허리가 안 좋으시면 수영이 부담이 적어서 더 좋아요."],o:["Porque cansa menos la espalda","Porque es más barata","Porque está más cerca","Porque es más divertida"],ko:0,e:"허리가 안 좋으시면 수영이 부담이 적어서 = si te duele la espalda, nadar exige menos esfuerzo."},
+{id:"l5b",s:"L",lv:5,p:"Escucha. ¿Qué opina el hombre?",a:["F|요즘 아이들이 스마트폰을 너무 많이 사용해서 걱정이에요.","M|무조건 못 쓰게 하기보다는 사용 시간을 아이와 함께 정하는 게 효과적이라고 하더라고요."],o:["Es mejor acordar con el niño el tiempo de uso","Hay que prohibir el celular por completo","Hay que dejarlo usarlo sin límite","Conviene comprarle otro teléfono"],ko:0,e:"사용 시간을 아이와 함께 정하는 게 효과적 = es eficaz decidir junto con el niño el tiempo de uso."},
+{id:"l5c",s:"L",lv:5,p:"Escucha. ¿Qué le preocupa a la mujer?",a:["M|우리 회사도 주 4일 근무제를 도입한다는데 어떻게 생각해요?","F|쉬는 날이 늘어서 좋긴 하지만, 근무일에 일이 몰려서 오히려 더 힘들어질까 봐 걱정돼요."],o:["Que el trabajo se acumule en los días laborales","Que le paguen menos","Que no le den vacaciones","Que la empresa cierre"],ko:0,e:"근무일에 일이 몰려서 더 힘들어질까 봐 = teme que el trabajo se concentre en los días laborales."},
+{id:"l6b",s:"L",lv:6,p:"Escucha. ¿Cuál es la idea central?",a:["M|흔히 꿀벌이 사라지면 꿀만 없어진다고 생각합니다. 그러나 꿀벌은 많은 농작물의 꽃가루를 옮겨 열매를 맺게 합니다. 따라서 꿀벌의 감소는 식량 생산 전체를 위협하는 문제입니다."],o:["La desaparición de las abejas amenaza la producción de alimentos","Si desaparecen las abejas, solo se pierde la miel","Las abejas dañan los cultivos","Hay demasiadas abejas en el campo"],ko:0,e:"꿀벌의 감소는 식량 생산 전체를 위협 = la disminución de abejas amenaza toda la producción de alimentos."},
+{id:"l6c",s:"L",lv:6,p:"Escucha. ¿Cuál es la idea central?",a:["F|우리는 보통 결정을 내릴 때 충분히 생각한 뒤 합리적으로 판단한다고 믿습니다. 하지만 실제로는 첫인상이나 그때의 기분처럼 사소한 요소가 판단에 큰 영향을 미친다는 연구 결과가 많습니다."],o:["Detalles como el estado de ánimo influyen mucho en nuestras decisiones","Siempre decidimos de forma racional","La primera impresión no importa","Pensar mucho evita cualquier error"],ko:0,e:"사소한 요소가 판단에 큰 영향을 미친다 = factores pequeños influyen mucho en el juicio."}
 ];
 const EXAM_MIN=30;
+// Cuántas preguntas salen por sección y nivel en cada examen (30 en total)
+const BLUEPRINT={V:{1:2,2:2,3:2,4:2,5:2,6:2},R:{1:1,2:1,3:2,4:2,5:2,6:2},L:{1:2,2:2,3:1,4:1,5:1,6:1}};
+const EXAM_N=Object.values(BLUEPRINT).reduce((a,o)=>a+Object.values(o).reduce((x,y)=>x+y,0),0);
+const SEC_N=Object.fromEntries(Object.entries(BLUEPRINT).map(([s,o])=>[s,Object.values(o).reduce((x,y)=>x+y,0)]));
+const BYID=Object.fromEntries(BANK.map(q=>[q.id,q]));
+let QUESTIONS=[];
+// Elige un examen del banco: primero las preguntas que esta persona ha visto menos veces, al azar entre empates
+function pickExam(seen={},rand=Math.random){
+  const ids=[];
+  for(const s of ["V","R","L"])for(let lv=1;lv<=6;lv++){
+    const pool=BANK.filter(q=>q.s===s&&q.lv===lv).map(q=>({id:q.id,k:(seen[q.id]||0)+rand()}));
+    pool.sort((a,b)=>a.k-b.k);
+    ids.push(...pool.slice(0,BLUEPRINT[s][lv]).map(x=>x.id));
+  }
+  return ids;
+}
 
 function hash(s){let h=2166136261;for(const ch of s){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 // Orden de opciones fijo por pregunta (siempre igual para todos)
@@ -265,9 +342,9 @@ const LEVEL_TXT={0:"Principiante",1:"Básico 1",2:"Básico 2",3:"Intermedio 1",4
 const TOPIK_TXT={0:"Aún sin nivel TOPIK",1:"Cercano a TOPIK I · nivel 1",2:"Cercano a TOPIK I · nivel 2",3:"Cercano a TOPIK II · nivel 3",4:"Cercano a TOPIK II · nivel 4",5:"Cercano a TOPIK II · nivel 5",6:"Cercano a TOPIK II · nivel 6"};
 
 // answers: {id: índice original elegido}
-function grade(answers){
+function grade(answers,qs=QUESTIONS){
   const byLv={},bySec={};let right=0;
-  for(const q of QUESTIONS){
+  for(const q of qs){
     const ok=answers[q.id]===0;
     (byLv[q.lv]??={n:0,ok:0}).n++; if(ok)byLv[q.lv].ok++;
     (bySec[q.s]??={n:0,ok:0}).n++; if(ok)bySec[q.s].ok++;
@@ -279,7 +356,7 @@ function grade(answers){
     const b=byLv[L];cn+=b.n;cok+=b.ok;
     if(b.ok/b.n>=0.6&&cok/cn>=0.6)level=L;else if(b.ok/b.n<0.4)break;
   }
-  return {right,total:QUESTIONS.length,level,byLv,bySec};
+  return {right,total:qs.length,level,byLv,bySec};
 }
 /* ===== /CORE ===== */
 </script>
@@ -294,13 +371,17 @@ const KEY="gk-examen-v1";
 let P=QS.get("p")||"inicio";
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fill=t=>esc(t).replace(/\( \)/g,'<span class="blank">( &nbsp; )</span>');
-const fresh=()=>({ans:{},flag:{},plays:{},ends:0,result:null,i:{V:0,R:0,L:0},last:"V"});
+const fresh=()=>({qids:[],ans:{},flag:{},plays:{},ends:0,result:null,i:{V:0,R:0,L:0},last:"V"});
 
 /* Guardado: si el navegador no deja guardar, el examen sigue en una sola página sin recargar */
 let STORE=true,st;
 try{localStorage.setItem(KEY+"-t","1");localStorage.removeItem(KEY+"-t")}catch(e){STORE=false}
 try{st=JSON.parse(STORE&&localStorage.getItem(KEY)||"null")}catch(e){}
-if(!st||!st.i)st=fresh();
+if(!st||!st.i||!Array.isArray(st.qids)||st.qids.length!==EXAM_N||!st.qids.every(id=>BYID[id]))st=fresh();
+QUESTIONS=st.qids.map(id=>BYID[id]);
+const SEEN_KEY="gk-examen-vistas";
+function loadSeen(){try{return JSON.parse(localStorage.getItem(SEEN_KEY)||"{}")||{}}catch(e){return {}}}
+function saveSeen(m){try{localStorage.setItem(SEEN_KEY,JSON.stringify(m))}catch(e){}}
 function save(){if(!STORE)return;try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){STORE=false}}
 function go(p){
   save();if("speechSynthesis" in window)speechSynthesis.cancel();
@@ -355,12 +436,12 @@ function vInicio(){
       <h1>¿Qué tanto coreano sabes? <span class="ko">한국어 실력 진단</span></h1>
       <p>Una prueba de nivel en computadora o celular, con el formato de los exámenes oficiales: hoja de respuestas, tiempo límite y tres secciones. Al terminar ves tu nivel estimado del 1 al 6, tus puntos fuertes y la explicación de cada pregunta en español.</p>
       <div class="facts">
-        <div class="fact"><b>${QUESTIONS.length}</b><span>preguntas</span></div>
+        <div class="fact"><b>${EXAM_N}</b><span>preguntas</span></div>
         <div class="fact"><b>${EXAM_MIN} min</b><span>tiempo límite</span></div>
         <div class="fact"><b>Gratis</b><span>sin crear cuenta</span></div>
       </div>
       <div class="row">${resume?`<button class="btn red" id="resume">Continuar mi prueba (${mmss(left())})</button><button class="btn ghost" id="start">Empezar de nuevo</button>`:`<button class="btn red" id="start">Empezar la prueba</button>`}</div>
-      <p class="note">Sube el volumen para la parte auditiva. Tu avance se guarda en este navegador.</p>
+      <p class="note">Cada vez que haces la prueba salen preguntas distintas, elegidas de un banco de ${BANK.length}. Sube el volumen para la parte auditiva. Tu avance se guarda en este navegador.</p>
     </section>
     <aside class="sheet levels">
       <div class="eyebrow n">Escala de niveles</div>
@@ -372,7 +453,7 @@ function vInicio(){
   <section class="sheet box">
     <div class="eyebrow n">Cómo funciona</div>
     <div class="steps">
-      ${ORDER.map((s,n)=>`<div class="step"><b>${n+1}. ${SECTIONS[s]}</b>${QUESTIONS.filter(q=>q.s===s).length} preguntas, de nivel 1 a 6</div>`).join("")}
+      ${ORDER.map((s,n)=>`<div class="step"><b>${n+1}. ${SECTIONS[s]}</b>${SEC_N[s]} preguntas, de nivel 1 a 6</div>`).join("")}
     </div>
     <p class="note">Entre una sección y otra verás tu avance. El reloj sigue corriendo durante toda la prueba, como en el examen real.</p>
   </section>
@@ -391,7 +472,7 @@ function vInicio(){
     <details><summary>¿Cuántos niveles tiene el TOPIK?</summary><p>Seis: TOPIK I cubre los niveles 1 y 2, y TOPIK II los niveles 3 a 6.</p></details>
   </section>
   ${ad("bottom")}`;
-  $("#start").onclick=()=>{st=fresh();st.ends=Date.now()+EXAM_MIN*60000;save();go("V")};
+  $("#start").onclick=()=>{st=fresh();const seen=loadSeen();st.qids=pickExam(seen);st.qids.forEach(id=>seen[id]=(seen[id]||0)+1);saveSeen(seen);st.ends=Date.now()+EXAM_MIN*60000;save();go("V")};
   if(resume)$("#resume").onclick=()=>go(st.last||"V");
 }
 
@@ -434,9 +515,9 @@ function renderQ(){
       ${secQs(s).map((x,j)=>`<button class="cell ${st.ans[x.q.id]!==undefined?"done":""} ${x.n===n?"cur":""} ${st.flag[x.q.id]?"flag":""}" data-s="${s}" data-j="${j}" aria-label="Pregunta ${x.n+1}">${x.n+1}</button>`).join("")}
     </div></div>`).join("")}
     <div class="legend"><span><i class="d"></i>Respondida</span><span><i></i>Pendiente</span><span><i class="f"></i>Marcada</span></div>
-    ${askSubmit?`<div class="confirm"><b>¿Entregar la prueba?</b><span>${QUESTIONS.length-done?`Te faltan ${QUESTIONS.length-done} preguntas; contarán como incorrectas.`:"Respondiste todas las preguntas."}</span>
+    ${askSubmit?`<div class="confirm"><b>¿Entregar la prueba?</b><span>${EXAM_N-done?`Te faltan ${EXAM_N-done} preguntas; contarán como incorrectas.`:"Respondiste todas las preguntas."}</span>
       <div><button class="btn red" id="yes">Sí, entregar</button><button class="btn ghost" id="no">Seguir</button></div></div>`
-      :`<span class="note" style="font-variant-numeric:tabular-nums">${done} de ${QUESTIONS.length} respondidas</span><button class="btn ghost" id="sub">Entregar prueba</button>`}`;
+      :`<span class="note" style="font-variant-numeric:tabular-nums">${done} de ${EXAM_N} respondidas</span><button class="btn ghost" id="sub">Entregar prueba</button>`}`;
   document.querySelectorAll("input[name=o]").forEach(r=>r.onchange=()=>{st.ans[q.id]=+r.value;save();renderQ()});
   document.querySelectorAll(".cell").forEach(b=>b.onclick=()=>{const s=b.dataset.s;st.i[s]=+b.dataset.j;askSubmit=false;if(s===sec){save();renderQ();scrollTo({top:0})}else go(s)});
   $("#prev").onclick=()=>{st.i[sec]=k-1;save();renderQ();scrollTo({top:0})};
@@ -479,8 +560,6 @@ function vResultado(){
   const tips={V:"Repasa terminaciones y partículas del nivel siguiente con frases cortas de ejemplo.",R:"Lee textos breves cada día (avisos, mensajes, noticias fáciles) y busca primero la idea principal.",L:"Escucha diálogos cortos: primero sin texto, luego con texto, y repite en voz alta."};
   const items=QUESTIONS.map((q,n)=>({q,n,ok:st.ans[q.id]===0,mine:st.ans[q.id]}));
   const sorted=[...items.filter(x=>!x.ok),...items.filter(x=>x.ok)];
-  const amz=k=>"https://www.amazon.com.mx/s?k="+encodeURIComponent(k)+(AMAZON_TAG?"&tag="+encodeURIComponent(AMAZON_TAG):"");
-  const books=r.level<=2?[["Libros de coreano para principiantes","libro coreano principiantes"],["Libros de preparación TOPIK I","libro TOPIK I"]]:[["Libros de preparación TOPIK II","libro TOPIK II"],["Gramática coreana intermedia","korean grammar in use intermediate"]];
   const rv=({q,n,ok,mine})=>`<div class="rv ${ok?"ok":"bad"}">
     <div class="h"><span class="tag ${ok?"ok":"bad"}">${ok?"Correcta":(mine===undefined?"Sin responder":"Incorrecta")}</span><span>Pregunta ${n+1} · ${SECTIONS[q.s]} · Nivel ${q.lv}</span></div>
     ${q.t?`<div class="ko" style="font-size:16px">${fill(q.t.length>90?q.t.slice(0,90)+"…":q.t)}</div>`:`<div class="script">${scriptOf(q)}</div>`}
@@ -505,7 +584,7 @@ function vResultado(){
     </section>
   </div>
   ${ad("result")}
-  <div class="two">
+  <div>
     <section class="sheet box">
       <div class="eyebrow n">Qué repasar</div>
       <ul>
@@ -513,11 +592,6 @@ function vResultado(){
         <li>${r.level<6?`Para subir al nivel ${r.level+1}, revisa abajo las preguntas de nivel ${r.level+1} que fallaste.`:"Dominas todos los niveles de esta prueba. El siguiente paso es practicar con exámenes TOPIK II completos."}</li>
       </ul>
       <div class="row"><button class="btn" id="again">Hacer la prueba otra vez</button><a class="btn ghost" href="/#g-coreano">Galería Aprender coreano</a></div>
-    </section>
-    <section class="sheet box">
-      <div class="eyebrow n">Material para tu nivel</div>
-      <ul>${books.map(([t,k])=>`<li><a href="${amz(k)}" target="_blank" rel="${AMAZON_TAG?"sponsored nofollow ":""}noopener">${t} en Amazon México</a></li>`).join("")}</ul>
-      ${AMAZON_TAG?`<p class="note">Enlaces de afiliado: si compras, GaleríaK puede recibir una comisión sin costo extra para ti.</p>`:`<p class="note">Búsquedas en Amazon México. Revisa reseñas y vendedor antes de comprar.</p>`}
     </section>
   </div>
   <section class="sheet review">
@@ -534,6 +608,7 @@ function vResultado(){
 }
 
 function boot(){
+  QUESTIONS=st.qids.map(id=>BYID[id]);
   clearInterval(tick);$("#timer").hidden=true;askSubmit=false;
   if(inProgress()&&left()<=0){st.result=grade(st.ans);save();if(STORE&&P!=="resultado"){go("resultado");return}P="resultado"}
   if(ORDER.includes(P)){if(!inProgress()){P="inicio";vInicio()}else vSeccion(P)}
