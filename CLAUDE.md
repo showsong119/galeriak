@@ -133,3 +133,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
   - `gk_niveles(uuid[])` → (id, puntos, admin). 점수: 글 +10, 댓글 +3, 받은 ♥ +2, 가입일수 +1(최대 365). 숨김/삭제 제외.
 - 사이트: `LEVELS`(Lv1 Nuevo 0 · Lv2 Fan 30 · Lv3 Fan activo 100 · Lv4 Fan dedicado 300 · Lv5 Experto 800 · Lv6 Veterano 2000 · Lv7 Leyenda 5000, 관리자=Admin, 봇=Bot), 닉네임 옆 배지(`.nk[data-uid]` → `decorateLevels()`), `#niveles` 설명 페이지, `#mensajes`·`#mensaje-<id>` 쪽지, 상단 ✉️ 안읽음 배지, 관리자 글쓰기에 '📌 aviso fijo' 체크박스, 관리자 화면에 쪽지 링크.
 - 사용자 간 쪽지는 일부러 만들지 않음(13세 이상 커뮤니티 — 미성년자 보호). 문의는 운영팀과만.
+
+## 18. 출석·레벨 v2·매니저 (2026-11-08)
+- SQL: `supabase/2026-11-08-asistencia-niveles-managers.sql` (재실행 안전, 로컬 PG16 테스트 통과). **사용자 실행 필요.** `gk_niveles`를 drop 후 재생성(반환에 `asistencias` 추가, 점수: 출석 +5/일(고유 날짜, America/Mexico_City), 글 +10(asistencia 제외), 댓글 +3, ♥ +2, 가입일수 점수 제거). 새 표 `gk_managers(gallery_id,user_id,created_at,created_by)` RLS: 읽기 전체, insert/delete는 `gk_is_admin()`. `gk_es_manager(text)`, `gk_manager_ocultar(p_tipo 'post'|'comment', p_id bigint, p_oculto)` (관리자 또는 해당 갤러리 매니저, 관리자 콘텐츠 불가).
+- 사이트: 갤러리 `asistencia`(attend:true, 전용 출석 박스·칩, 하루 1회), `libre`(Foro libre), 분류 `comunidad`. `LEVELS=[[n,pts,name,asis]]` Lv0~7, Lv2 이상은 출석 7일 필요(`LV2_ASIS`). 가입 직후 `sessionStorage.gk_new` → `#g-asistencia`. 매니저: `MGR`(gk_managers 캐시, `mgrReady`), `.nk[data-gal]`로 갤러리별 🛡️ 배지, 갤러리 헤더에 매니저 목록, 글/댓글에 매니저 도구, 관리자 탭 `managers`.

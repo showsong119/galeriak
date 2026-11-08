@@ -33,7 +33,8 @@ nav.main{max-width:1120px;margin:0 auto;display:flex;gap:4px;padding:0 12px 8px;
 nav.main::-webkit-scrollbar{display:none}
 nav.main a{padding:6px 12px;border-radius:999px;font-weight:600;color:var(--muted);white-space:nowrap}
 nav.main a.on{background:var(--ink);color:#fff}
-nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:nowrap}.hoy-more{margin-left:auto;align-self:center}@media(max-width:700px){.tabs{flex-wrap:wrap}.hoy-more{flex-basis:100%;margin:6px 0 0}}nav.main a.nav-hoy.on{background:var(--hot);color:#fff}
+nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:nowrap}.hoy-more{margin-left:auto;align-self:center}@media(max-width:700px){.tabs{flex-wrap:wrap}.hoy-more{flex-basis:100%;margin:6px 0 0}}nav.main a.nav-hoy.on{background:var(--hot);color:#fff}nav.main a.nav-att{color:var(--ok);font-weight:800}nav.main a.nav-att.on{background:var(--ok);color:#fff}
+.att{border:2px solid #bfe6cf;background:linear-gradient(135deg,#ecfaf2,#fff 70%);border-radius:14px;padding:14px 16px;margin-bottom:12px}.att h3{margin:0 0 6px;font-size:17px;color:var(--ok)}.att .chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.att .chips button{border:1px solid #bfe6cf;background:#fff;border-radius:99px;padding:5px 10px;font-size:13px;cursor:pointer}.att form{display:flex;gap:8px;flex-wrap:wrap}.att input{flex:1;min-width:200px}.att .btn-ok{background:var(--ok);color:#fff;border-color:var(--ok);font-weight:800}.att-done{font-weight:700;color:var(--ok)}.att-new{border-color:#f6c3d8;background:linear-gradient(135deg,#fde8f1,#fff 70%)}.att-new h3{color:var(--brand)}
 .demo{background:#fff7d6;border-bottom:1px solid #f1e3a4;color:#7a5b00;font-size:12.5px;text-align:center;padding:6px 10px}
 .wrap{max-width:1120px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1fr 300px;gap:16px}
 @media(max-width:900px){.wrap{grid-template-columns:1fr}.side{order:2}}
@@ -57,7 +58,8 @@ nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:now
 .aviso-row{background:#f6f8ff}
 .best .num.top{color:var(--brand);font-weight:800}
 .lv{display:inline-block;font-size:10px;font-weight:800;line-height:1;padding:3px 5px;border-radius:5px;margin-left:4px;vertical-align:1px;color:#fff;background:#9a9aa6}
-.lv1{background:#b8b8c2}.lv2{background:#6bbf8a}.lv3{background:#3aa0d8}.lv4{background:#2f5bd8}.lv5{background:#8a4fd8}.lv6{background:#e5317d}.lv7{background:linear-gradient(90deg,#f5a623,#e5317d)}.lv-adm{background:#17171c}
+.lv0{background:#dcdce2;color:#666!important}.lv1{background:#b8b8c2}.lv2{background:#6bbf8a}.lv3{background:#3aa0d8}.lv4{background:#2f5bd8}.lv5{background:#8a4fd8}.lv6{background:#e5317d}.lv7{background:linear-gradient(90deg,#f5a623,#e5317d)}.lv-adm{background:#17171c}
+.lv-mgr{background:linear-gradient(90deg,#f5b400,#ff7a00);display:inline-flex;align-items:center;gap:3px;margin-left:3px}.lv-mgr svg{width:12px;height:12px;flex:none}.mgrs{font-size:12px;color:var(--muted);margin-top:4px}.mgrbox{border-top:1px solid var(--line);margin-top:12px;padding-top:10px;background:#fff8e6;border-radius:10px;padding:10px 12px}
 .lvt{border-collapse:collapse;width:100%;max-width:520px;font-size:14px}.lvt th,.lvt td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left}
 .lvme{background:var(--brand-soft);border-radius:12px;padding:12px 14px;margin:10px 0}.lvbar{height:8px;background:#fff;border-radius:99px;overflow:hidden;margin:8px 0 4px}.lvbar i{display:block;height:100%;background:var(--brand)}
 .mc-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.mc-head h1{margin:0;font-size:22px}.mc-big{font-size:30px;font-weight:800;color:var(--brand);line-height:1.1}
@@ -190,6 +192,7 @@ document.addEventListener('click',e=>{ if(!e.target.closest('#fixReload'))return
 let ME=null, MYNICK='', MYROLE='', myVotes=new Map();
 
 const CATS=[
+ {id:'comunidad',name:'Comunidad'},
  {id:'beauty',name:'K-Beauty'},
  {id:'deals',name:'Ofertas'},
  {id:'kpop',name:'K-Pop'},
@@ -197,6 +200,8 @@ const CATS=[
  {id:'vida',name:'Corea y más'}
 ];
 const GALS=[
+ {id:'asistencia',cat:'comunidad',name:'Asistencia diaria',desc:'Pasa lista cada día y gana +5 puntos',c:'#1d8a5a',icon:'✅',attend:true},
+ {id:'libre',cat:'comunidad',name:'Foro libre',desc:'Habla de lo que quieras: K-Beauty, K-Pop, tu día…',c:'#636e72',icon:'💬'},
  {id:'skincare',cat:'beauty',name:'Skincare coreano',desc:'Rutinas, ingredientes y dudas de cuidado de la piel',c:'#e5317d'},
  {id:'maquillaje',cat:'beauty',name:'Maquillaje coreano',desc:'Cushions, tints, tonos para piel latina',c:'#d94f9a'},
  {id:'resenas',cat:'beauty',name:'Reseñas',desc:'Reseñas honestas después de usar el producto',c:'#b83f7a'},
@@ -216,7 +221,6 @@ const GALS=[
  {id:'kdramas',cat:'kdrama',name:'K-Dramas',desc:'Recomendaciones y comentarios (sin spoilers en el título)',c:'#00a383'},
  {id:'viajes',cat:'vida',name:'Viaje a Corea',desc:'Compras, tax free y consejos para tu viaje',c:'#0984e3'},
  {id:'coreano',cat:'vida',name:'Aprender coreano',desc:'Frases útiles, hangul y recursos',c:'#6d4c41'},
- {id:'libre',cat:'vida',name:'Charla libre',desc:'De todo un poco',c:'#636e72'},
  {id:'solicitudes',cat:'vida',name:'Solicitar galería',desc:'Pide nuevas galerías de grupos, actores o marcas',c:'#2f5bd8'}
 ];
 
@@ -278,10 +282,10 @@ function ago(t){t=new Date(t).getTime();const d=Date.now()-t;if(d<60e3)return'ah
 const BOT='Bot de ofertas';
 // Ofertas del bot: el precio solo se muestra durante 24 h (regla de Amazon sobre precios)
 const priceShown=p=>!!p.deal_price&&!(p.anon_name===BOT&&Date.now()-new Date(p.created_at).getTime()>D);
-const nick=p=>p.author_id?`<span class="nk" data-uid="${esc(p.author_id)}">${esc(p.profiles&&p.profiles.nickname||'usuario')}</span>`:(p.anon_name?`${esc(p.anon_name)} <span class="pill p-gal">Bot</span>`:'usuario');
+const nick=p=>p.author_id?`<span class="nk" data-uid="${esc(p.author_id)}" data-gal="${esc(p.gallery_id||'')}">${esc(p.profiles&&p.profiles.nickname||'usuario')}</span>`:(p.anon_name?`${esc(p.anon_name)} <span class="pill p-gal">Bot</span>`:'usuario');
 const ad=k=>`<div class="ad ad-${k}">Publicidad</div>`;
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2200)}
-function av(g){return `<span class="av" style="background:${g.c}">${esc(g.name.replace(/[^A-Za-z0-9ÁÉÍÓÚÑáéíóúñ]/g,'').slice(0,2).toUpperCase())}</span>`}
+function av(g){if(g.icon)return `<span class="av" style="background:${g.c};font-size:16px">${g.icon}</span>`;return `<span class="av" style="background:${g.c}">${esc(g.name.replace(/[^A-Za-z0-9ÁÉÍÓÚÑáéíóúñ]/g,'').slice(0,2).toUpperCase())}</span>`}
 const loading=()=>`<div class="card empty">Cargando…</div>`;
 const fail=e=>`<div class="card empty">No se pudo cargar (${esc(e&&e.message||'error')}). Intenta de nuevo.</div>`;
 function tags(p,showGal){
@@ -312,6 +316,7 @@ async function refreshSession(given){
   let session=given;
   if(session===undefined){const res=await withTimeout(sb.auth.getSession(),4000);session=res&&res.data?res.data.session:null}
   ME=session?session.user:null;MYNICK='';MYROLE='';myVotes=new Map();
+  if(!ME)ATT={loaded:false,today:false,streak:0,total:0};
   if(ME){
     let {data:prof}=await sb.from('profiles').select('nickname,role').eq('id',ME.id).maybeSingle();
     if(!prof){ // primer inicio de sesión: crear perfil con el apodo del registro
@@ -320,9 +325,10 @@ async function refreshSession(given){
       let n=md.nickname||(gname.length>=2?gname:('fan'+ME.id.slice(0,5)));
       const ins=nn=>sb.from('profiles').insert({id:ME.id,nickname:nn,age_confirmed_at:ageOk?new Date().toISOString():null}).select('nickname,role').single();
       let r=await ins(n);if(r.error&&/duplicate|unique/i.test(r.error.message||'')){n=n.slice(0,14)+ME.id.slice(0,4);r=await ins(n)}
-      prof=r.data||{nickname:n};
+      prof=r.data||{nickname:n};try{sessionStorage.setItem('gk_new','1')}catch(_){}
     }
     MYNICK=prof.nickname;MYROLE=prof.role||'';
+    await loadAttend().catch(()=>{});
     const {data:v}=await sb.from('votes').select('post_id,value').eq('voter',ME.id);
     (v||[]).forEach(x=>myVotes.set(x.post_id,x.value));
   }
@@ -338,10 +344,10 @@ function renderUserBox(){
 async function side(){
   const since=ms=>new Date(Date.now()-ms).toISOString();
   const BEAUTY=GALS.filter(g=>g.cat==='beauty'||g.cat==='deals').map(g=>g.id);
-  const top=(ms,n,gals)=>{let q=listQ().gte('created_at',since(ms)).eq('is_pinned',false);if(gals)q=q.in('gallery_id',gals);return q.order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(n)};
+  const top=(ms,n,gals)=>{let q=listQ().gte('created_at',since(ms)).eq('is_pinned',false).neq('gallery_id','asistencia');if(gals)q=q.in('gallery_id',gals);return q.order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(n)};
   const [{data:day},{data:week},{data:bDay},{data:bWeek}]=await Promise.all([top(D,10),top(7*D,10),top(D,10,BEAUTY),top(7*D,10,BEAUTY)]);
   const best=(arr,empty)=>arr&&arr.length?`<ol class="list best">${arr.map((p,i)=>`<li class="row"><span class="num ${i<3?'top':''}">${i+1}</span><div class="t"><a href="#p-${p.id}">${esc(p.title)}</a>${p.comment_count?`<span class="cc">[${p.comment_count}]</span>`:''}<div class="meta"><span>${esc((G[p.gallery_id]||{name:p.gallery_id}).name)}</span><span>♥ ${p.up_count}</span></div></div></li>`).join('')}</ol>`:`<div class="hint">${empty}</div>`;
-  $('#side').innerHTML=`
+  $('#side').innerHTML=`${location.hash==='#g-asistencia'||location.hash==='#home'||location.hash===''?'':attendNudge()}
   ${location.hash==='#hoy'?'':`  <div class="card"><h2 style="color:var(--hot)">🏆 Mejores de hoy · TOP 10 <a class="more" href="#hoy">Ver todo</a></h2>${best(day,'Todavía no hay publicaciones hoy. ¡<a href="#w-libre" style="color:var(--blue)">Escribe la primera</a>!')}</div>`}
   ${ad('rect')}
   <div class="card"><h2>📅 Mejores de la semana · TOP 10</h2>${best(week,'Todavía no hay publicaciones esta semana.')}</div>
@@ -353,9 +359,9 @@ async function side(){
 
 /* ---------------- vistas ---------------- */
 function nav(cur){
-  const items=[['home','Inicio'],['hoy','🔥 Mejores de hoy'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y más'],['guias','Guías'],['/examen-coreano/','Examen de coreano'],['galerias','Galerías']];
+  const items=[['home','Inicio'],['hoy','🔥 Mejores de hoy'],['g-asistencia','✅ Asistencia'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['g-libre','💬 Foro libre'],['c-vida','Corea y más'],['guias','Guías'],['/examen-coreano/','Examen de coreano'],['galerias','Galerías']];
   if(MYROLE==='admin')items.push(['admin','관리자']);
-  $('#nav').innerHTML=items.map(([h,n])=>`<a href="${h[0]==='/'?h:'#'+h}" class="${cur===h?'on':''}${h==='hoy'?' nav-hoy':''}">${n}</a>`).join('');
+  $('#nav').innerHTML=items.map(([h,n])=>`<a href="${h[0]==='/'?h:'#'+h}" class="${cur===h?'on':''}${h==='hoy'?' nav-hoy':''}${h==='g-asistencia'?' nav-att':''}">${n}</a>`).join('');
 }
 const galCard=g=>`<a class="gal" href="#g-${g.id}">${av(g)}<div><b>${esc(g.name)}</b><small>${esc(g.desc)}</small></div></a>`;
 const FLAME='<svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="flg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e5482b"/><stop offset="1" stop-color="#ff9a3c"/></linearGradient></defs><path fill="url(#flg)" d="M16 1.5c1.2 5-1.6 7.6-4.2 10.4C9.3 14.6 7 17.4 7 21.4 7 26.6 11 30.5 16 30.5s9-3.9 9-9.1c0-4.6-2.4-7.6-4.6-10.3-.5 2.3-1.6 4-3.3 4.9.6-5.2-.4-10.4-1.1-14.5z"/><path fill="#ffd25e" d="M16.3 17c.5 2.6-.9 3.8-2.1 5.1-.9 1-1.6 2-1.6 3.4 0 2 1.6 3.5 3.5 3.5s3.5-1.5 3.5-3.5c0-1.9-1.1-3.2-2.1-4.3-.3 1-.8 1.6-1.4 1.9.3-2.2 0-4.3-.2-6.1z"/></svg>';
@@ -367,11 +373,11 @@ async function vHome(){
   const [best,deals,recent]=await Promise.all([
     listQ().gte('up_count',BEST).neq('gallery_id','ofertas').order('created_at',{ascending:false}).limit(8),
     listQ().eq('gallery_id','ofertas').eq('deal_sold',false).order('created_at',{ascending:false}).limit(5),
-    listQ().eq('is_pinned',false).order('created_at',{ascending:false}).limit(10)
+    listQ().eq('is_pinned',false).neq('gallery_id','asistencia').order('created_at',{ascending:false}).limit(10)
   ]);
   if(recent.error)return fail(recent.error);
   const B=best.data||[],Dl=deals.data||[],R=recent.data||[];
-  return ad('leader')+welcome()+`
+  return ad('leader')+welcome()+attendNudge()+`
   ${B.length?`<div class="card"><h2>⭐ Destacados <a class="more" href="#mejores">Ver más</a></h2>${listWithAds(B,1,true)}</div>`:''}
   <div class="card"><h2>🔥 Ofertas K-Beauty <a class="more" href="#g-ofertas">Ver todas</a></h2>${Dl.length?`<ul class="list">${Dl.map((p,i)=>row(p,i+1,false)).join('')}</ul>`:'<div class="empty">¿Viste un buen precio? <a href="#w-ofertas" style="color:var(--blue)">Compártelo</a></div>'}</div>
   <div class="card"><h2>🕒 Lo más nuevo</h2>${R.length?listWithAds(R,1,true):'<div class="empty">¡Sé la primera persona en publicar!</div>'}</div>
@@ -386,25 +392,33 @@ async function vCat(cid){
   <div class="card"><h2>Publicaciones recientes</h2>${data.length?listWithAds(data,1,true):'<div class="empty">Aún no hay publicaciones.</div>'}</div>`;
 }
 let galTab='all',galPage=1,lastGal='';
+const navKey=g=>g.deal?'g-ofertas':['kdramas','asistencia','libre'].includes(g.id)?'g-'+g.id:'c-'+g.cat;
 async function vGal(gid){
   const g=G[gid];if(!g)return vNotFound();
   if(lastGal!==gid){galTab='all';galPage=1;lastGal=gid}
-  nav(g.deal?'g-ofertas':g.id==='kdramas'?'g-kdramas':'c-'+g.cat);
+  nav(navKey(g));
   let q=listQ({count:'exact'}).eq('gallery_id',gid).eq('is_pinned',false);
   if(galTab==='best')q=q.gte('up_count',g.deal?HOT_DEAL:BEST);
   const from=(galPage-1)*PAGE;
   const [{data,count,error},pins]=await Promise.all([q.order('created_at',{ascending:false}).range(from,from+PAGE-1),listQ().eq('gallery_id',gid).eq('is_pinned',true)]);
   if(error)return fail(error);
   const pages=Math.max(1,Math.ceil((count||0)/PAGE));const P=pins.data||[];
-  return ad('leader')+`<div class="card"><div class="gh">${av(g)}<div><h1>${esc(g.name)}</h1><p>${esc(g.desc)}</p></div><a class="btn btn-brand write" href="#w-${g.id}">Escribir</a></div>
+  await mgrReady;const mg=[...(MGR.get(gid)||[])];const mgn=mg.length?await nicksOf(mg):{};
+  return ad('leader')+`<div class="card"><div class="gh">${av(g)}<div><h1>${esc(g.name)}</h1><p>${esc(g.desc)}</p>${mg.length?`<div class="mgrs">${mgrBadge(gid)} ${mg.map(u=>esc(mgn[u]||'usuario')).join(', ')}</div>`:''}</div>${g.attend?'':`<a class="btn btn-brand write" href="#w-${g.id}">Escribir</a>`}</div>
+  ${g.attend?attendBox():''}
   <div class="tabs"><button data-tab="all" class="${galTab==='all'?'on':''}">Todo</button><button data-tab="best" class="${galTab==='best'?'on':''}">${g.deal?'🔥 Calientes':'⭐ Destacados'}</button></div>
   <ul class="list">${avisoRow(g)}${P.map(p=>row(p,0,false)).join('')}</ul>
   ${data.length?listWithAds(data,null,false):'<div class="empty">Todavía no hay publicaciones aquí. ¡Sé la primera persona en escribir!</div>'}
   ${pages>1?`<div class="pager">${Array.from({length:Math.min(pages,10)},(_,i)=>`<button data-page="${i+1}" class="${galPage===i+1?'on':''}">${i+1}</button>`).join('')}</div>`:''}</div>`;
 }
 /* ---------------- avisos fijos por galería (📌 Aviso) ---------------- */
-const AVISO_TIPO={skincare:'beauty',maquillaje:'beauty',resenas:'resenas','idol-picks':'idol',ofertas:'ofertas',kdramas:'kdrama',viajes:'viajes',coreano:'coreano',libre:'libre',solicitudes:'solicitudes'};
+const AVISO_TIPO={asistencia:'asistencia',skincare:'beauty',maquillaje:'beauty',resenas:'resenas','idol-picks':'idol',ofertas:'ofertas',kdramas:'kdrama',viajes:'viajes',coreano:'coreano',libre:'libre',solicitudes:'solicitudes'};
 const AVISO_ESP={
+ asistencia:g=>`<h2>Cómo funciona ${g}</h2><ul>
+  <li>Pasa lista <b>una vez al día</b> con un saludo corto (hora de la Ciudad de México). Cada día cuenta +${ATT_PTS} puntos para tu nivel.</li>
+  <li>Las cuentas nuevas empiezan en Lv.0. Para llegar a Lv.2 necesitas ${LV2_ASIS} días de asistencia y ${LEVELS[2][1]} puntos.</li>
+  <li>Comenta y dale ♥ a las asistencias de los demás: así nos conocemos.</li>
+  <li>Las listas repetidas, con spam, enlaces o contenido ofensivo se ocultan y no cuentan.</li></ul>`,
  beauty:g=>`<h2>Antes de publicar en ${g}</h2><ul>
   <li>Comparte tu experiencia real: tu tipo de piel, cuánto tiempo usaste el producto y qué resultado tuviste.</li>
   <li>Esto no es una consulta médica. No recomiendes medicamentos ni tratamientos para acné, rosácea, dermatitis u otras condiciones: sugiere ver a un dermatólogo.</li>
@@ -429,6 +443,7 @@ const AVISO_ESP={
   <li>Algunas ofertas pueden incluir enlaces de afiliado de GaleríaK; se indica en el sitio.</li></ul>`,
  kpop:g=>`<h2>Bienvenida a la galería de ${g}</h2><ul>
   <li>Esta es una galería de fans <b>no oficial</b>. No está afiliada al grupo ni a su agencia.</li>
+  <li>Los <span class="lv lv-mgr">${MGR_ICON}Manager</span> de esta galería son fans nombrados por el equipo de GaleríaK. Pueden ocultar publicaciones y comentarios que rompan las reglas.</li>
   <li>Prohibido compartir horarios privados, vuelos, direcciones, teléfonos o cualquier contenido tipo sasaeng.</li>
   <li>Nada de fan wars ni ataques a otros grupos, integrantes o fans.</li>
   <li>No compartas filtraciones, música pirata ni contenido de pago sin permiso. Comparte enlaces oficiales.</li>
@@ -483,40 +498,96 @@ function avisoHTML(g){
 const avisoRow=g=>`<li class="row aviso-row"><span class="num">📌</span><div class="t"><span class="pill p-pin">Aviso</span><a href="#aviso-${g.id}">Reglas y niveles de ${esc(g.name)} · Léelo antes de publicar</a><div class="meta"><span>Equipo GaleríaK</span></div></div></li>`;
 function vAviso(gid){
   const g=G[gid];if(!g)return vNotFound();
-  nav(g.deal?'g-ofertas':g.id==='kdramas'?'g-kdramas':'c-'+g.cat);document.title='Aviso: '+g.name+' – GaleríaK';
+  nav(navKey(g));document.title='Aviso: '+g.name+' – GaleríaK';
   return `<div class="card article"><a href="#g-${g.id}" class="hint">← ${esc(g.name)}</a><h1><span class="pill p-pin">Aviso</span> Reglas y niveles de ${esc(g.name)}</h1>${avisoHTML(g)}</div>`;
 }
 /* ---------------- niveles de usuario (estilo DC Inside / Ppomppu) ---------------- */
-const LEVELS=[[1,0,'Nuevo'],[2,30,'Fan'],[3,100,'Fan activo'],[4,300,'Fan dedicado'],[5,800,'Experto'],[6,2000,'Veterano'],[7,5000,'Leyenda']];
-const levelOf=pts=>{let l=LEVELS[0];for(const x of LEVELS)if(pts>=x[1])l=x;return l};
+// [nivel, puntos mínimos, nombre, días de asistencia mínimos]. Toda cuenta nueva empieza en Lv.0.
+const LEVELS=[[0,0,'Nuevo',0],[1,30,'Novato',0],[2,150,'Fan',7],[3,400,'Fan activo',7],[4,900,'Fan dedicado',7],[5,2000,'Experto',7],[6,4000,'Veterano',7],[7,8000,'Leyenda',7]];
+const ATT_PTS=5,LV2_ASIS=7;
+// asis = días de asistencia (null si el servidor todavía no lo informa: no se aplica ese requisito)
+const levelOf=(pts,asis=null)=>{let l=LEVELS[0];for(const x of LEVELS)if(pts>=x[1]&&(asis==null||asis>=x[3]))l=x;return l};
+const nextLevel=l=>LEVELS.find(x=>x[0]===l[0]+1)||null;
 const LV=new Map();let LV_OFF=false,MYLV=null;
-function lvBadge(info){if(!info)return '';if(info.admin)return '<span class="lv lv-adm" title="Equipo de GaleríaK">Admin</span>';const [n,,name]=levelOf(info.puntos);return `<span class="lv lv${n}" title="Nivel ${n} · ${name} · ${info.puntos} puntos">Lv.${n}</span>`}
+/* managers por galería: tabla gk_managers (el equipo los nombra) */
+let MGR=new Map(),MGR_OK=false,mgrReady=Promise.resolve();
+async function loadManagers(){const {data,error}=await sb.from('gk_managers').select('gallery_id,user_id');MGR=new Map();if(error){MGR_OK=false;return}(data||[]).forEach(r=>{if(!MGR.has(r.gallery_id))MGR.set(r.gallery_id,new Set());MGR.get(r.gallery_id).add(r.user_id)});MGR_OK=true}
+const isMgr=(uid,gid)=>!!(uid&&gid&&MGR.has(gid)&&MGR.get(gid).has(uid));
+const myMgrGals=()=>ME?[...MGR].filter(([,st])=>st.has(ME.id)).map(([g])=>g):[];
+const MGR_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 1.8 3.5 5v6.2c0 5.3 3.6 9.6 8.5 11 4.9-1.4 8.5-5.7 8.5-11V5z"/><path fill="#ff8a00" d="m12 6.3 1.7 3.5 3.8.5-2.8 2.6.7 3.8L12 14.9l-3.4 1.8.7-3.8-2.8-2.6 3.8-.5z"/></svg>';
+const mgrBadge=gid=>`<span class="lv lv-mgr" title="Manager de ${esc((G[gid]||{name:gid}).name)}">${MGR_ICON}Manager</span>`;
+function lvBadge(info){if(!info)return '';if(info.admin)return '<span class="lv lv-adm" title="Equipo de GaleríaK">Admin</span>';const [n,,name]=levelOf(info.puntos,info.asistencias);return `<span class="lv lv${n}" title="Nivel ${n} · ${name} · ${info.puntos} puntos">Lv.${n}</span>`}
 async function fetchLevels(ids){
   ids=[...new Set(ids)].filter(id=>id&&!LV.has(id));if(!ids.length||LV_OFF)return;
   const {data,error}=await sb.rpc('gk_niveles',{p_ids:ids.slice(0,200)});
   if(error){LV_OFF=true;return}
-  (data||[]).forEach(r=>LV.set(r.id,{puntos:r.puntos,admin:r.admin}));
+  (data||[]).forEach(r=>LV.set(r.id,{puntos:r.puntos,admin:r.admin,asistencias:r.asistencias==null?null:r.asistencias}));
 }
 async function decorateLevels(){
   const els=[...document.querySelectorAll('.nk[data-uid]:not([data-lv])')].filter(e=>e.dataset.uid);if(!els.length)return;
   await fetchLevels(els.map(e=>e.dataset.uid));
-  els.forEach(e=>{const i=LV.get(e.dataset.uid);if(!i)return;e.dataset.lv=1;e.insertAdjacentHTML('afterend',lvBadge(i))});
+  await mgrReady;
+  els.forEach(e=>{const i=LV.get(e.dataset.uid);if(!i)return;e.dataset.lv=1;e.insertAdjacentHTML('afterend',lvBadge(i)+(i.admin?'':isMgr(e.dataset.uid,e.dataset.gal)?mgrBadge(e.dataset.gal):''))});
 }
 function vNiveles(){
   nav('');document.title='Niveles de usuario – GaleríaK';
-  const me=MYLV?levelOf(MYLV.puntos):null,next=me?LEVELS.find(x=>x[1]>MYLV.puntos):null;
+  const me=MYLV?levelOf(MYLV.puntos,MYLV.asistencias):null,next=me?nextLevel(me):null;
   return `<div class="card article"><h1>Niveles de usuario</h1>
-  <p>En GaleríaK cada cuenta tiene un nivel según su actividad en la comunidad, como en los foros coreanos DC Inside y Ppomppu. Entre más aportes, más alto tu nivel. El nivel aparece junto a tu apodo en publicaciones y comentarios.</p>
-  ${ME?(MYLV?`<div class="lvme">${MYLV.admin?'<b>Eres parte del equipo de GaleríaK.</b>':`<div>Tu nivel: ${lvBadge(MYLV)} <b>${me[2]}</b> · ${MYLV.puntos} puntos</div>${next?`<div class="lvbar"><i style="width:${Math.min(100,Math.round((MYLV.puntos-me[1])/(next[1]-me[1])*100))}%"></i></div><div class="hint">Te faltan ${next[1]-MYLV.puntos} puntos para Lv.${next[0]} (${next[2]}).</div>`:'<div class="hint">¡Llegaste al nivel máximo!</div>'}`}</div>`:'<p class="hint">Tu nivel aparecerá aquí en cuanto se active el sistema.</p>'):`<p><a href="#entrar" style="color:var(--blue);font-weight:700">Entra</a> para ver tu nivel.</p>`}
+  <p>En GaleríaK cada cuenta tiene un nivel según su actividad en la comunidad, como en los foros coreanos DC Inside y Ppomppu. <b>Todas las cuentas nuevas empiezan en Lv.0.</b> Entre más aportes, más alto tu nivel. El nivel aparece junto a tu apodo en publicaciones y comentarios.</p><p>La forma más fácil de empezar: <a href="#g-asistencia" style="color:var(--ok);font-weight:700">✅ pasa lista cada día en Asistencia diaria</a> (+${ATT_PTS} puntos al día). Para llegar a <b>Lv.2</b> necesitas ${LEVELS[2][1]} puntos <b>y</b> al menos ${LV2_ASIS} días de asistencia.</p>
+  ${ME?(MYLV?`<div class="lvme">${MYLV.admin?'<b>Eres parte del equipo de GaleríaK.</b>':`<div>Tu nivel: ${lvBadge(MYLV)} <b>${me[2]}</b> · ${MYLV.puntos} puntos</div>${next?`<div class="lvbar"><i style="width:${Math.max(0,Math.min(100,Math.round((MYLV.puntos-me[1])/(next[1]-me[1])*100)))}%"></i></div><div class="hint">${faltaTxt(MYLV.puntos,MYLV.asistencias,next)} <a href="#mi-cuenta" style="color:var(--blue)">Ver mi cuenta</a></div>`:'<div class="hint">¡Llegaste al nivel máximo!</div>'}`}</div>`:'<p class="hint">Tu nivel aparecerá aquí en cuanto se active el sistema.</p>'):`<p><a href="#entrar" style="color:var(--blue);font-weight:700">Entra</a> para ver tu nivel.</p>`}
   <h2>Cómo se ganan puntos</h2>
   <table class="lvt"><tr><th>Actividad</th><th>Puntos</th></tr>
-   <tr><td>Publicar en una galería</td><td>+10</td></tr><tr><td>Comentar</td><td>+3</td></tr>
-   <tr><td>Cada ♥ que reciben tus publicaciones</td><td>+2</td></tr><tr><td>Cada día desde que te registraste (máx. 365)</td><td>+1</td></tr></table>
+   <tr><td>Pasar lista en <a href="#g-asistencia">Asistencia diaria</a> (1 vez al día)</td><td>+${ATT_PTS}</td></tr><tr><td>Publicar en una galería</td><td>+10</td></tr><tr><td>Comentar</td><td>+3</td></tr>
+   <tr><td>Cada ♥ que reciben tus publicaciones</td><td>+2</td></tr></table>
   <p class="hint">Las publicaciones y comentarios ocultos por moderación o eliminados no cuentan. Hacer spam o votos falsos para subir de nivel es motivo de suspensión.</p>
   <h2>Tabla de niveles</h2>
-  <table class="lvt"><tr><th>Nivel</th><th>Nombre</th><th>Puntos</th></tr>${LEVELS.map(([n,min,name])=>`<tr><td>${lvBadge({puntos:min})}</td><td>${name}</td><td>${min.toLocaleString('es-MX')}+</td></tr>`).join('')}
-   <tr><td><span class="lv lv-adm">Admin</span></td><td>Equipo de GaleríaK</td><td>—</td></tr><tr><td><span class="pill p-gal">Bot</span></td><td>Bot de ofertas automático</td><td>—</td></tr></table>
-  <h2>Avisos fijos</h2><p>Solo el equipo de GaleríaK puede publicar avisos fijos (📌) en las galerías.</p></div>`;
+  <table class="lvt"><tr><th>Nivel</th><th>Nombre</th><th>Puntos</th><th>Días de asistencia</th></tr>${LEVELS.map(([n,min,name,as])=>`<tr><td>${lvBadge({puntos:min,asistencias:as})}</td><td>${name}</td><td>${min.toLocaleString('es-MX')}+</td><td>${as?as+'+':'—'}</td></tr>`).join('')}
+   <tr><td><span class="lv lv-adm">Admin</span></td><td>Equipo de GaleríaK</td><td>—</td><td>—</td></tr><tr><td><span class="lv lv-mgr">${MGR_ICON}Manager</span></td><td>Manager de una galería (nombrado por el equipo)</td><td>—</td><td>—</td></tr><tr><td><span class="pill p-gal">Bot</span></td><td>Bot de ofertas automático</td><td>—</td><td>—</td></tr></table>
+  <h2>Managers de galería</h2><p>El equipo de GaleríaK puede nombrar fans de confianza como <span class="lv lv-mgr">${MGR_ICON}Manager</span> de una galería (por ejemplo, la de su grupo de K-Pop). El ícono aparece junto a su apodo en esa galería, y pueden ocultar publicaciones y comentarios que rompan las reglas. Los managers aparecen arriba de cada galería.</p><h2>Avisos fijos</h2><p>Solo el equipo de GaleríaK puede publicar avisos fijos (📌) en las galerías.</p></div>`;
+}
+
+/* ---------------- asistencia diaria (출석체크) ---------------- */
+const TZ='America/Mexico_City';
+const dayKey=d=>new Date(d).toLocaleDateString('en-CA',{timeZone:TZ});
+let ATT={loaded:false,today:false,streak:0,total:0};
+async function loadAttend(){
+  ATT={loaded:false,today:false,streak:0,total:0};if(!ME)return;
+  const {data,error}=await sb.from('posts').select('created_at').eq('author_id',ME.id).eq('gallery_id','asistencia').eq('is_deleted',false).order('created_at',{ascending:false}).limit(500);
+  if(error)return;
+  const days=new Set((data||[]).map(r=>dayKey(r.created_at)));const today=dayKey(Date.now());
+  let k=0,cur=days.has(today)?Date.now():Date.now()-D;while(days.has(dayKey(cur))){k++;cur-=D}
+  ATT={loaded:true,today:days.has(today),streak:k,total:days.size};
+}
+const faltaTxt=(pts,asis,next)=>{const a=Math.max(0,next[1]-pts),b=asis==null?0:Math.max(0,next[3]-asis);const n=x=>Number(x).toLocaleString('es-MX');
+  return `Te faltan ${a?`<b>${n(a)} puntos</b>`:''}${a&&b?' y ':''}${b?`<b>${b} días de asistencia</b>`:''}${!a&&!b?'<b>muy poco</b>':''} para <b>Lv.${next[0]} · ${next[2]}</b>.`};
+const isNewbie=()=>ME&&ATT.loaded&&ATT.total===0&&(!MYLV||(!MYLV.admin&&levelOf(MYLV.puntos,MYLV.asistencias)[0]===0));
+const ATT_CHIPS=['¡Presente! ✋','¡Buenos días, GaleríaK! ☀️','Hoy no olvidé mi protector solar 🧴','Escuchando K-Pop para empezar el día 🎧','안녕하세요! Aprendiendo coreano 📚'];
+function attendBox(){
+  if(!ME)return `<div class="att"><h3>✅ Asistencia diaria</h3><p>Pasa lista una vez al día y gana <b>+${ATT_PTS} puntos</b> para subir de nivel.</p><a class="btn btn-brand" href="#entrar">Entrar para pasar lista</a></div>`;
+  if(ATT.today)return `<div class="att"><h3>✅ ¡Ya pasaste lista hoy!</h3><div class="att-done">Racha: ${ATT.streak} ${ATT.streak===1?'día':'días'} seguidos · Total: ${ATT.total} ${ATT.total===1?'día':'días'}</div><p class="hint">Vuelve mañana para otros +${ATT_PTS} puntos. Mientras, comenta y dale ♥ a las asistencias de hoy.</p></div>`;
+  const nb=isNewbie();
+  return `<div class="att ${nb?'att-new':''}"><h3>${nb?'🎉 ¡Bienvenida, bienvenido! Empieza aquí':'✅ Pasa lista de hoy'}</h3>
+   <p>${nb?`Tu cuenta empieza en <b>Lv.0</b>. Pasa lista hoy y gana tus primeros <b>+${ATT_PTS} puntos</b>. Con ${LV2_ASIS} días de asistencia y ${LEVELS[2][1]} puntos llegas a <b>Lv.2</b>.`:`Gana <b>+${ATT_PTS} puntos</b> hoy.${ATT.streak?` Llevas una racha de <b>${ATT.streak} ${ATT.streak===1?'día':'días'}</b>: ¡no la pierdas!`:''}`}</p>
+   <div class="chips">${ATT_CHIPS.map(c=>`<button type="button" data-chip="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+   <form id="attform"><input id="attmsg" maxlength="80" placeholder="Escribe un saludo corto o elige uno de arriba"><button class="btn btn-ok" id="attsend">✅ Pasar lista (+${ATT_PTS})</button></form><div class="err" id="atterr"></div></div>`;
+}
+// aviso para quien aún no pasa lista hoy (inicio y barra lateral)
+function attendNudge(){
+  if(!ME||!ATT.loaded||ATT.today||(MYLV&&MYLV.admin))return '';
+  const nb=isNewbie();
+  return `<div class="card att ${nb?'att-new':''}" style="margin-bottom:12px"><h3>${nb?'🎉 Empieza en Lv.0: pasa tu primera lista':'✅ Aún no pasas lista hoy'}</h3><p style="margin:0 0 8px">${nb?`Gana tus primeros +${ATT_PTS} puntos en 10 segundos.`:`+${ATT_PTS} puntos${ATT.streak?` · racha de ${ATT.streak} ${ATT.streak===1?'día':'días'}`:''}`}</p><a class="btn btn-ok" href="#g-asistencia">✅ Pasar lista</a></div>`;
+}
+async function sendAttend(){
+  const err=$('#atterr');err.textContent='';
+  if(ATT.today)return err.textContent='Ya pasaste lista hoy. ¡Vuelve mañana!';
+  await loadAttend();if(ATT.today){toast('Ya pasaste lista hoy');return route()}
+  const msg=($('#attmsg').value.trim()||'¡Presente! ✋').slice(0,80);
+  const v=validate(msg);if(v)return err.textContent=v;
+  const racha=ATT.streak+1,fecha=new Date().toLocaleDateString('es-MX',{timeZone:TZ,day:'numeric',month:'long'});
+  busy(true);const {error}=await sb.from('posts').insert({gallery_id:'asistencia',author_id:ME.id,title:msg.length>=4?msg:msg+' ✅',body:`${msg}\n\n✅ Asistencia del ${fecha} · Racha: ${racha} ${racha===1?'día':'días'}`}).select('id').single();busy(false);
+  if(error)return err.textContent=errMsg(error);
+  await loadAttend();LV.delete(ME.id);await fetchLevels([ME.id]);MYLV=LV.get(ME.id)||MYLV;renderUserBox();
+  toast(`¡Lista pasada! +${ATT_PTS} puntos · Racha: ${ATT.streak} ${ATT.streak===1?'día':'días'}`);route();
 }
 
 /* ---------------- mi cuenta: puntos, nivel, ♥ recibidos ---------------- */
@@ -529,33 +600,35 @@ async function vMiCuenta(){
     sb.from('comments').select('id',{count:'exact',head:true}).eq('author_id',ME.id).eq('is_deleted',false).eq('is_hidden',false)
   ]);
   if(pr.error)return fail(pr.error);
-  const posts=pr.data||[],nPosts=posts.length,nCom=cr.count||0,hearts=posts.reduce((a,p)=>a+(p.up_count||0),0);
-  const days=Math.min(365,Math.max(0,Math.floor((Date.now()-new Date(ME.created_at).getTime())/D)));
-  const calc=nPosts*10+nCom*3+hearts*2+days;
-  const pts=MYLV&&!LV_OFF?MYLV.puntos:calc, adm=MYLV&&MYLV.admin;
-  const lv=levelOf(pts),next=LEVELS.find(x=>x[1]>pts),pct=next?Math.min(100,Math.round((pts-lv[1])/(next[1]-lv[1])*100)):100;
+  const all=pr.data||[],posts=all.filter(p=>p.gallery_id!=='asistencia'),nPosts=posts.length,nCom=cr.count||0,hearts=all.reduce((a,p)=>a+(p.up_count||0),0);
+  const asis=new Set(all.filter(p=>p.gallery_id==='asistencia').map(p=>dayKey(p.created_at))).size;
+  const calc=nPosts*10+nCom*3+hearts*2+asis*ATT_PTS;
+  const pts=MYLV&&!LV_OFF?MYLV.puntos:calc, asisLv=MYLV&&MYLV.asistencias!=null?MYLV.asistencias:asis, adm=MYLV&&MYLV.admin;
+  const lv=levelOf(pts,asisLv),next=nextLevel(lv),pct=next?Math.max(0,Math.min(100,Math.round((pts-lv[1])/(next[1]-lv[1])*100))):100;
   const n=x=>Number(x).toLocaleString('es-MX');
   const top=posts.filter(p=>p.up_count>0).slice(0,5);
   return `<div class="card">
-   <div class="mc-head"><h1>${esc(MYNICK||'Mi cuenta')}</h1>${adm?'<span class="lv lv-adm">Admin</span>':lvBadge({puntos:pts})}<span class="hint">Miembro desde ${new Date(ME.created_at).toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'})}</span></div>
+   ${(await mgrReady,myMgrGals().length)?`<div class="mgrbox" style="margin:0 0 10px">${MGR_ICON.replace('<svg','<svg style="width:14px;height:14px;background:#ff8a00;border-radius:4px"')} <b>Eres manager de:</b> ${myMgrGals().map(g=>`<a href="#g-${g}" style="color:var(--blue)">${esc((G[g]||{name:g}).name)}</a>`).join(', ')}</div>`:''}
+   <div class="mc-head"><h1>${esc(MYNICK||'Mi cuenta')}</h1>${adm?'<span class="lv lv-adm">Admin</span>':lvBadge({puntos:pts,asistencias:asisLv})}<span class="hint">Miembro desde ${new Date(ME.created_at).toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'})}</span></div>
    <div class="lvme">
     <div class="hint">Mis puntos</div><div class="mc-big">${n(pts)} pts</div>
-    <div style="margin-top:6px">Mi nivel: ${lvBadge({puntos:pts})} <b>Lv.${lv[0]} · ${lv[2]}</b>${adm?' <span class="hint">(en el sitio apareces como Admin)</span>':''}</div>
+    <div style="margin-top:6px">Mi nivel: ${lvBadge({puntos:pts,asistencias:asisLv})} <b>Lv.${lv[0]} · ${lv[2]}</b>${adm?' <span class="hint">(en el sitio apareces como Admin)</span>':''}</div>
     ${next?`<div class="lvbar"><i style="width:${pct}%"></i></div><div class="mc-next"><span>Lv.${lv[0]} · ${n(lv[1])}</span><span>${pct}%</span><span>Lv.${next[0]} · ${n(next[1])}</span></div>
-    <div style="margin-top:6px">Te faltan <b>${n(next[1]-pts)} puntos</b> para <b>Lv.${next[0]} · ${next[2]}</b>.</div>`:'<div style="margin-top:6px"><b>¡Llegaste al nivel máximo!</b></div>'}
+    <div style="margin-top:6px">${faltaTxt(pts,asisLv,next)}</div>${next[3]?`<div class="hint" style="margin-top:4px">Asistencia: ${Math.min(asisLv,next[3])}/${next[3]} días</div>`:''}`:'<div style="margin-top:6px"><b>¡Llegaste al nivel máximo!</b></div>'}
    </div>
+   ${ATT.loaded&&!ATT.today&&!adm?`<div class="att" style="margin-top:10px"><b>✅ Hoy aún no pasas lista.</b> <a class="btn btn-ok" href="#g-asistencia" style="margin-left:6px">Pasar lista (+${ATT_PTS})</a></div>`:''}
    <div class="mc-stats">
     <div class="mc-stat heart"><b>♥ ${n(hearts)}</b><span>Me gusta recibidos</span></div>
     <div class="mc-stat"><b>${n(nPosts)}</b><span>Publicaciones</span></div>
     <div class="mc-stat"><b>${n(nCom)}</b><span>Comentarios</span></div>
-    <div class="mc-stat"><b>${n(days)}</b><span>Días en GaleríaK</span></div>
+    <div class="mc-stat"><b>✅ ${n(asis)}</b><span>Días de asistencia${ATT.streak?` · racha ${ATT.streak}`:''}</span></div>
    </div>
    <h2>Cómo se forman tus puntos</h2>
    <table class="lvt"><tr><th>Actividad</th><th>Cantidad</th><th>Puntos</th></tr>
     <tr><td>Publicaciones (+10)</td><td>${n(nPosts)}</td><td>${n(nPosts*10)}</td></tr>
     <tr><td>Comentarios (+3)</td><td>${n(nCom)}</td><td>${n(nCom*3)}</td></tr>
     <tr><td>♥ recibidos (+2)</td><td>${n(hearts)}</td><td>${n(hearts*2)}</td></tr>
-    <tr><td>Días desde tu registro (+1, máx. 365)</td><td>${n(days)}</td><td>${n(days)}</td></tr>
+    <tr><td>Días de asistencia (+${ATT_PTS})</td><td>${n(asis)}</td><td>${n(asis*ATT_PTS)}</td></tr>
     <tr><th>Total</th><th></th><th>${n(calc)}</th></tr></table>
    ${calc!==pts?`<p class="hint">Tus puntos oficiales (${n(pts)}) se calculan en el servidor y pueden variar un poco respecto a esta tabla.</p>`:''}
    <p class="hint">Se actualiza al abrir esta página. Las publicaciones y comentarios ocultos o eliminados no cuentan. <a href="#niveles" style="color:var(--blue)">Ver tabla de niveles</a></p>
@@ -618,7 +691,7 @@ let hoyTab='hoy';
 async function vHoy(){
   nav('hoy');document.title='Mejores de hoy – GaleríaK';
   const ms=hoyTab==='hoy'?D:7*D;
-  const {data,error}=await listQ().gte('created_at',new Date(Date.now()-ms).toISOString()).eq('is_pinned',false).gte('up_count',1)
+  const {data,error}=await listQ().gte('created_at',new Date(Date.now()-ms).toISOString()).eq('is_pinned',false).neq('gallery_id','asistencia').gte('up_count',1)
     .order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(50);
   if(error)return fail(error);
   return ad('leader')+`<div class="card"><div class="gh"><div class="av flame" style="width:44px;height:44px">${FLAME.replace('<svg','<svg style="width:44px;height:44px"')}</div><div><h1 style="color:var(--hot)">Mejores de hoy</h1><p>Las publicaciones con más ♥ de todas las galerías. Se actualiza solo: ${hoyTab==='hoy'?'últimas 24 horas':'últimos 7 días'}.</p></div></div>
@@ -630,7 +703,7 @@ async function vPost(id){
   const {data:p,error}=await sb.from('posts').select('id,gallery_id,author_id,anon_name,title,body,source_url,deal_price,deal_store,deal_url,deal_sold,is_pinned,is_sponsored,is_hidden,is_deleted,needs_review,views,up_count,down_count,comment_count,created_at,profiles(nickname,role)').eq('id',id).maybeSingle();
   if(error)return fail(error);
   if(!p)return vNotFound('Esta publicación no existe o fue ocultada por moderación.');
-  curPost=p;const g=G[p.gallery_id]||G.libre;nav(g.deal?'g-ofertas':'c-'+g.cat);
+  await mgrReady;curPost=p;const g=G[p.gallery_id]||G.libre;nav(g.deal?'g-ofertas':'c-'+g.cat);
   const {data:cm}=await sb.from('comments').select('id,author_id,body,is_hidden,is_deleted,created_at,anon_name,profiles(nickname)').eq('post_id',id).order('created_at');
   const C=cm||[];const myVote=myVotes.get(p.id);const mine=ME&&p.author_id===ME.id;
   if(p.is_deleted&&!C.length&&MYROLE!=='admin')return vNotFound('Esta publicación fue eliminada.');
@@ -646,19 +719,21 @@ async function vPost(id){
    ${ad('post')}
    ${p.is_deleted?'':`<div class="votes"><button class="v-up" data-vote="1" style="${myVote===1?'background:var(--brand-soft)':''}">♥ Me gusta ${p.up_count}</button><button data-vote="-1" style="${myVote===-1?'background:#eee':''}">👎 ${p.down_count}</button></div>`}
    ${p.is_deleted?'':`<div class="post-actions">${mine?'<button data-pdel="1">🗑 Eliminar</button>':''}${mine&&g.deal&&!p.deal_sold?'<button data-sold="1">Marcar como agotada</button>':''}<button data-report="1">🚩 Reportar</button></div>`}
-   ${admPostPanel(p)}
+   ${admPostPanel(p)}${mgrPostPanel(p)}
   </div>
   <div class="card cmts"><h3>Comentarios (${C.length})</h3>
-   ${C.map(c=>`<div class="cmt"><div class="who">${nick(c)}<span>${ago(c.created_at)}</span>${c.is_hidden?'<span class="pill p-sold">Oculto</span>':''}${admCmtBtn(c)}</div><p>${esc(c.body)}</p>${cmtBtns(c)}</div>`).join('')||'<div class="hint">Sé la primera persona en comentar.</div>'}
+   ${C.map(c=>`<div class="cmt"><div class="who">${nick({...c,gallery_id:p.gallery_id})}<span>${ago(c.created_at)}</span>${c.is_hidden?'<span class="pill p-sold">Oculto</span>':''}${admCmtBtn(c)}${mgrCmtBtn(c,p)}</div><p>${esc(c.body)}</p>${cmtBtns(c)}</div>`).join('')||'<div class="hint">Sé la primera persona en comentar.</div>'}
    ${p.is_deleted?'<p class="hint" style="margin-top:12px">Esta publicación fue eliminada.</p>':ME?`<form id="cform" style="margin-top:12px"><div class="f"><textarea id="cbody" maxlength="1000" style="min-height:80px" placeholder="Escribe un comentario respetuoso"></textarea></div><div class="err" id="cerr"></div><button class="btn btn-dark">Comentar</button></form>`:`<p style="margin-top:12px"><a href="#entrar" style="color:var(--blue);font-weight:700">Entra</a> para comentar.</p>`}
   </div>`;
 }
 function vWrite(gid){
   const g=G[gid]||G.libre;nav('');
+  if(g.attend){setTimeout(()=>go('g-asistencia'),0);return loading()}
   if(!ME)return `<div class="card empty">Para publicar necesitas una cuenta. <a href="#entrar" style="color:var(--blue);font-weight:700">Entrar o registrarse</a></div>`;
   return `<div class="card"><div class="gh">${av(g)}<div><h1>Escribir en ${esc(g.name)}</h1><p>Publicas como <b>${esc(MYNICK)}</b>. Lee las <a href="#reglas" style="color:var(--blue)">reglas</a>.</p></div></div>
+  ${isNewbie()&&!ATT.today?`<div class="att att-new"><b>💡 Consejo:</b> tu cuenta está en Lv.0. Empieza <a href="#g-asistencia" style="color:var(--ok);font-weight:700">pasando lista en Asistencia diaria</a> (+${ATT_PTS} puntos) y luego vuelve a escribir aquí.</div>`:''}
   <form id="wform">
-   <div class="f"><label>Galería</label><select id="wg">${GALS.map(x=>`<option value="${x.id}" ${x.id===g.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>
+   <div class="f"><label>Galería</label><select id="wg">${GALS.filter(x=>!x.attend).map(x=>`<option value="${x.id}" ${x.id===g.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>
    <div class="f"><label>Título</label><input id="wtitle" maxlength="80" required></div>
    <div id="dealFields" style="display:none"><div class="two"><div class="f"><label>Precio</label><input id="wprice" maxlength="20" placeholder="$299 MXN"></div><div class="f"><label>Tienda</label><input id="wstore" maxlength="40" placeholder="Amazon MX, Sephora…"></div></div><div class="f"><label>Enlace de la oferta</label><input id="wurl" placeholder="https://"></div></div>
    <div id="srcField" style="display:none" class="f"><label>Fuente (obligatoria)</label><input id="wsrc" placeholder="Enlace a entrevista, video oficial o publicación del artista/marca"></div>
@@ -726,6 +801,25 @@ function vNewPass(){
   return '<div class="card" style="max-width:440px;margin:0 auto 14px"><h2>Nueva contraseña</h2><form id="pform"><div class="f"><label>Contraseña nueva</label><input id="npass" type="password" minlength="8" required autocomplete="new-password"><div class="hint">Mínimo 8 caracteres.</div></div><div class="err" id="perr"></div><button class="btn btn-brand" style="width:100%">Guardar contraseña</button></form></div>';
 }
 
+/* ---------------- managers: moderación de su galería ---------------- */
+const canMgr=p=>ME&&MYROLE!=='admin'&&isMgr(ME.id,p.gallery_id)&&!(p.profiles&&p.profiles.role==='admin');
+function mgrPostPanel(p){
+  if(!canMgr(p)||p.is_deleted)return '';
+  return `<div class="mgrbox">${mgrBadge(p.gallery_id)} <b>Herramientas de manager</b><div class="hint" style="margin:4px 0 8px">Oculta publicaciones que rompan las reglas de ${esc((G[p.gallery_id]||{}).name||'esta galería')}. El equipo de GaleríaK revisa cada caso.</div><button class="btn" data-mhide="${p.id}" data-mval="${p.is_hidden?0:1}">${p.is_hidden?'👁 Mostrar publicación':'🙈 Ocultar publicación'}</button></div>`;
+}
+function mgrCmtBtn(c,p){
+  if(!ME||MYROLE==='admin'||!isMgr(ME.id,p.gallery_id)||c.is_deleted||(c.author_id&&isAdminUid(c.author_id)))return '';
+  return ` <button class="btn" style="padding:2px 8px;font-size:11px" data-mchide="${c.id}" data-mval="${c.is_hidden?0:1}">${c.is_hidden?'Mostrar':'🛡️ Ocultar'}</button>`;
+}
+const isAdminUid=uid=>{const i=LV.get(uid);return !!(i&&i.admin)};
+async function mgrClick(t){
+  const tipo=t.dataset.mhide?'post':'comment',id=+(t.dataset.mhide||t.dataset.mchide),val=t.dataset.mval==='1';
+  if(val&&!confirm(tipo==='post'?'¿Ocultar esta publicación?':'¿Ocultar este comentario?'))return;
+  t.disabled=true;const {error}=await sb.rpc('gk_manager_ocultar',{p_tipo:tipo,p_id:id,p_oculto:val});
+  if(error){t.disabled=false;toast(/gk_manager_ocultar|function/i.test(error.message||'')?'Función de managers aún no activada':errMsg(error));return}
+  toast(val?'Ocultado':'Visible de nuevo');route();
+}
+
 /* ---------------- administración ---------------- */
 let admTab='review',admQ='';
 const ADM_POST='id,title,gallery_id,author_id,deal_sold,is_hidden,is_pinned,is_sponsored,needs_review,up_count,created_at,profiles(nickname,role)';
@@ -762,7 +856,7 @@ async function vAdmin(){
   if(!ME)return '<div class="card empty">먼저 <a href="#entrar" style="color:var(--blue);font-weight:700">로그인</a>해 주세요.</div>';
   if(MYROLE!=='admin')return '<div class="card empty">관리자만 볼 수 있는 페이지입니다.</div>';
   document.title='관리자 – GaleríaK';
-  const TABS=[['review','검토 필요'],['reports','신고 내역'],['hidden','숨긴 글'],['users','사용자']];
+  const TABS=[['review','검토 필요'],['reports','신고 내역'],['hidden','숨긴 글'],['users','사용자'],['managers','🛡️ 매니저']];
   let body='';
   if(admTab==='review'){
     const {data,error}=await sb.from('posts').select(ADM_POST).eq('needs_review',true).order('created_at',{ascending:false}).limit(50);
@@ -787,6 +881,15 @@ async function vAdmin(){
     ]);
     if(ps.error)return fail(ps.error);if(cs.error)return fail(cs.error);
     body='<h3>글</h3>'+admList(ps.data,admPostRow,'숨긴 글이 없습니다.')+'<h3>댓글</h3>'+admList(cs.data,c=>'<li class="row"><div class="t"><a href="#p-'+c.post_id+'">'+esc(String(c.body).slice(0,120))+'</a><div class="meta"><span>'+nick(c)+'</span><span>'+ago(c.created_at)+'</span></div>'+admBox(admCmtBtn(c))+'</div></li>','숨긴 댓글이 없습니다.');
+  }else if(admTab==='managers'){
+    await loadManagers();
+    if(!MGR_OK)return '<div class="card"><h2>🛡️ 매니저</h2><p>매니저 기능이 아직 켜지지 않았습니다. Supabase SQL Editor에서 <code>supabase/2026-11-08-asistencia-niveles-managers.sql</code>을 실행해 주세요.</p><p><button class="btn" data-admtab="review">← 관리자</button></p></div>';
+    const all=[...MGR].flatMap(([g,st])=>[...st].map(u=>[g,u]));const names=all.length?await nicksOf(all.map(x=>x[1])):{};
+    const order=[...GALS.filter(g=>g.cat==='kpop'),...GALS.filter(g=>g.cat!=='kpop'&&!g.attend)];
+    body='<p class="hint">매니저는 자기 갤러리에서 🛡️ Manager 아이콘이 붙고, 그 갤러리의 글·댓글을 숨기거나 다시 보이게 할 수 있습니다(관리자 글은 제외). 지정·해제는 관리자만 할 수 있습니다.</p>'
+     +'<form id="mgrform" style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 14px"><select id="mgrgal" style="max-width:220px"><optgroup label="K-Pop">'+order.filter(g=>g.cat==='kpop').map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('')+'</optgroup><optgroup label="기타 갤러리">'+order.filter(g=>g.cat!=='kpop').map(g=>'<option value="'+g.id+'">'+esc(g.name)+'</option>').join('')+'</optgroup></select><input id="mgrnick" placeholder="닉네임 (정확히)" style="max-width:220px" required><button class="btn btn-brand" style="white-space:nowrap">매니저 지정</button></form>'
+     +order.filter(g=>MGR.has(g.id)&&MGR.get(g.id).size).map(g=>'<h3 style="margin:10px 0 4px">'+esc(g.name)+'</h3><ul class="list">'+[...MGR.get(g.id)].map(u=>'<li class="row"><div class="t"><b>'+esc(names[u]||u.slice(0,8))+'</b> '+mgrBadge(g.id)+' <button class="btn" style="padding:2px 8px;font-size:11px;margin-left:8px" data-mgrdel="'+g.id+'|'+u+'">해제</button></div></li>').join('')+'</ul>').join('')
+     +(all.length?'':'<div class="empty">아직 지정된 매니저가 없습니다.</div>');
   }else{
     const {data,error}=await sb.rpc('admin_users',{p_search:admQ||null});
     if(error)return fail(error);
@@ -829,6 +932,7 @@ function errMsg(e){const m=(e&&e.message)||'';if(/Invalid login/i.test(m))return
 /* ---------------- router ---------------- */
 let routeSeq=0;
 async function route(){
+  try{if(ME&&sessionStorage.getItem('gk_new')){sessionStorage.removeItem('gk_new');if(location.hash!=='#g-asistencia'){location.hash='#g-asistencia';return}}}catch(_){}
   const seq=++routeSeq;const raw=decodeURIComponent(location.hash.slice(1));const h=/^(access_token|error|type)=/.test(raw)?'home':(raw||'home');let m,html;
   document.title='GaleríaK – Comunidad de K-Beauty, K-Pop y ofertas en México';
   $('#main').innerHTML=loading();
@@ -868,9 +972,12 @@ function go(h){if(location.hash==='#'+h)route();else location.hash=h}
 document.addEventListener('click',async e=>{
   const t=e.target.closest('button');if(!t)return;
   if(t.dataset.tab){galTab=t.dataset.tab;galPage=1;route();return}
+  if(t.dataset.chip){const i=$('#attmsg');if(i){i.value=t.dataset.chip;i.focus()}return}
   if(t.dataset.hoytab){hoyTab=t.dataset.hoytab;route();return}
   if(t.dataset.page){galPage=+t.dataset.page;route();return}
   if(t.dataset.auth){authMode=t.dataset.auth;route();return}
+  if(t.dataset.mhide||t.dataset.mchide){await mgrClick(t);return}
+  if(t.dataset.mgrdel&&MYROLE==='admin'){const [g,u]=t.dataset.mgrdel.split('|');if(!confirm('매니저를 해제할까요?'))return;t.disabled=true;const {error}=await sb.from('gk_managers').delete().eq('gallery_id',g).eq('user_id',u);toast(error?errMsg(error):'해제했습니다.');await loadManagers();route();return}
   if(t.dataset.admtab||t.dataset.pid||t.dataset.cid||t.dataset.ban||t.dataset.unban){await admClick(t);return}
   const p=curPost;
   if(!p)return;
@@ -897,6 +1004,15 @@ document.addEventListener('submit',async e=>{
     toast('Contraseña actualizada');go('home');return;
   }
   if(f.id==='admsearch'){admQ=$('#admq').value.trim();route();return}
+  if(f.id==='mgrform'&&MYROLE==='admin'){
+    const gid=$('#mgrgal').value,nk=$('#mgrnick').value.trim();if(!nk)return;
+    const {data:pr,error:pe}=await sb.from('profiles').select('id,nickname').ilike('nickname',nk.replace(/[%_]/g,'\\$&')).limit(2);
+    if(pe)return toast(errMsg(pe));
+    const u=(pr||[]).find(x=>x.nickname.toLowerCase()===nk.toLowerCase())||(pr&&pr.length===1?pr[0]:null);
+    if(!u)return toast('그 닉네임의 회원을 찾지 못했습니다.');
+    const {error}=await sb.from('gk_managers').insert({gallery_id:gid,user_id:u.id});
+    toast(error?(/duplicate|unique/i.test(error.message||'')?'이미 이 갤러리의 매니저입니다.':errMsg(error)):`${u.nickname} → ${(G[gid]||{}).name} 매니저 지정`);
+    await loadManagers();route();return}
   if(f.id==='aform'){
     const err=$('#aerr');err.textContent='';const mail=$('#amail').value.trim(),pass=($('#apass')||{}).value;
     busy(true);
@@ -915,7 +1031,7 @@ document.addEventListener('submit',async e=>{
       busy(false);
       if(error)return err.textContent=errMsg(error);
       if(!data.session){$('#main').innerHTML=`<div class="card empty" style="max-width:440px;margin:0 auto">📩 Te enviamos un correo a <b>${esc(mail)}</b>. Abre el enlace para confirmar tu cuenta y después entra.<br><br><button class="btn btn-brand" data-auth="in">Ya confirmé, entrar</button></div>`;return}
-      await refreshSession();toast('¡Cuenta creada!');go('home');
+      await refreshSession();try{sessionStorage.removeItem('gk_new')}catch(_){}toast('¡Cuenta creada! Empieza en Lv.0: pasa tu primera lista ✅');go('g-asistencia');
     }else{
       const {error}=await sb.auth.signInWithPassword({email:mail,password:pass});busy(false);
       if(error)return err.textContent=errMsg(error);
@@ -923,6 +1039,7 @@ document.addEventListener('submit',async e=>{
     }
     return;
   }
+  if(f.id==='attform'){await sendAttend();return}
   if(f.id==='wform'){
     const err=$('#werr');err.textContent='';const g=G[$('#wg').value];
     const title=$('#wtitle').value.trim(),body=$('#wbody').value.trim();
@@ -971,6 +1088,7 @@ document.addEventListener('click',async e=>{
   if(error)toast('No se pudo iniciar sesión con Google');
 });
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+mgrReady=loadManagers().catch(()=>{});
 route(); // la página se dibuja enseguida; la sesión llega después y vuelve a dibujar
 
 </script>
