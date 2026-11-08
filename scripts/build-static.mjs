@@ -61,7 +61,7 @@ ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld).replace(
 </style>
 </head>
 <body>
-<header class="top"><div class="top-in"><a class="logo" href="/">Galería<b>K</b></a><nav><a href="/g/">Galerías</a><a href="/guias/">Guías</a><a href="/examen-coreano/">Examen</a></nav></div></header>
+<header class="top"><div class="top-in"><a class="logo" href="/">Galería<b>K</b></a><nav><a href="/g/">Galerías</a><a href="/guias/">Guías</a><a href="/examen-coreano/" style="background:#e8efff;color:#2f5bd8;border-radius:999px;padding:2px 10px;font-weight:800">📝 Examen gratis</a></nav></div></header>
 <div class="wrap">
 ${body}
 </div>

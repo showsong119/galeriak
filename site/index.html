@@ -33,6 +33,7 @@ nav.main{max-width:1120px;margin:0 auto;display:flex;gap:4px;padding:0 12px 8px;
 nav.main::-webkit-scrollbar{display:none}
 nav.main a{padding:6px 12px;border-radius:999px;font-weight:600;color:var(--muted);white-space:nowrap}
 nav.main a.on{background:var(--ink);color:#fff}
+nav.main a.nav-exam{background:#e8efff;color:#2f5bd8;font-weight:800;border:1px solid #c7d6ff}nav.main a.nav-exam:hover{background:#2f5bd8;color:#fff}
 nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:nowrap}.hoy-more{margin-left:auto;align-self:center}@media(max-width:700px){.tabs{flex-wrap:wrap}.hoy-more{flex-basis:100%;margin:6px 0 0}}nav.main a.nav-hoy.on{background:var(--hot);color:#fff}nav.main a.nav-att{color:var(--ok);font-weight:800}nav.main a.nav-att.on{background:var(--ok);color:#fff}
 .att{border:2px solid #bfe6cf;background:linear-gradient(135deg,#ecfaf2,#fff 70%);border-radius:14px;padding:14px 16px;margin-bottom:12px}.att h3{margin:0 0 6px;font-size:17px;color:var(--ok)}.att .chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.att .chips button{border:1px solid #bfe6cf;background:#fff;border-radius:99px;padding:5px 10px;font-size:13px;cursor:pointer}.att form{display:flex;gap:8px;flex-wrap:wrap}.att input{flex:1;min-width:200px}.att .btn-ok{background:var(--ok);color:#fff;border-color:var(--ok);font-weight:800}.att-done{font-weight:700;color:var(--ok)}.att-new{border-color:#f6c3d8;background:linear-gradient(135deg,#fde8f1,#fff 70%)}.att-new h3{color:var(--brand)}
 .demo{background:#fff7d6;border-bottom:1px solid #f1e3a4;color:#7a5b00;font-size:12.5px;text-align:center;padding:6px 10px}
@@ -411,10 +412,10 @@ function meBox(){
 }
 
 function nav(cur){
-  const items=[['home','Inicio'],['hoy','🔥 Mejores de hoy'],['g-asistencia','✅ Asistencia'],['g-libre','💬 Foro libre'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y coreano'],['guias','Guías'],['/examen-coreano/','Examen de coreano'],['galerias','Galerías']];
+  const items=[['home','Inicio'],['hoy','🔥 Mejores de hoy'],['g-asistencia','✅ Asistencia'],['g-libre','💬 Foro libre'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y coreano'],['guias','Guías'],['/examen-coreano/','📝 Examen gratis'],['galerias','Galerías']];
   if(MYROLE==='admin')items.push(['admin','관리자']);
   renderQbar();
-  $('#nav').innerHTML=items.map(([h,n])=>`<a href="${h[0]==='/'?h:'#'+h}" class="${cur===h?'on':''}${h==='hoy'?' nav-hoy':''}${h==='g-asistencia'?' nav-att':''}">${n}</a>`).join('');
+  $('#nav').innerHTML=items.map(([h,n])=>`<a href="${h[0]==='/'?h:'#'+h}" class="${cur===h?'on':''}${h==='hoy'?' nav-hoy':''}${h==='g-asistencia'?' nav-att':''}${h==='/examen-coreano/'?' nav-exam':''}">${n}</a>`).join('');
 }
 const galCard=g=>`<a class="gal" href="#g-${g.id}">${av(g)}<div><b>${esc(g.name)}</b><small>${esc(g.desc)}</small></div></a>`;
 const FLAME='<svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="flg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e5482b"/><stop offset="1" stop-color="#ff9a3c"/></linearGradient></defs><path fill="url(#flg)" d="M16 1.5c1.2 5-1.6 7.6-4.2 10.4C9.3 14.6 7 17.4 7 21.4 7 26.6 11 30.5 16 30.5s9-3.9 9-9.1c0-4.6-2.4-7.6-4.6-10.3-.5 2.3-1.6 4-3.3 4.9.6-5.2-.4-10.4-1.1-14.5z"/><path fill="#ffd25e" d="M16.3 17c.5 2.6-.9 3.8-2.1 5.1-.9 1-1.6 2-1.6 3.4 0 2 1.6 3.5 3.5 3.5s3.5-1.5 3.5-3.5c0-1.9-1.1-3.2-2.1-4.3-.3 1-.8 1.6-1.4 1.9.3-2.2 0-4.3-.2-6.1z"/></svg>';
