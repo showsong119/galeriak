@@ -1,0 +1,25 @@
+-- GaleríaK · Verificación: ¿qué funciones ya están activadas en la base de datos?
+-- Supabase → SQL Editor → New query → pegar → Run. Solo lee; no cambia nada.
+-- Cada fila dice ✅ (listo) o ❌ (falta) y qué archivo ejecutar.
+with c(orden, revision, ok, archivo) as (values
+  (1, 'Administrador (gk_is_admin)',           to_regprocedure('public.gk_is_admin()') is not null,                        '2026-11-08-mensajes-niveles.sql'),
+  (2, 'Mensajes al equipo (tabla mensajes)',   to_regclass('public.mensajes') is not null,                                 '2026-11-08-mensajes-niveles.sql'),
+  (3, 'Puntos con asistencia (gk_niveles v2)', coalesce((select pg_get_function_result(p.oid) like '%asistencias%'
+                                                          from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+                                                         where n.nspname = 'public' and p.proname = 'gk_niveles' limit 1), false),
+                                                                                                                             '2026-11-08-asistencia-niveles-managers.sql'),
+  (4, 'Managers (tabla gk_managers)',          to_regclass('public.gk_managers') is not null,                              '2026-11-08-asistencia-niveles-managers.sql'),
+  (5, 'Ocultar como manager',                  to_regprocedure('public.gk_manager_ocultar(text,bigint,boolean)') is not null, '2026-11-08-asistencia-niveles-managers.sql'),
+  (6, 'Fotos: bucket post-images',             exists (select 1 from storage.buckets where id = 'post-images'),            '2026-11-08-fotos.sql'),
+  (7, 'Fotos: regla Lv.2 (gk_puede_fotos)',    to_regprocedure('public.gk_puede_fotos()') is not null,                     '2026-11-08-fotos.sql'),
+  (8, 'Líder: columna gk_managers.rol',        exists (select 1 from information_schema.columns
+                                                        where table_schema = 'public' and table_name = 'gk_managers' and column_name = 'rol'),
+                                                                                                                             '2026-11-08-lideres-advertencias.sql'),
+  (9, 'Advertencias (tabla gk_advertencias)',  to_regclass('public.gk_advertencias') is not null,                          '2026-11-08-lideres-advertencias.sql'),
+  (10,'Comentarios pausados con advertencia',  exists (select 1 from pg_policies where tablename = 'comments' and policyname = 'gk_cmt_no_advertidos'),
+                                                                                                                             '2026-11-08-lideres-advertencias.sql'),
+  (11,'Al menos 1 administrador',              exists (select 1 from public.profiles where role = 'admin'),                '5장 SQL: 관리자 추가')
+)
+select orden as "#", revision as "Revisión", case when ok then '✅ listo' else '❌ falta' end as "Estado",
+       case when ok then '' else archivo end as "Ejecutar"
+  from c order by orden;

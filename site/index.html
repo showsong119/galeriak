@@ -62,6 +62,8 @@ nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:now
 .qbar{max-width:1120px;margin:0 auto;padding:0 12px 8px;display:flex;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none;font-size:12px}.qbar b{color:var(--muted);white-space:nowrap;font-weight:700}.qbar a{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 10px;color:var(--ink)}.qbar a.fav{border-color:#f5c542;background:#fff8e1}
 .trend{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}.trend li a{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:7px 10px;background:#fff}.trend .rk{font-weight:800;width:18px;text-align:center;color:var(--muted)}.trend .rk.top{color:var(--hot)}.trend small{display:block;color:var(--muted);font-size:11px}.trend .av{width:26px;height:26px;font-size:11px;border-radius:8px}
 .mebox .lvbar{height:8px}.mebox .mrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.gh .favbtn{margin-left:auto}.gh .favbtn+.write{margin-left:0}.favbtn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font-weight:700;cursor:pointer;white-space:nowrap}.favbtn.on{background:#fff8e1;border-color:#f5c542}
+.chips2{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 10px}.chips2 button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font-size:13px;font-weight:600;cursor:pointer}.chips2 button.on{background:var(--ink);color:#fff;border-color:var(--ink)}.chips2 small{color:var(--muted);font-weight:400;margin-left:3px}.chips2 button.on small{color:#ddd}
+.repbox{border:1px solid var(--line);background:#fafafc;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:14px}
 .lv-lid{background:linear-gradient(90deg,#8e44ad,#e5317d);display:inline-flex;align-items:center;gap:3px;margin-left:3px}.lv-lid svg{width:12px;height:12px;flex:none}
 .row .t a.adv,.post h1.adv{color:#9a9aa6}.p-adv{background:#fff1d6;color:#a86400}.advbox{background:#fff6e5;border:1px solid #f5d39a;border-radius:12px;padding:10px 12px;margin:10px 0;font-size:14px}.lidbox{border-top:1px solid var(--line);margin-top:12px;background:#f7f0fb;border-radius:10px;padding:10px 12px}
 .lv-mgr{background:linear-gradient(90deg,#f5b400,#ff7a00);display:inline-flex;align-items:center;gap:3px;margin-left:3px}.lv-mgr svg{width:12px;height:12px;flex:none}.mgrs{font-size:12px;color:var(--muted);margin-top:4px}.mgrbox{border-top:1px solid var(--line);margin-top:12px;padding-top:10px;background:#fff8e6;border-radius:10px;padding:10px 12px}
@@ -166,7 +168,7 @@ footer a{margin:0 6px;text-decoration:underline}
 
 <footer>
   <div>
-    <a href="#reglas">Reglas</a> · <a href="#niveles">Niveles</a> · <a href="#mensajes">Contacto</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="#galerias">Todas las galerías</a> · <a href="/examen-coreano/">Examen de coreano gratis</a>
+    <a href="#reglas">Reglas</a> · <a href="#niveles">Niveles</a> · <a href="#mensajes">Contacto</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="/g/">Todas las galerías</a> · <a href="/examen-coreano/">Examen de coreano gratis</a>
   </div>
   <p>GaleríaK es una comunidad de fans no oficial. No está afiliada a ninguna agencia, artista ni marca. Los nombres de artistas y marcas pertenecen a sus dueños. Para usar la comunidad debes tener 13 años o más.</p>
   <p>Como Afiliado de Amazon, GaleríaK obtiene ingresos por las compras adscritas que cumplen los requisitos aplicables.</p>
@@ -177,6 +179,9 @@ footer a{margin:0 6px;text-decoration:underline}
 /* ================= GaleríaK – versión conectada a Supabase ================= */
 const SUPABASE_URL='https://pimuwxsazuzmgwhbrzbx.supabase.co';
 const SUPABASE_KEY='sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn';
+// Anti-bots al crear cuenta / entrar: clave pública (site key) de Cloudflare Turnstile. Vacía = desactivado.
+// Orden: 1) poner aquí la site key y publicar, 2) después activar CAPTCHA (Turnstile) en Supabase › Authentication.
+const TURNSTILE_SITEKEY='';
 
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -202,7 +207,7 @@ let ME=null, MYNICK='', MYROLE='', myVotes=new Map();
 const CATS=[
  {id:'comunidad',name:'Comunidad',icon:'💬',desc:'Lo de todos los días: lo más votado, asistencia y charla libre'},
  {id:'beauty',name:'K-Beauty',icon:'💄',desc:'Skincare, maquillaje, reseñas y ofertas'},
- {id:'kpop',name:'K-Pop',icon:'🎤',desc:'Una galería por grupo, en orden alfabético'},
+ {id:'kpop',name:'K-Pop',icon:'🎤',desc:'Todos los grupos en un solo tablero; filtra por grupo'},
  {id:'kdrama',name:'K-Drama',icon:'🎬',desc:'Recomendaciones y comentarios'},
  {id:'vida',name:'Corea y coreano',icon:'🇰🇷',desc:'Aprende coreano y planea tu viaje'}
 ];
@@ -216,6 +221,7 @@ const GALS=[
  {id:'resenas',cat:'beauty',name:'Reseñas',desc:'Reseñas honestas después de usar el producto',c:'#b83f7a'},
  {id:'idol-picks',cat:'beauty',name:'Productos de idols',desc:'Lo que usan los idols — siempre con fuente',c:'#8e44ad',needSource:true},
  {id:'ofertas',cat:'beauty',name:'Ofertas K-Beauty',desc:'Precios bajos en México, con enlace y tienda',c:'#e5482b',deal:true},
+ {id:'kpop-general',cat:'kpop',name:'K-Pop general',desc:'Comebacks, conciertos en México y charla de todos los grupos',c:'#6c4bd8',icon:'🎤'},
  {id:'aespa',cat:'kpop',name:'aespa',desc:'Galería de fans de aespa',c:'#16a085'},
  {id:'ateez',cat:'kpop',name:'ATEEZ',desc:'Galería de fans de ATEEZ',c:'#d35400'},
  {id:'blackpink',cat:'kpop',name:'BLACKPINK',desc:'Galería de fans de BLACKPINK',c:'#e0457b'},
@@ -412,7 +418,7 @@ function nav(cur){
 }
 const galCard=g=>`<a class="gal" href="#g-${g.id}">${av(g)}<div><b>${esc(g.name)}</b><small>${esc(g.desc)}</small></div></a>`;
 const FLAME='<svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="flg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e5482b"/><stop offset="1" stop-color="#ff9a3c"/></linearGradient></defs><path fill="url(#flg)" d="M16 1.5c1.2 5-1.6 7.6-4.2 10.4C9.3 14.6 7 17.4 7 21.4 7 26.6 11 30.5 16 30.5s9-3.9 9-9.1c0-4.6-2.4-7.6-4.6-10.3-.5 2.3-1.6 4-3.3 4.9.6-5.2-.4-10.4-1.1-14.5z"/><path fill="#ffd25e" d="M16.3 17c.5 2.6-.9 3.8-2.1 5.1-.9 1-1.6 2-1.6 3.4 0 2 1.6 3.5 3.5 3.5s3.5-1.5 3.5-3.5c0-1.9-1.1-3.2-2.1-4.3-.3 1-.8 1.6-1.4 1.9.3-2.2 0-4.3-.2-6.1z"/></svg>';
-const catCard=cid=>{const c=CATS.find(x=>x.id===cid),n=GALS.filter(g=>g.cat===cid).length;return `<a class="gal" href="#c-${cid}"><span class="av" style="background:#6c4bd8;font-size:16px">${c.icon}</span><div><b>${esc(c.name)}</b><small>${n} galerías de grupos, de la A a la Z</small></div></a>`};
+const catCard=cid=>{const c=CATS.find(x=>x.id===cid),n=GALS.filter(g=>g.cat===cid).length;return `<a class="gal" href="#c-${cid}"><span class="av" style="background:#6c4bd8;font-size:16px">${c.icon}</span><div><b>${esc(c.name)}</b><small>Todos los grupos en un tablero (${n} galerías)</small></div></a>`};
 const hotCard=()=>`<a class="gal gal-hot" href="#hoy"><span class="av flame">${FLAME}</span><div><b>Mejores de hoy</b><small>Lo más votado de todas las galerías</small></div></a>`;
 const welcome=()=>ME?'':`<div class="card" style="background:var(--brand-soft);border-color:#f6c3d8"><b>¡Bienvenida, bienvenido a GaleríaK!</b> La comunidad en español de K-Beauty y K-Pop. <a href="#entrar" style="color:var(--brand);font-weight:700">Crea tu cuenta</a> para publicar, comentar y votar.</div>`;
 
@@ -437,7 +443,28 @@ async function vHome(){
   <div class="card"><h2>📂 Galerías <a class="more" href="#galerias">Todas</a></h2><div class="galgrid">${hotCard()}${['asistencia','libre','skincare','ofertas'].map(k=>galCard(G[k])).join('')}${catCard('kpop')}${['kdramas','coreano'].map(k=>galCard(G[k])).join('')}</div></div>
   <div class="card"><h2>📘 Guías de K-Beauty, K-Pop y coreano <a class="more" href="/guias/">Ver todas</a></h2><div class="guides">${STATIC_GUIDES.slice(0,6).map(g=>`<a class="guide" href="${g.u}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}${Object.entries(GUIDES).map(([k,g])=>`<a class="guide" href="#${k}"><b>${esc(g.t)}</b><span>${esc(g.d)}</span></a>`).join('')}</div></div>`;
 }
+/* ---------------- tablero K-Pop unificado: todas las galerías de grupos juntas, con filtro por grupo (말머리) ---------------- */
+let kTag='',kTab='all',kPage=1;
+async function vKpop(){
+  nav('c-kpop');document.title='K-Pop – GaleríaK';
+  const gs=GALS.filter(g=>g.cat==='kpop'),ids=kTag&&G[kTag]?[kTag]:gs.map(g=>g.id);
+  let q=listQ({count:'exact'}).in('gallery_id',ids).eq('is_pinned',false);
+  if(kTab==='best')q=q.gte('up_count',BEST);
+  const from=(kPage-1)*PAGE;
+  const [{data,count,error},wk]=await Promise.all([q.order('created_at',{ascending:false}).range(from,from+PAGE-1),
+    sb.from('posts').select('gallery_id').in('gallery_id',gs.map(g=>g.id)).eq('is_deleted',false).gte('created_at',new Date(Date.now()-7*D).toISOString()).limit(2000)]);
+  if(error)return fail(error);
+  const n={};(wk.data||[]).forEach(r=>n[r.gallery_id]=(n[r.gallery_id]||0)+1);
+  const pages=Math.max(1,Math.ceil((count||0)/PAGE)),cur=kTag&&G[kTag]?G[kTag]:null;
+  return ad('leader')+`<div class="card"><div class="gh"><span class="av" style="background:#6c4bd8;font-size:20px">🎤</span><div><h1>K-Pop</h1><p>Todos los grupos en un solo tablero. Elige un grupo para filtrar.</p></div><a class="btn btn-brand write" href="#w-${cur?cur.id:'kpop-general'}">Escribir</a></div>
+  <div class="chips2"><button data-ktag="" class="${!cur?'on':''}">Todos<small>${Object.values(n).reduce((a,b)=>a+b,0)||''}</small></button>${gs.map(g=>`<button data-ktag="${g.id}" class="${cur&&cur.id===g.id?'on':''}">${esc(g.name)}${n[g.id]?`<small>${n[g.id]}</small>`:''}</button>`).join('')}</div>
+  ${cur?`<p class="hint" style="margin:0 0 8px">Viendo solo <b>${esc(cur.name)}</b> · <a href="#g-${cur.id}" style="color:var(--blue)">Abrir la galería de ${esc(cur.name)} →</a></p>`:'<p class="hint" style="margin:0 0 8px">El número es la cantidad de publicaciones de esta semana.</p>'}
+  <div class="tabs"><button data-ktab="all" class="${kTab==='all'?'on':''}">Todo</button><button data-ktab="best" class="${kTab==='best'?'on':''}">⭐ Destacados</button></div>
+  ${data.length?listWithAds(data,null,true):`<div class="empty">Todavía no hay publicaciones${cur?' de '+esc(cur.name):''}. <a href="#w-${cur?cur.id:'kpop-general'}" style="color:var(--blue)">¡Escribe la primera!</a></div>`}
+  ${pages>1?`<div class="pager">${Array.from({length:Math.min(pages,10)},(_,i)=>`<button data-kpage="${i+1}" class="${kPage===i+1?'on':''}">${i+1}</button>`).join('')}</div>`:''}</div>`;
+}
 async function vCat(cid){
+  if(cid==='kpop')return vKpop();
   nav('c-'+cid);const c=CATS.find(x=>x.id===cid);const gs=GALS.filter(g=>g.cat===cid);
   const {data,error}=await listQ().in('gallery_id',gs.map(g=>g.id)).eq('is_pinned',false).order('created_at',{ascending:false}).limit(20);
   if(error)return fail(error);
@@ -459,6 +486,7 @@ async function vGal(gid){
   const pages=Math.max(1,Math.ceil((count||0)/PAGE));const P=pins.data||[];
   await mgrReady;const mg=[...(MGR.get(gid)||[])],ld=LID.get(gid);const mgn=mg.length||ld?await nicksOf([...mg,...(ld?[ld]:[])]):{};
   return ad('leader')+`<div class="card"><div class="gh">${av(g)}<div><h1>${esc(g.name)}</h1><p>${esc(g.desc)}</p>${ld||mg.length?`<div class="mgrs">${ld?`${liderBadge(gid)} ${esc(mgn[ld]||'usuario')} `:''}${mg.length?`${mgrBadge(gid)} ${mg.map(u=>esc(mgn[u]||'usuario')).join(', ')}`:''}</div>`:''}</div>${g.attend?'':`<button class="favbtn ${isFav(g.id)?'on':''}" data-fav="${g.id}" title="Favorita">${isFav(g.id)?'★ Favorita':'☆ Favorita'}</button> <a class="btn btn-brand write" href="#w-${g.id}">Escribir</a>`}</div>
+  ${g.cat==='kpop'?`<p class="hint" style="margin:-4px 0 8px"><a href="#c-kpop" style="color:var(--blue)">← K-Pop: ver todos los grupos juntos</a></p>`:''}
   ${g.attend?attendBox():''}
   <div class="tabs"><button data-tab="all" class="${galTab==='all'?'on':''}">Todo</button><button data-tab="best" class="${galTab==='best'?'on':''}">${g.deal?'🔥 Calientes':'⭐ Destacados'}</button></div>
   <ul class="list">${avisoRow(g)}${P.map(p=>row(p,0,false)).join('')}</ul>
@@ -841,7 +869,7 @@ async function vPost(id){
    ${p.source_url?`<div class="srcbox"><b>Fuente:</b> ${safeUrl(p.source_url)?`<a href="${esc(p.source_url)}" target="_blank" rel="nofollow noopener">${esc(p.source_url)}</a>`:esc(p.source_url)}</div>`:''}
    ${ad('post')}
    ${p.is_deleted?'':`<div class="votes"><button class="v-up" data-vote="1" style="${myVote===1?'background:var(--brand-soft)':''}">♥ Me gusta ${p.up_count}</button><button data-vote="-1" style="${myVote===-1?'background:#eee':''}">👎 ${p.down_count}</button></div>`}
-   ${p.is_deleted?'':`<div class="post-actions">${mine?'<button data-pdel="1">🗑 Eliminar</button>':''}${mine&&g.deal&&!p.deal_sold?'<button data-sold="1">Marcar como agotada</button>':''}<button data-report="1">🚩 Reportar</button></div>`}
+   ${p.is_deleted?'':`<div class="post-actions">${mine?'<button data-pdel="1">🗑 Eliminar</button>':''}${mine&&g.deal&&!p.deal_sold?'<button data-sold="1">Marcar como agotada</button>':''}<button data-share="${p.id}">🔗 Compartir</button><button data-report="1">🚩 Reportar</button></div>`}
    ${admPostPanel(p)}${advAdminPanel(p)}${lidPostPanel(p)}${mgrPostPanel(p)}
   </div>
   <div class="card cmts"><h3>Comentarios (${C.length})</h3>
@@ -880,11 +908,21 @@ function vAuth(){
     <div class="f"><label>Correo</label><input id="amail" type="email" required autocomplete="email"></div>
     ${authMode==='reset'?'<p class="hint">Te enviaremos un enlace para crear una contraseña nueva.</p>':`<div class="f"><label>Contraseña</label><input id="apass" type="password" minlength="8" required autocomplete="${authMode==='up'?'new-password':'current-password'}"><div class="hint">Mínimo 8 caracteres.</div></div>`}
     ${authMode==='up'?`<div class="f"><label style="font-weight:400"><input type="checkbox" id="aage" style="width:auto"> Tengo 13 años o más y acepto las <a href="#reglas" style="color:var(--blue)">reglas</a> y el <a href="/privacidad/" style="color:var(--blue)">aviso de privacidad</a>.</label></div>`:''}
+    <div style="position:absolute;left:-5000px" aria-hidden="true"><label>Sitio web <input id="aweb" tabindex="-1" autocomplete="off"></label></div>
+    ${TURNSTILE_SITEKEY?'<div id="tsbox" style="margin:6px 0 10px;min-height:65px"></div>':''}
     <div class="err" id="aerr"></div>
     <button class="btn btn-brand" style="width:100%">${authMode==='up'?'Crear cuenta':authMode==='reset'?'Enviar enlace':'Entrar'}</button>
    </form>${authMode==='in'?'<div class="post-actions" style="margin-top:8px"><button data-auth="reset">¿Olvidaste tu contraseña?</button></div>':''}</div>`;
 }
-let authMode='in';
+let authMode='in',TS_TOKEN='',TS_ID=null;
+function mountTurnstile(){
+  if(!TURNSTILE_SITEKEY||!$('#tsbox'))return;TS_TOKEN='';
+  const go=()=>{try{TS_ID=window.turnstile.render('#tsbox',{sitekey:TURNSTILE_SITEKEY,language:'es',callback:t=>{TS_TOKEN=t},'expired-callback':()=>{TS_TOKEN=''}})}catch(_){}};
+  if(window.turnstile)return go();
+  if(!document.getElementById('tsjs')){const sc=document.createElement('script');sc.id='tsjs';sc.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';sc.async=true;sc.onload=go;document.head.appendChild(sc)}
+}
+const capOpt=()=>TURNSTILE_SITEKEY?{captchaToken:TS_TOKEN}:{};
+const capReset=()=>{try{if(TS_ID!=null&&window.turnstile)window.turnstile.reset(TS_ID)}catch(_){}TS_TOKEN=''};
 async function vSearch(q){
   nav('');const k=q.trim().replace(/[%_,()]/g,' ');
   const {data,error}=k?await listQ().ilike('title','%'+k+'%').order('created_at',{ascending:false}).limit(40):{data:[]};
@@ -915,6 +953,13 @@ const listQ=o=>sb.from('posts').select(SEL,o).eq('is_deleted',false);
 function countView(id){
   try{if(sessionStorage.getItem('v'+id))return;sessionStorage.setItem('v'+id,'1')}catch(e){}
   sb.rpc('increment_view',{p_post_id:id}).then(()=>{},()=>{});
+}
+const REP_MOTIVOS=['Spam o publicidad','Ofensivo, acoso o fan war','Datos personales de alguien','Derechos de autor o de imagen (foto o video de otra persona)','Contenido sexual o violento','Información falsa','Otro'];
+function repPicker(btn,tipo,id){
+  const old=document.querySelector('.repbox');if(old){old.remove();if(old.dataset.for===tipo+id)return}
+  const box=document.createElement('div');box.className='repbox';box.dataset.for=tipo+id;
+  box.innerHTML='<b>¿Por qué lo reportas?</b><div class="post-actions" style="flex-wrap:wrap">'+REP_MOTIVOS.map(m=>`<button ${tipo==='c'?`data-creport="${id}"`:'data-report="1"'} data-why="${esc(m)}">${esc(m)}</button>`).join('')+'</div><div class="hint">Si es una foto tuya o de tu obra publicada sin permiso, también puedes escribir a galeriakmx@gmail.com (ver <a href="/terminos/#derechos">Términos</a>).</div>';
+  btn.closest('.post-actions').after(box);
 }
 function cmtBtns(c){
   if(!ME||c.is_deleted)return '';
@@ -1006,7 +1051,7 @@ async function vAdmin(){
   if(!ME)return '<div class="card empty">먼저 <a href="#entrar" style="color:var(--blue);font-weight:700">로그인</a>해 주세요.</div>';
   if(MYROLE!=='admin')return '<div class="card empty">관리자만 볼 수 있는 페이지입니다.</div>';
   document.title='관리자 – GaleríaK';
-  const TABS=[['review','검토 필요'],['reports','신고 내역'],['hidden','숨긴 글'],['users','사용자'],['managers','🛡️ 매니저·방장'],['avisos','⚠️ 방장 경고']];
+  const TABS=[['review','검토 필요'],['reports','신고 내역'],['hidden','숨긴 글'],['users','사용자'],['managers','🛡️ 매니저·방장'],['avisos','⚠️ 방장 경고'],['salud','🩺 점검']];
   let body='';
   if(admTab==='review'){
     const {data,error}=await sb.from('posts').select(ADM_POST).eq('needs_review',true).order('created_at',{ascending:false}).limit(50);
@@ -1031,6 +1076,24 @@ async function vAdmin(){
     ]);
     if(ps.error)return fail(ps.error);if(cs.error)return fail(cs.error);
     body='<h3>글</h3>'+admList(ps.data,admPostRow,'숨긴 글이 없습니다.')+'<h3>댓글</h3>'+admList(cs.data,c=>'<li class="row"><div class="t"><a href="#p-'+c.post_id+'">'+esc(String(c.body).slice(0,120))+'</a><div class="meta"><span>'+nick(c)+'</span><span>'+ago(c.created_at)+'</span></div>'+admBox(admCmtBtn(c))+'</div></li>','숨긴 댓글이 없습니다.');
+  }else if(admTab==='salud'){
+    const ck=async(name,fn,fix)=>{try{const r=await fn();return {name,ok:r===true,info:typeof r==='string'?r:'',fix}}catch(e){return {name,ok:false,info:String(e&&e.message||e).slice(0,120),fix}}};
+    const errOf=r=>{if(r.error)throw new Error(r.error.message);return true};
+    const F1='2026-11-08-asistencia-niveles-managers.sql',F2='2026-11-08-fotos.sql',F3='2026-11-08-lideres-advertencias.sql';
+    const R=await Promise.all([
+      ck('관리자 계정으로 로그인',async()=>MYROLE==='admin'||'관리자가 아닙니다','5장 SQL'),
+      ck('쪽지(mensajes)',async()=>errOf(await sb.from('mensajes').select('id',{head:true,count:'exact'}).limit(1)),'2026-11-08-mensajes-niveles.sql'),
+      ck('점수 v2(출석 포함)',async()=>{const r=await sb.rpc('gk_niveles',{p_ids:[ME.id]});errOf(r);return (r.data&&r.data[0]&&'asistencias' in r.data[0])||'예전 점수 함수입니다'},F1),
+      ck('매니저 표(gk_managers)',async()=>errOf(await sb.from('gk_managers').select('gallery_id').limit(1)),F1),
+      ck('사진 저장소(post-images)',async()=>errOf(await sb.storage.from(FOTO_BUCKET).list(ME.id,{limit:1})),F2),
+      ck('사진 권한 함수(gk_puede_fotos)',async()=>{const r=await sb.rpc('gk_puede_fotos');errOf(r);return true},F2),
+      ck('방장 역할(rol)',async()=>errOf(await sb.from('gk_managers').select('rol').limit(1)),F3),
+      ck('경고 표(gk_advertencias)',async()=>errOf(await sb.from('gk_advertencias').select('id').limit(1)),F3),
+      ck('정적 페이지(/g/, /p/)',async()=>{const r=await fetch('/g/skincare/',{cache:'no-store'});return r.ok||'아직 생성 전(최대 몇 분)'},'GitHub Actions'),
+    ]);
+    body='<p class="hint">각 기능이 실제 DB에서 켜졌는지 확인합니다. ❌가 있으면 오른쪽 파일을 Supabase SQL Editor에서 실행한 뒤 새로고침하세요. (전체 한 번에: <code>supabase/2026-11-08-TODO-en-orden.sql</code>)</p><ul class="list">'
+     +R.map(x=>'<li class="row"><span class="num">'+(x.ok?'✅':'❌')+'</span><div class="t"><b>'+esc(x.name)+'</b><div class="meta">'+(x.ok?'<span>정상</span>':'<span>실행: '+esc(x.fix)+'</span>'+(x.info?'<span>'+esc(x.info)+'</span>':''))+'</div></div></li>').join('')+'</ul>'
+     +'<h3 style="margin-top:14px">직접 확인 순서 (계정 2개)</h3><ol style="font-size:14px;line-height:1.8"><li>새 계정(일반)으로 가입 → 출석체크 화면으로 이동하는지, Lv.0인지</li><li>출석 → +5점, 「오늘 출석 완료」 표시</li><li>자유 게시판에 글쓰기 → 사진 칸이 「Lv.2부터」로 잠겨 있는지</li><li>관리자 계정 → 🛡️ 매니저·방장 탭에서 그 계정을 BTS 방장으로 지정</li><li>방장 계정으로 BTS 글에 ⚠️ 경고 → 제목 회색·댓글 정지</li><li>관리자 계정 → ⚠️ 방장 경고 탭에서 해제 → 댓글 다시 가능</li><li>관리자 계정으로 사진 글 올리기 → 글에 사진이 보이는지</li></ol>';
   }else if(admTab==='avisos'){
     await loadAdv(true);
     if(!ADV_OK)return '<div class="card"><h2>⚠️ 방장 경고</h2><p>경고 기능이 아직 켜지지 않았습니다. <code>supabase/2026-11-08-lideres-advertencias.sql</code>을 실행해 주세요.</p><p><button class="btn" data-admtab="review">← 관리자</button></p></div>';
@@ -1121,6 +1184,7 @@ async function route(){
   }catch(e){html=fail(e)}
   if(seq!==routeSeq)return;
   $('#main').innerHTML=html;window.scrollTo(0,0);
+  mountTurnstile();
   if($('#wg')){$('#wg').onchange=syncWriteFields;syncWriteFields()}
   if($('#wfile')){$('#wfile').onchange=e=>{addPhotos(e.target.files).finally(()=>{e.target.value=''})};renderThumbs()}
   decorateLevels().catch(()=>{});
@@ -1131,6 +1195,9 @@ function go(h){if(location.hash==='#'+h)route();else location.hash=h}
 /* ---------------- eventos ---------------- */
 document.addEventListener('click',async e=>{
   const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.ktag!=null&&t.closest('.chips2')){kTag=t.dataset.ktag;kPage=1;route();return}
+  if(t.dataset.ktab){kTab=t.dataset.ktab;kPage=1;route();return}
+  if(t.dataset.kpage){kPage=+t.dataset.kpage;route();return}
   if(t.dataset.tab){galTab=t.dataset.tab;galPage=1;route();return}
   if(t.dataset.chip){const i=$('#attmsg');if(i){i.value=t.dataset.chip;i.focus()}return}
   if(t.dataset.hoytab){hoyTab=t.dataset.hoytab;route();return}
@@ -1138,6 +1205,7 @@ document.addEventListener('click',async e=>{
   if(t.dataset.auth){authMode=t.dataset.auth;route();return}
   if(t.dataset.fdel!=null&&t.dataset.fdel!==undefined&&t.closest('#wthumbs')){WFOTOS.splice(+t.dataset.fdel,1);renderThumbs();return}
   if(t.dataset.fav){const on=toggleFav(t.dataset.fav);t.classList.toggle('on',on);t.textContent=on?'★ Favorita':'☆ Favorita';renderQbar();toast(on?'Agregada a favoritas':'Quitada de favoritas');return}
+  if(t.dataset.share){const u=location.origin+'/p/'+t.dataset.share+'/';try{if(navigator.share){await navigator.share({title:curPost&&curPost.title||'GaleríaK',url:u})}else{await navigator.clipboard.writeText(u);toast('Enlace copiado')}}catch(_){toast(u)}return}
   if(t.dataset.warn){await warnClick(t);return}
   if(t.dataset.advres&&MYROLE==='admin'){await advResClick(t);return}
   if(t.dataset.mhide||t.dataset.mchide){await mgrClick(t);return}
@@ -1151,8 +1219,10 @@ document.addEventListener('click',async e=>{
   if(t.dataset.vote){t.disabled=true;const val=+t.dataset.vote,cur=myVotes.get(p.id);const q=cur===val?sb.from('votes').delete().eq('post_id',p.id).eq('voter',ME.id):cur?sb.from('votes').update({value:val}).eq('post_id',p.id).eq('voter',ME.id):sb.from('votes').insert({post_id:p.id,voter:ME.id,value:val});const {error}=await q;if(error){toast(errMsg(error));t.disabled=false;return}if(cur===val)myVotes.delete(p.id);else myVotes.set(p.id,val);toast(cur===val?'Voto cancelado':'¡Gracias por votar!');route();return}
   if(t.dataset.pdel){if(!confirm('¿Eliminar esta publicación? No se puede deshacer.'))return;const {error}=await sb.from('posts').update({is_deleted:true}).eq('id',p.id);toast(error?errMsg(error):'Publicación eliminada');if(!error)go('g-'+p.gallery_id);return}
   if(t.dataset.cdel){if(!confirm('¿Eliminar este comentario?'))return;const {error}=await sb.from('comments').update({is_deleted:true}).eq('id',+t.dataset.cdel);toast(error?errMsg(error):'Comentario eliminado');if(!error)route();return}
-  if(t.dataset.creport){const {error}=await sb.from('reports').insert({comment_id:+t.dataset.creport,reporter:ME.id});toast(error?(/duplicate/i.test(error.message)?'Ya reportaste este comentario':errMsg(error)):'Reporte enviado. El equipo lo revisará.');return}
-  if(t.dataset.report){const {error}=await sb.from('reports').insert({post_id:p.id,reporter:ME.id});toast(error?(/duplicate/i.test(error.message)?'Ya reportaste esta publicación':errMsg(error)):'Reporte enviado. El equipo lo revisará.');return}
+  if(t.dataset.creport&&!t.dataset.why){repPicker(t,'c',t.dataset.creport);return}
+  if(t.dataset.creport){const {error}=await sb.from('reports').insert({comment_id:+t.dataset.creport,reporter:ME.id,reason:t.dataset.why});toast(error?(/duplicate/i.test(error.message)?'Ya reportaste este comentario':errMsg(error)):'Reporte enviado. El equipo lo revisará.');return}
+  if(t.dataset.report&&!t.dataset.why){repPicker(t,'p',p.id);return}
+  if(t.dataset.report){const {error}=await sb.from('reports').insert({post_id:p.id,reporter:ME.id,reason:t.dataset.why});toast(error?(/duplicate/i.test(error.message)?'Ya reportaste esta publicación':errMsg(error)):'Reporte enviado. El equipo lo revisará.');return}
   if(t.dataset.sold){const {error}=await sb.from('posts').update({deal_sold:true}).eq('id',p.id);toast(error?errMsg(error):'Marcada como agotada');route();return}
 });
 $('#writeTop').onclick=()=>{const m=location.hash.match(/^#g-([\w-]+)$/);go('w-'+(m&&G[m[1]]?m[1]:'libre'))};
@@ -1180,9 +1250,11 @@ document.addEventListener('submit',async e=>{
     await loadManagers();route();return}
   if(f.id==='aform'){
     const err=$('#aerr');err.textContent='';const mail=$('#amail').value.trim(),pass=($('#apass')||{}).value;
+    if($('#aweb')&&$('#aweb').value)return;// trampa para bots
+    if(TURNSTILE_SITEKEY&&!TS_TOKEN)return err.textContent='Completa la verificación de seguridad.';
     busy(true);
     if(authMode==='reset'){
-      const {error}=await sb.auth.resetPasswordForEmail(mail,{redirectTo:location.origin+location.pathname});busy(false);
+      const {error}=await sb.auth.resetPasswordForEmail(mail,{redirectTo:location.origin+location.pathname,...capOpt()});busy(false);capReset();
       if(error)return err.textContent=errMsg(error);
       $('#main').innerHTML='<div class="card empty" style="max-width:440px;margin:0 auto">📩 Si existe una cuenta con ese correo, te enviamos un enlace. Revisa tu bandeja.</div>';return;
     }
@@ -1192,13 +1264,13 @@ document.addEventListener('submit',async e=>{
       if(!$('#aage').checked){busy(false);return err.textContent='Debes confirmar que tienes 13 años o más.'}
       const {data:taken}=await sb.from('profiles').select('id').eq('nickname',n).maybeSingle();
       if(taken){busy(false);return err.textContent='Ese apodo ya está en uso.'}
-      const {data,error}=await sb.auth.signUp({email:mail,password:pass,options:{data:{nickname:n,age_confirmed:true},emailRedirectTo:location.origin+location.pathname}});
-      busy(false);
+      const {data,error}=await sb.auth.signUp({email:mail,password:pass,options:{data:{nickname:n,age_confirmed:true},emailRedirectTo:location.origin+location.pathname,...capOpt()}});
+      busy(false);capReset();
       if(error)return err.textContent=errMsg(error);
       if(!data.session){$('#main').innerHTML=`<div class="card empty" style="max-width:440px;margin:0 auto">📩 Te enviamos un correo a <b>${esc(mail)}</b>. Abre el enlace para confirmar tu cuenta y después entra.<br><br><button class="btn btn-brand" data-auth="in">Ya confirmé, entrar</button></div>`;return}
       await refreshSession();try{sessionStorage.removeItem('gk_new')}catch(_){}toast('¡Cuenta creada! Empieza en Lv.0: pasa tu primera lista ✅');go('g-asistencia');
     }else{
-      const {error}=await sb.auth.signInWithPassword({email:mail,password:pass});busy(false);
+      const {error}=await sb.auth.signInWithPassword({email:mail,password:pass,options:capOpt()});busy(false);capReset();
       if(error)return err.textContent=errMsg(error);
       await refreshSession();toast('¡Hola, '+MYNICK+'!');go('home');
     }
