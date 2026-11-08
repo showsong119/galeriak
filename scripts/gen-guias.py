@@ -68,7 +68,7 @@ def head(title, desc, url, extra='', og='/icons/icon-512.png'):
 """
 
 FOOT = """<footer>GaleríaK es una comunidad de fans no oficial. No está afiliada a ninguna agencia, artista ni marca.<br>
-<a href="/">Inicio</a> · <a href="/guias/">Guías</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="/#reglas">Reglas</a> · <a href="mailto:galeriakmx@gmail.com">galeriakmx@gmail.com</a></footer>
+<a href="/">Inicio</a> · <a href="/guias/">Guías</a> · <a href="/acerca/">Acerca de</a> · <a href="/contacto/">Contacto</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="/#reglas">Reglas</a> · <a href="mailto:galeriakmx@gmail.com">galeriakmx@gmail.com</a></footer>
 </body>
 </html>
 """
@@ -98,7 +98,7 @@ for g in guides:
     # anuncio después del segundo bloque <h2> (mitad del artículo)
     parts = body.split('<h2>')
     if len(parts) > 3:
-        body = '<h2>'.join(parts[:3]) + '<div class="ad">Publicidad</div>\n\n<h2>' + '<h2>'.join(parts[3:])
+        body = '<h2>'.join(parts[:3]) + '\n<h2>' + '<h2>'.join(parts[3:])
     ld = json.dumps({"@context": "https://schema.org", "@type": "Article", "headline": g['title'], "description": g['desc'],
                      "inLanguage": "es-MX", "datePublished": DATE_ISO, "dateModified": DATE_ISO, "mainEntityOfPage": url,
                      "author": {"@type": "Organization", "name": "Equipo GaleríaK"}, "publisher": {"@type": "Organization", "name": "GaleríaK"}}, ensure_ascii=False)
@@ -113,10 +113,8 @@ for g in guides:
 <h1>{html.escape(g['title'])}</h1>
 <p class="meta">Por el equipo de GaleríaK · Actualizado el {DATE_TXT}</p>
 {hero}
-<div class="ad">Publicidad</div>
 {body}
 {EXAM_BANNER}
-<div class="ad">Publicidad</div>
 </article>
 <section class="box more"><h2>Más guías</h2><ul class="list">{''.join(card(o) for o in same[:4])}</ul>
 <p><a class="cta" href="/examen-coreano/">Haz el examen de coreano gratis</a></p></section>
@@ -131,12 +129,11 @@ for g in guides:
 idx = head('Guías de K-Beauty, K-Pop y coreano', 'Guías en español para cuidar tu piel con K-Beauty, entender el K-pop y aprender coreano: rutinas, ingredientes, hangul, frases y preparación para el TOPIK.', f'{SITE}/guias/') + '<div class="wrap"><article>\n<div class="crumb"><a href="/">Inicio</a> › Guías</div>\n<h1>Guías de K-Beauty, K-Pop y coreano</h1>\n<p class="meta">Guías prácticas en español escritas por el equipo de GaleríaK.</p>\n' + EXAM_BANNER + '\n'
 for i, c in enumerate(cats):
     idx += f'<h2>{html.escape(c)}</h2><ul class="list">' + ''.join(card(g) for g in guides if g['cat'] == c) + '</ul>\n'
-    if i == 0: idx += '<div class="ad">Publicidad</div>\n'
 idx += '<h2>Para comprar en México</h2><ul class="list">' \
        '<li><a href="/#guia-original"><b>Cómo saber si tu cosmético coreano es original</b><span>7 señales para no comprar imitaciones en México</span></a></li>' \
        '<li><a href="/#guia-donde-comprar"><b>Dónde comprar cosmética coreana en México</b><span>Tiendas físicas y en línea con marcas coreanas</span></a></li>' \
        '<li><a href="/#guia-rebajas"><b>Calendario de rebajas de Olive Young</b><span>Cuándo comprar más barato en Corea u Olive Young Global</span></a></li></ul>\n' \
-       '<div class="ad">Publicidad</div>\n</article></div>\n' + FOOT
+       '</article></div>\n' + FOOT
 (OUT / 'index.html').write_text(idx)
 
 # Lista para el sitio principal (entre marcadores)
@@ -145,8 +142,45 @@ arr = 'const STATIC_GUIDES=' + json.dumps([{"u": f'/guias/{g["slug"]}/', "t": g[
 s = re.sub(r'/\* STATIC_GUIDES:start \*/.*?/\* STATIC_GUIDES:end \*/', lambda m: '/* STATIC_GUIDES:start */' + arr + '/* STATIC_GUIDES:end */', s, flags=re.S)
 idxf.write_text(s)
 
+# Acerca de y Contacto (páginas de confianza: quién está detrás del sitio y cómo contactarlo)
+PAGES = {
+ 'acerca': ('Acerca de GaleríaK', 'Quiénes somos, qué encontrarás en GaleríaK, cómo moderamos la comunidad y cómo se financia el sitio.', '''<p class="big">GaleríaK es una comunidad independiente en español para fans de la cosmética coreana (K-Beauty), el K-Pop, los K-Dramas y la cultura coreana en México y Latinoamérica.</p>
+<h2>Qué encontrarás</h2>
+<ul>
+<li><strong>Galerías por tema:</strong> skincare, maquillaje, reseñas, ofertas, grupos de K-Pop, K-Dramas, aprender coreano y viajes. Cualquier persona puede leer; para publicar y comentar se necesita una cuenta gratuita.</li>
+<li><strong>Guías prácticas</strong> escritas por el equipo: rutinas de skincare, protector solar, ingredientes, hangul, partículas, números y más. <a href="/guias/">Ver todas las guías</a>.</li>
+<li><strong>Examen de coreano gratis</strong> estilo TOPIK, con 30 preguntas de un banco de 180 y explicaciones en español. <a href="/examen-coreano/">Hacer el examen</a>.</li>
+</ul>
+<h2>Cómo cuidamos la comunidad</h2>
+<p>Tenemos <a href="/#reglas">reglas</a> claras: respeto entre fandoms, nada de datos personales, nada de contenido sexual o violento y respeto a los derechos de autor. El equipo de GaleríaK revisa los reportes, y en algunas galerías hay líderes y managers voluntarios que ayudan a moderar. Las decisiones finales sobre eliminar contenido o suspender cuentas las toma el equipo.</p>
+<h2>Cómo escribimos las guías</h2>
+<p>Las guías se basan en información general y fuentes públicas confiables, se revisan antes de publicarse y se actualizan cuando algo cambia. No sustituyen la opinión de un dermatólogo, médico o profesional: si tienes un problema de salud o de la piel, consulta a un especialista.</p>
+<h2>Cómo se financia GaleríaK</h2>
+<p>GaleríaK es gratis. Para mantener el sitio mostramos anuncios (Google AdSense) y algunas ofertas pueden incluir enlaces de afiliado; cuando una publicación es patrocinada se indica claramente. Los anuncios no influyen en lo que publican los usuarios ni en el contenido de las guías.</p>
+<h2>Aviso importante</h2>
+<p>GaleríaK es una comunidad de fans <strong>no oficial</strong>. No está afiliada a ninguna agencia, artista, marca ni tienda. Los nombres de grupos y marcas se usan solo para identificar el tema de cada galería.</p>
+<p>¿Dudas o sugerencias? Visita la página de <a href="/contacto/">contacto</a>.</p>'''),
+ 'contacto': ('Contacto', 'Cómo comunicarte con el equipo de GaleríaK: correo, mensajes dentro del sitio y solicitudes de retiro de contenido.', '''<p class="big">¿Tienes una duda, una sugerencia o encontraste un problema? Escríbenos.</p>
+<h2>Correo</h2>
+<p><a href="mailto:galeriakmx@gmail.com"><strong>galeriakmx@gmail.com</strong></a> — intentamos responder en un máximo de 3 días hábiles.</p>
+<h2>Mensajes dentro del sitio</h2>
+<p>Si tienes cuenta, puedes escribirnos desde <a href="/#mensajes">Mensajes</a>. Solo tú y el equipo de GaleríaK pueden leer esa conversación.</p>
+<h2>¿Sobre qué nos puedes escribir?</h2>
+<ul>
+<li><strong>Retiro de contenido</strong> por derechos de autor, derechos de imagen o datos personales: indica el enlace exacto y por qué tienes derecho a pedirlo. Ver el procedimiento en los <a href="/terminos/#derechos">Términos y Condiciones</a>.</li>
+<li><strong>Tus datos personales</strong> (acceso, rectificación, cancelación u oposición): ver la <a href="/privacidad/">Política de Privacidad</a>.</li>
+<li><strong>Errores en una guía o en el examen</strong>: dinos la página y qué está mal.</li>
+<li><strong>Nuevas galerías</strong>: también puedes pedirlas en la galería <a href="/#g-solicitudes">Solicitar galería</a>.</li>
+<li><strong>Publicidad o colaboraciones</strong> con marcas o tiendas.</li>
+</ul>
+<p>Para reportar una publicación o comentario, lo más rápido es usar el botón <strong>🚩 Reportar</strong> que aparece en cada uno.</p>'''),
+}
+for slug, (title, desc, body) in PAGES.items():
+    d = ROOT / 'site' / slug; d.mkdir(parents=True, exist_ok=True)
+    (d / 'index.html').write_text(head(title, desc, f'{SITE}/{slug}/') + f'<div class="wrap"><article>\n<div class="crumb"><a href="/">Inicio</a> › {html.escape(title)}</div>\n<h1>{html.escape(title)}</h1>\n<p class="meta">Actualizado el {DATE_TXT}</p>\n{body}\n</article></div>\n' + FOOT)
+
 # sitemap
-urls = ['/', '/examen-coreano/', '/guias/'] + [f'/guias/{g["slug"]}/' for g in guides] + ['/privacidad/', '/terminos/']
+urls = ['/', '/examen-coreano/', '/guias/'] + [f'/guias/{g["slug"]}/' for g in guides] + ['/acerca/', '/contacto/', '/privacidad/', '/terminos/']
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'  <url><loc>{SITE}{u}</loc><lastmod>{DATE_ISO}</lastmod></url>\n' for u in urls) + '</urlset>\n'
 (ROOT / 'site/sitemap.xml').write_text(sm)
 print(f'{len(guides)} guías generadas')

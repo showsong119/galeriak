@@ -160,3 +160,6 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 일러스트: `scripts/gen-illustrations.py`(슬러그별 모티프, 사진·아이돌 이미지 미사용) → `site/img/guias/<slug>.svg`, `site/img/examen.svg`. 공유 이미지: `PLAYWRIGHT=/opt/npm-tools/node_modules/playwright CHROME=/usr/bin/google-chrome node scripts/render-og.cjs` → `site/img/og/*.jpg`. 새 가이드 추가 시 ART에 항목 추가 → 두 스크립트 → `gen-guias.py` → **`set-adsense.py ca-pub-2340316018998356` 다시 실행(gen-guias가 AdSense 태그를 지움)**.
 - gen-guias: 표지(figure.hero), 목록 썸네일, og:image, 시험 배너(EXAM_BANNER), 헤더 시험 버튼. STATIC_GUIDES에 `i`(썸네일).
 - 사이트: 메뉴 2번째 `📝 Examen de coreano GRATIS`(.nav-exam 파란 배경·흰 글씨·노란 배지), 홈 맨 위 `.exambar`, 가이드 카드 썸네일(.guide img, .gmini).
+
+## 23. AdSense 대비 (2026-11-09)
+- `/acerca/`, `/contacto/`는 `gen-guias.py`의 PAGES에서 생성(사이트맵 포함). 빈 광고 상자 제거: SPA `ad()`는 `?demo=ads`일 때만 상자 표시, 가이드엔 상자 없음(자동 광고 사용). `site/index.html`의 `<main id="main">`에 기본 소개 HTML(라우터가 덮어씀).

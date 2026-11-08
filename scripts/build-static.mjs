@@ -66,7 +66,7 @@ ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld).replace(
 ${body}
 </div>
 <footer>GaleríaK es una comunidad de fans no oficial. No está afiliada a ninguna agencia, artista ni marca. Las publicaciones son de sus autores.<br>
-<a href="/">Inicio</a> · <a href="/g/">Galerías</a> · <a href="/guias/">Guías</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="mailto:galeriakmx@gmail.com">galeriakmx@gmail.com</a></footer>
+<a href="/">Inicio</a> · <a href="/g/">Galerías</a> · <a href="/guias/">Guías</a> · <a href="/acerca/">Acerca de</a> · <a href="/contacto/">Contacto</a> · <a href="/privacidad/">Política de Privacidad</a> · <a href="/terminos/">Términos y Condiciones</a> · <a href="mailto:galeriakmx@gmail.com">galeriakmx@gmail.com</a></footer>
 </body>
 </html>
 `;
