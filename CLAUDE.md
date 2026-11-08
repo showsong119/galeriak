@@ -141,3 +141,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 ## 19. 게시글 사진 (2026-11-08)
 - SQL: `supabase/2026-11-08-fotos.sql` (18번 SQL 다음에 실행, 재실행 안전, 로컬 PG16+모의 storage 테스트 통과). 버킷 `post-images`(public, 2MB, webp/jpeg/png), `gk_puede_fotos()`(admin 또는 gk_niveles 150점+출석 7일, 정지 아님, 하루 40장), storage.objects 정책: insert(본인 폴더+gk_puede_fotos), select(버킷), delete(본인/관리자).
 - 사이트: `FOTO_LV=2`, `canPhoto()`, `photoBox()`(잠김 안내), `shrinkImage()`(canvas → webp ≤1600px, EXIF 제거), 업로드 후 본문 끝에 `[foto:<uid>/<name>.<ext>]` 줄 추가, `bodyHTML(p)`가 작성자 폴더 사진만 <img>로 렌더. 본문에 직접 `[foto:` 입력은 거부.
+
+## 20. 방장(Líder)·경고 (2026-11-08)
+- SQL: `supabase/2026-11-08-lideres-advertencias.sql` (18번 다음, 재실행 안전, 로컬 PG16 테스트 통과). `gk_managers.rol`('manager'|'lider', 갤러리당 lider 1명 부분 unique), update 정책(admin), `gk_es_lider(text)`. 새 표 `gk_advertencias(post_id,gallery_id,motivo,por,created_at,estado 'activa'|'levantada'|'eliminada',resuelto_por,resuelto_at)` 읽기 전체·쓰기 RPC만. `gk_advertir(p_post,p_motivo)`(lider/admin, 관리자 글 불가, needs_review=true), `gk_resolver_advertencia(p_post,'eliminar'|'levantar')`(admin; eliminar→is_deleted=true), comments restrictive insert 정책 `gk_cmt_no_advertidos`.
+- 사이트: `LID`(갤러리→방장), `isLider`, `liderBadge`(👑), `ADV`(활성 경고 캐시, route마다 60초 캐시), `row()`/글 제목 회색(`.adv`)+`⚠️ En revisión`, 댓글폼 숨김, `lidPostPanel`/`advAdminPanel`, 관리자 탭 `avisos`, 매니저 탭에 역할 선택.
