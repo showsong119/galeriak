@@ -14,7 +14,7 @@
 | 항목 | 값 |
 | --- | --- |
 | 사이트 | https://galeriakmx.com (주 도메인, www는 자동 이동) · https://galeriak.netlify.app |
-| 호스팅 | Netlify 프로젝트 `galeriak` — **Public** (2026-11-08 공개), GitHub `main` 자동 배포 확인 |
+| 호스팅 | **GitHub Pages로 이전 중** (`.github/workflows/pages.yml`, `site/CNAME`). Netlify 무료 크레딧(배포 1회 15, 월 300) 소진으로 2026-11-08 16시 이후 배포 Skipped. 도메인 등록·DNS는 Netlify에 그대로 둠. 커밋은 모아서 올릴 것 |
 | 저장소 | https://github.com/showsong119/galeriak (Public, 브랜치 `main`) |
 | DB·인증 | Supabase 프로젝트 `pimuwxsazuzmgwhbrzbx` (`https://pimuwxsazuzmgwhbrzbx.supabase.co`) |
 | 공개키 | `sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn` (site/index.html에 하드코딩, 공개값) |
