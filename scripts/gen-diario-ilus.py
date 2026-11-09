@@ -5,6 +5,9 @@ Lee content/diario/{cola,publicadas}/*.json con el campo opcional
 y genera site/img/diario/<nombre-del-archivo>.svg (1200x630).
 Las mascotas Bomi (봄이, cachorro de tigre) y Dali (달이, conejita de la luna) son personajes originales de GaleríaK:
 no se usan fotos, idols ni personajes de terceros.
+Campos de "ilus":
+  - una sola mascota (por defecto se alternan: lección impar Bomi, par Dali; o "quien": "bomi"|"dali")
+  - conversación: "dialogo": [{"quien":"bomi","ko":"…","rom":"…","es":"…"}, {"quien":"dali",…}] (2 líneas)
 Uso: python3 scripts/gen-diario-ilus.py
 """
 import json
@@ -150,31 +153,87 @@ def fit(text, width, base, minimum, per_char):
     return size
 
 
-def svg(ilus, numero=''):
-    motivo = ilus.get('motivo', 'cultura')
-    a, b, c1, c2 = PAL.get(motivo, PAL['cultura'])
-    ko, rom, es = ilus['ko'], ilus.get('rom', ''), ilus.get('es', '')
-    ko_size = fit(ko, 520, 110, 52, .98)
-    lab = f'Coreano del día #{numero}' if numero else 'Coreano del día'
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="{escape(lab)}: {escape(ko)} ({escape(rom)}) — {escape(es)}">
+HEAD = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="{aria}">
 <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{a}"/><stop offset="1" stop-color="{b}"/></linearGradient>
 <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity=".10"/></filter>
 <pattern id="dots" width="36" height="36" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="3" fill="#fff" opacity=".55"/></pattern></defs>
 <rect width="1200" height="630" fill="url(#bg)"/><rect width="1200" height="630" fill="url(#dots)"/>
-{sparkle(1110, 80, 1.2, c2, .7)}{sparkle(560, 570, .9, c1, .5)}{sparkle(60, 300, .8, c2, .6)}
-{deco(motivo, c1, c2)}
-<g transform="translate(392 408) scale(.9)">{conejo()}</g>
-<g transform="translate(168 418) scale(.98)">{tigre()}</g>
-<g transform="translate(515 585) scale(.42) rotate(-6)">{prop(motivo, c1, c2)}</g>
-<g filter="url(#sh)"><path d="M560 96h560a40 40 0 0 1 40 40v300a40 40 0 0 1-40 40H600a40 40 0 0 1-40-40V330l-62-20 62-40V136a40 40 0 0 1 40-40z" fill="#fff" stroke="{INK}" stroke-width="7" stroke-linejoin="round"/></g>
-<rect x="600" y="122" width="{len(lab) * 15 + 36}" height="44" rx="22" fill="{c1}"/>
-<text x="618" y="152" font-family="{FONT}" font-size="24" font-weight="800" fill="#fff">{escape(lab)}</text>
-<text x="860" y="{290 if rom else 320}" text-anchor="middle" font-family="{FONT}" font-size="{ko_size}" font-weight="900" fill="{INK}">{escape(ko)}</text>
-{f'<text x="860" y="350" text-anchor="middle" font-family="{FONT}" font-size="36" font-weight="600" fill="#868e96">{escape(rom)}</text>' if rom else ''}
-<text x="860" y="418" text-anchor="middle" font-family="{FONT}" font-size="{fit(es, 500, 42, 26, .55)}" font-weight="800" fill="{c1}">{escape(es)}</text>
-<text x="1168" y="606" text-anchor="end" font-family="{FONT}" font-size="24" font-weight="900" fill="{INK}" opacity=".55">Galería<tspan fill="{c1}">K</tspan></text>
-</svg>
 '''
+PERSONAJE = {'bomi': ('Bomi', tigre), 'dali': ('Dali', conejo)}
+
+
+def personaje(quien, x, y, s, espejo=False):
+    nombre, fn = PERSONAJE[quien]
+    k = s * (1.04 if quien == "bomi" else .96)
+    return f'<g transform="translate({x} {y}) scale({-k if espejo else k} {k})">{fn()}</g>'
+
+
+def pill(x, y, txt, col, size=24):
+    return (f'<rect x="{x}" y="{y}" width="{len(txt) * size * .62 + 36}" height="{size + 20}" rx="{(size + 20) / 2}" fill="{col}"/>'
+            f'<text x="{x + 18}" y="{y + size + 4}" font-family="{FONT}" font-size="{size}" font-weight="800" fill="#fff">{escape(txt)}</text>')
+
+
+def textos(cx, top, ko, rom, es, col, ko_w, ko_base, es_w, es_base):
+    out = f'<text x="{cx}" y="{top}" text-anchor="middle" font-family="{FONT}" font-size="{fit(ko, ko_w, ko_base, 36, .98)}" font-weight="900" fill="{INK}">{escape(ko)}</text>'
+    if rom:
+        out += f'<text x="{cx}" y="{top + ko_base * .55}" text-anchor="middle" font-family="{FONT}" font-size="{int(ko_base * .36)}" font-weight="600" fill="#868e96">{escape(rom)}</text>'
+    out += f'<text x="{cx}" y="{top + ko_base * 1.12}" text-anchor="middle" font-family="{FONT}" font-size="{fit(es, es_w, es_base, 20, .55)}" font-weight="800" fill="{col}">{escape(es)}</text>'
+    return out
+
+
+def firma(c1):
+    return f'<text x="1168" y="606" text-anchor="end" font-family="{FONT}" font-size="24" font-weight="900" fill="{INK}" opacity=".55">Galería<tspan fill="{c1}">K</tspan></text>'
+
+
+def svg_solo(ilus, numero, quien):
+    motivo = ilus.get('motivo', 'cultura')
+    a, b, c1, c2 = PAL.get(motivo, PAL['cultura'])
+    ko, rom, es = ilus['ko'], ilus.get('rom', ''), ilus.get('es', '')
+    lab = f'Coreano del día #{numero}' if numero else 'Coreano del día'
+    aria = escape(f'{lab}: {PERSONAJE[quien][0]} dice {ko} ({rom}) — {es}')
+    return (HEAD.format(aria=aria, a=a, b=b)
+            + sparkle(1110, 80, 1.2, c2, .7) + sparkle(560, 570, .9, c1, .5) + deco(motivo, c1, c2)
+            + personaje(quien, 255, 405, 1.0)
+            + f'<g transform="translate(470 575) scale(.42) rotate(-6)">{prop(motivo, c1, c2)}</g>'
+            + f'<g filter="url(#sh)"><path d="M560 96h560a40 40 0 0 1 40 40v300a40 40 0 0 1-40 40H600a40 40 0 0 1-40-40V330l-62-20 62-40V136a40 40 0 0 1 40-40z" fill="#fff" stroke="{INK}" stroke-width="7" stroke-linejoin="round"/></g>'
+            + pill(600, 122, lab, c1)
+            + textos(860, 290 if rom else 320, ko, rom, es, c1, 520, 110, 500, 42)
+            + firma(c1) + '\n</svg>\n')
+
+
+def svg_dialogo(ilus, numero):
+    motivo = ilus.get('motivo', 'cultura')
+    a, b, c1, c2 = PAL.get(motivo, PAL['cultura'])
+    d = ilus['dialogo']
+    lab = f'Coreano del día #{numero}' if numero else 'Coreano del día'
+    aria = escape(f'{lab}: ' + ' / '.join(f'{PERSONAJE[x["quien"]][0]}: {x["ko"]} ({x.get("es", "")})' for x in d))
+    # a la izquierda quien habla primero; a la derecha el otro
+    izq, der = d[0]['quien'], d[1]['quien']
+    B1 = (280, 70, 440, 210)    # x, y, ancho, alto
+    B2 = (460, 330, 440, 210)
+    def burbuja(bx, by, w, h, cola, x, col):
+        return (f'<g filter="url(#sh)"><path d="M{bx + 36} {by}h{w - 72}a36 36 0 0 1 36 36v{h - 72}a36 36 0 0 1-36 36H{bx + 36}a36 36 0 0 1-36-36V{by + 36}a36 36 0 0 1 36-36z" fill="#fff" stroke="{INK}" stroke-width="7"/>'
+                f'{cola}</g>'
+                + pill(bx + 24, by - 22, PERSONAJE[x['quien']][0], col, 22)
+                + textos(bx + w / 2, by + 92, x['ko'], x.get('rom', ''), x.get('es', ''), col, w - 60, 72, w - 50, 32))
+    cola1 = f'<path d="M{B1[0] + 50} {B1[1] + B1[3] - 4}l-70 56 110-50z" fill="#fff" stroke="{INK}" stroke-width="7" stroke-linejoin="round"/><path d="M{B1[0] + 46} {B1[1] + B1[3] - 9}h70" stroke="#fff" stroke-width="9"/>'
+    cola2 = f'<path d="M{B2[0] + B2[2] - 4} {B2[1] + 70}l66 24-64 22z" fill="#fff" stroke="{INK}" stroke-width="7" stroke-linejoin="round"/><path d="M{B2[0] + B2[2] - 9} {B2[1] + 66}v54" stroke="#fff" stroke-width="9"/>'
+    return (HEAD.format(aria=aria, a=a, b=b)
+            + sparkle(1150, 300, 1.0, c2, .8) + sparkle(60, 260, .9, c1, .6)
+            + pill(860, 30, lab, c1)
+            + personaje(izq, 165, 430, .82)
+            + personaje(der, 1065, 430, .82, espejo=True)
+            + f'<g transform="translate(360 585) scale(.34) rotate(-6)">{prop(motivo, c1, c2)}</g>'
+            + burbuja(*B1, cola1, d[0], c1)
+            + burbuja(*B2, cola2, d[1], c2)
+            + f'<text x="32" y="54" font-family="{FONT}" font-size="24" font-weight="900" fill="{INK}" opacity=".55">Galería<tspan fill="{c1}">K</tspan></text>' + '\n</svg>\n')
+
+
+def svg(ilus, numero=''):
+    if ilus.get('dialogo'):
+        return svg_dialogo(ilus, numero)
+    quien = ilus.get('quien') or ('dali' if numero and int(numero) % 2 == 0 else 'bomi')
+    return svg_solo(ilus, numero, quien)
 
 
 def main():

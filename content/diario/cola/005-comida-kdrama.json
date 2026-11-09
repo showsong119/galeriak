@@ -3,9 +3,20 @@
   "title": "Coreano del día #5: La comida de los K-Dramas y cómo pedirla",
   "body": "En los K-Dramas siempre están comiendo. Aprende los platillos más famosos y cómo pedirlos:\n\n🍜 라면 (ramyeon) — ramen instantáneo, el favorito de los dramas\n🍗 치킨 (chikin) — pollo frito coreano\n🍺 치맥 (chimaek) — 치킨 + 맥주 (cerveza): el combo clásico\n🍢 떡볶이 (tteokbokki) — pastelitos de arroz en salsa picante\n🍙 김밥 (gimbap) — rollo de arroz con alga\n🍖 삼겹살 (samgyeopsal) — panceta de cerdo a la parrilla\n🥃 소주 (soju) — la bebida alcohólica más popular\n\n🗣️ Para pedir:\n• 이거 주세요 (igeo juseyo) — Deme esto, por favor\n• 떡볶이 하나 주세요 — Un tteokbokki, por favor\n• 맛있어요! (masisseoyo!) — ¡Está delicioso!\n• 너무 매워요 (neomu maewoyo) — Está muy picante\n\n💡 Dato cultural: en Corea no se sirve uno mismo el alcohol. Le sirves a los demás y ellos te sirven a ti. Con personas mayores, se sirve y se recibe el vaso con las dos manos.\n\n✏️ Mini reto: ¿cómo dirías «Dos kimbaps, por favor»? Pista: dos = 두 개 (du gae).\n\nRespuesta: 김밥 두 개 주세요.\n\n¿Qué comida coreana ya probaste en México? 👇",
   "ilus": {
-    "ko": "맛있어요!",
-    "rom": "masisseoyo",
-    "es": "¡Está delicioso!",
-    "motivo": "comida"
+    "motivo": "comida",
+    "dialogo": [
+      {
+        "quien": "bomi",
+        "ko": "맛있어요!",
+        "rom": "masisseoyo",
+        "es": "¡Está delicioso!"
+      },
+      {
+        "quien": "dali",
+        "ko": "한 입 더!",
+        "rom": "han ip deo",
+        "es": "¡Otro bocado!"
+      }
+    ]
   }
 }

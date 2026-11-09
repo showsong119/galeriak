@@ -28,3 +28,11 @@ test('ilustración: marca al inicio y validación', () => {
   assert.ok(validar({ ...l, ilus: { ko: 'hola', es: 'x' } }).some(e => /ilus\.ko/.test(e)));
   assert.ok(validar({ ...l, body: '[ilus:x]\n' + l.body }).length);
 });
+test('ilustración en conversación', () => {
+  const base = { title: 'Hola coreano de prueba', body: '안녕 ' + 'x'.repeat(400) };
+  const ok = { motivo: 'kpop', dialogo: [{ quien: 'bomi', ko: '안녕!', es: '¡Hola!' }, { quien: 'dali', ko: '반가워!', es: '¡Qué gusto!' }] };
+  assert.deepEqual(validar({ ...base, ilus: ok }), []);
+  assert.ok(validar({ ...base, ilus: { ...ok, dialogo: [ok.dialogo[0], ok.dialogo[0]] } }).length);
+  assert.ok(validar({ ...base, ilus: { ...ok, dialogo: [ok.dialogo[0]] } }).length);
+  assert.ok(validar({ ...base, ilus: { ko: '안녕', es: 'hola', quien: 'gato' } }).length);
+});

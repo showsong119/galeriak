@@ -33,9 +33,24 @@ export function validar(l, nombre) {
   if (/\[(foto|ilus):/i.test(b)) e.push('sin marcas [foto:] ni [ilus:] en el cuerpo');
   if (l.ilus) {
     const i = l.ilus;
-    if (!i.ko || !/[가-힣]/.test(i.ko) || String(i.ko).length > 14) e.push('ilus.ko: coreano corto (máx. 14)');
-    if (!i.es || String(i.es).length > 34) e.push('ilus.es: español corto (máx. 34)');
-    if (i.rom && String(i.rom).length > 28) e.push('ilus.rom: máx. 28');
+    if (i.dialogo) {
+      // conversación: 2 líneas, una de Bomi y otra de Dali
+      const d = i.dialogo;
+      if (!Array.isArray(d) || d.length !== 2) e.push('ilus.dialogo: exactamente 2 líneas');
+      else {
+        if (new Set(d.map(x => x.quien)).size !== 2 || d.some(x => !['bomi', 'dali'].includes(x.quien))) e.push('ilus.dialogo: una línea de bomi y otra de dali');
+        d.forEach((x, k) => {
+          if (!x.ko || !/[가-힣]/.test(x.ko) || String(x.ko).length > 12) e.push(`ilus.dialogo[${k}].ko: coreano corto (máx. 12)`);
+          if (!x.es || String(x.es).length > 30) e.push(`ilus.dialogo[${k}].es: español corto (máx. 30)`);
+          if (x.rom && String(x.rom).length > 26) e.push(`ilus.dialogo[${k}].rom: máx. 26`);
+        });
+      }
+    } else {
+      if (!i.ko || !/[가-힣]/.test(i.ko) || String(i.ko).length > 14) e.push('ilus.ko: coreano corto (máx. 14)');
+      if (!i.es || String(i.es).length > 34) e.push('ilus.es: español corto (máx. 34)');
+      if (i.rom && String(i.rom).length > 28) e.push('ilus.rom: máx. 28');
+      if (i.quien && !['bomi', 'dali'].includes(i.quien)) e.push('ilus.quien: bomi o dali');
+    }
     if (i.motivo && !MOTIVOS.includes(i.motivo)) e.push('ilus.motivo no válido');
     if (nombre && !existsSync(path.join(ILUS_DIR, nombre.replace(/\.json$/, '') + '.svg'))) e.push('falta la ilustración (python3 scripts/gen-diario-ilus.py)');
   }
