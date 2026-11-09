@@ -26,7 +26,9 @@ with c(orden, revision, ok, archivo) as (values
   (15,'Revisión automática IA (gk_moderacion)', to_regclass('public.gk_moderacion') is not null,                             '2026-11-09-moderacion-ia.sql'),
   (16,'Anónimo + comentarios solo miembros',   to_regprocedure('public.gk_puede_anonimo()') is not null
                                                 and exists (select 1 from pg_policies where tablename = 'comments' and policyname = 'gk_cmt_solo_miembros'),
-                                                                                                                             '2026-11-09-anonimo.sql')
+                                                                                                                             '2026-11-09-anonimo.sql'),
+  (17,'Visitas del examen aparte',           to_regclass('public.gk_visitas_pagina') is not null and to_regprocedure('public.gk_estadisticas_examen()') is not null,
+                                                                                                                             '2026-11-10-visitas-examen.sql')
 )
 select orden as "#", revision as "Revisión", case when ok then '✅ listo' else '❌ falta' end as "Estado",
        case when ok then '' else archivo end as "Ejecutar"

@@ -229,3 +229,8 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 그림 배치(2026-11-09 사용자 요청): 기본은 캐릭터 1마리(`ilus.quien` bomi|dali, 없으면 홀수 레슨 bomi·짝수 dali) + 오른쪽 큰 말풍선(`svg_solo`). 대화형은 `ilus.dialogo=[{quien,ko(≤12),rom(≤26),es(≤30)}×2]`(bomi·dali 각 1줄) → `svg_dialogo`: 첫 화자 왼쪽, 상대는 오른쪽(좌우 반전해 마주 봄), 말풍선 2개 지그재그+이름표. 검사는 `validar()`.
 - 예약 작업 「매일 한국어 콘텐츠」 프롬프트에 ilus·형식 규칙·gen-diario-ilus 단계 추가(2026-11-09).
 
+## 35. 시험 페이지 방문자 별도 집계 (2026-11-10)
+- SQL `supabase/2026-11-10-visitas-examen.sql`(재실행 안전, 로컬 PG16 확인, **사용자 실행 필요**, verificar 17번): 표 `gk_visitas_pagina(dia,pagina 'examen'|'examen-fin',visitante,vistas≤200)` 직접 접근 불가, `gk_registrar_pagina(uuid,text)`(anon 가능), `gk_estadisticas_examen()`(관리자만: hoy/ayer/semana/mes/total 방문자·조회, hoy/semana/total_terminados, total_personas_terminaron, 30일 `dias{visitantes,terminados}`).
+- 시험 페이지: 기존 `gk_registrar_visita`(사이트 전체) 뒤에 `window.gkPagina('examen')`, `finish()`·시간 종료 시 `gkPagina('examen-fin')`.
+- 사이트: `admDash(v,r,ia,ex)` 「📝 무료 시험」 줄, 관리자 탭 `visitas` 아래 시험 섹션(파란 막대), 점검 탭 항목.
+

@@ -613,12 +613,13 @@ document.addEventListener('keydown',e=>{if(e.target.id==='mq'&&e.key==='Enter'){
 document.addEventListener('input',e=>{if(e.target.id!=='mq')return;clearTimeout(window._mqT);window._mqT=setTimeout(()=>{mQ=e.target.value;mShow=50;route().then(()=>{const i=$('#mq');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}})},450)});
 
 /* panel de administración en la portada */
-function admDash(v,r,ia){
+function admDash(v,r,ia,ex){
   if(MYROLE!=='admin')return '';
   const n=x=>Number(x||0).toLocaleString('ko-KR'),st=v&&!v.error&&v.data,rs=r&&!r.error&&r.data;
   const tile=(ico,label,val,href,warn,on)=>'<a class="adt'+(warn&&val>0?' hot':'')+'" href="'+href+'"'+(on?' onclick="'+on+'"':'')+'><b>'+(val==null?'–':n(val))+'</b><span>'+ico+' '+label+'</span></a>';
   return '<div class="card admdash"><h2>🛠️ 관리자 대시보드 <span class="hint" style="font-weight:400">· 관리자에게만 보여요</span></h2>'
    +'<div class="adrow"><div class="adlbl">📊 방문자</div>'+(st?tile('','오늘 방문자',st.hoy_visitantes,'#admin',0,"admTab='visitas'")+tile('','오늘 조회',st.hoy_vistas,'#admin',0,"admTab='visitas'")+tile('','어제 방문자',st.ayer_visitantes,'#admin',0,"admTab='visitas'")+tile('','총 방문자',st.total_visitantes,'#admin',0,"admTab='visitas'"):'<span class="hint">방문자 통계 꺼짐 — <code>2026-11-09-visitas.sql</code> 실행 필요</span>')+'</div>'
+   +(ex&&!ex.error&&ex.data?'<div class="adrow"><div class="adlbl">📝 무료 시험</div>'+tile('','오늘 방문자',ex.data.hoy_visitantes,'#admin',0,"admTab='visitas'")+tile('','어제 방문자',ex.data.ayer_visitantes,'#admin',0,"admTab='visitas'")+tile('','총 방문자',ex.data.total_visitantes,'#admin',0,"admTab='visitas'")+tile('🏁','오늘 시험 완료',ex.data.hoy_terminados,'#admin',0,"admTab='visitas'")+tile('🏁','총 시험 완료',ex.data.total_terminados,'#admin',0,"admTab='visitas'")+'</div>':'')
    +'<div class="adrow"><div class="adlbl">✅ 할 일</div>'+(rs?tile('🔎','검토 대기 글',rs.revisar,'#admin',1,"admTab='review'")+tile('🚩','신고 (7일)',rs.reportes_7d,'#admin',1,"admTab='reports'")+tile('⚠️','방장 경고 대기',rs.avisos_activos,'#admin',1,"admTab='avisos'")+tile('✉️','안 읽은 문의',rs.mensajes,'#mensajes',1)+(ia&&!ia.error?tile('🤖','AI 검수 대기',ia.count,'#admin',1,"admTab='ia'"):''):'<span class="hint">요약 꺼짐 — <code>2026-11-09-miembros.sql</code> 실행 필요</span>')+'</div>'
    +'<div class="adrow"><div class="adlbl">👥 회원</div>'+(rs?tile('','전체 회원',rs.miembros,'#miembros',0,"mFil='all'")+tile('🆕','오늘 가입',rs.nuevos_hoy,'#miembros',0,"mFil='nuevos'")+tile('🆕','7일 가입',rs.nuevos_7d,'#miembros',0,"mFil='nuevos'")+tile('🟡','주의·경고 중',rs.con_advertencia,'#miembros',0,"mFil='adv'")+tile('🔴','정지중',rs.suspendidos,'#miembros',0,"mFil='sus'"):'')+'</div>'
    +'<div class="adbtns"><a class="btn btn-p" href="#admin">🛠️ 관리자 페이지</a><a class="btn" href="#miembros">👥 회원 관리</a><a class="btn" href="#admin" onclick="admTab=\'visitas\'">📊 방문자 통계</a></div></div>';
@@ -632,7 +633,7 @@ async function vHome(){
   if(P&&!window.GK_PRE_USED&&MYROLE!=='admin'&&Date.now()-P.t<6*36e5){window.GK_PRE_USED=1;pre=P;
     setTimeout(()=>{if(!location.hash||location.hash==='#home'){window.GK_SNAP=1;route()}},60)}
   const top=ms=>listQ().gte('created_at',since(ms)).eq('is_pinned',false).neq('gallery_id','asistencia').order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(10);
-  const [day,week,deals,recent,trend,vis,res,ia]=pre?[{data:pre.day},{data:pre.week},{data:pre.deals},{data:pre.recent},pre.trend||[],null,null,null]:await Promise.all([
+  const [day,week,deals,recent,trend,vis,res,ia,exv]=pre?[{data:pre.day},{data:pre.week},{data:pre.deals},{data:pre.recent},pre.trend||[],null,null,null,null]:await Promise.all([
     top(D),top(7*D),
     listQ().eq('gallery_id','ofertas').eq('deal_sold',false).order('created_at',{ascending:false}).limit(5),
     listQ().eq('is_pinned',false).neq('gallery_id','asistencia').order('created_at',{ascending:false}).limit(10),
@@ -640,12 +641,13 @@ async function vHome(){
     MYROLE==='admin'?sb.rpc('gk_estadisticas_visitas').then(r=>r,()=>({error:1})):null,
     MYROLE==='admin'?sb.rpc('gk_admin_resumen').then(r=>r,()=>({error:1})):null,
     MYROLE==='admin'?sb.from('gk_moderacion').select('id',{count:'exact',head:true}).eq('estado','pendiente').neq('nivel','ok').then(r=>r,()=>({error:1})):null,
+    MYROLE==='admin'?sb.rpc('gk_estadisticas_examen').then(r=>r,()=>({error:1})):null,
     PREP
   ]);
   if(recent.error)return fail(recent.error);
   const Dy=day.data||[],Wk=week.data||[],Dl=deals.data||[],R=recent.data||[];
   const bestL=Dy.length?Dy:Wk,bestT=Dy.length?'hoy':'esta semana';
-  return ad('leader')+admDash(vis,res,ia)+welcome()+(isNewbie()?attendNudge():'')+`
+  return ad('leader')+admDash(vis,res,ia,exv)+welcome()+(isNewbie()?attendNudge():'')+`
   <div class="card"><h2 style="color:var(--hot)">🔥 Mejores de ${bestT} <span class="hint" style="font-weight:400">· lo más votado de todas las galerías</span> <a class="more" href="#hoy">Ver todo</a></h2>${bestL.length?`<ul class="list">${bestL.slice(0,5).map((p,i)=>row(p,i+1,true)).join('')}</ul>`+(bestL.length>5?`<ul class="list" id="bestMore" hidden>${bestL.slice(5,10).map((p,i)=>row(p,i+6,true)).join('')}</ul><button class="btn" style="width:100%;margin-top:8px" onclick="const m=document.getElementById('bestMore');m.hidden=!m.hidden;this.textContent=m.hidden?'Ver más · TOP 10 ▾':'Ver menos ▴'">Ver más · TOP 10 ▾</button>`:''):'<div class="empty">Todavía no hay publicaciones con ♥. Dale ♥ a lo que te guste y aparecerá aquí.</div>'}</div>
   <a class="card exambar" href="/examen-coreano/"><div><span class="tag">GRATIS · SIN CUENTA</span><h2>📝 ¿Qué tanto coreano sabes?</h2><p>Examen estilo TOPIK con 30 preguntas de un banco de 180: vocabulario, lectura y audio. Nivel del 1 al 6 con explicación en español.</p><span class="go">Hacer el examen gratis →</span></div><img src="/img/examen.svg" alt="Examen de coreano gratis" width="1200" height="630"></a>
   <div class="card"><h2>📈 Galerías en tendencia <span class="hint" style="font-weight:400">· más activas esta semana</span> <a class="more" href="#galerias">Todas</a></h2>${trendList(trend,8)}</div>
@@ -1367,6 +1369,13 @@ async function vAdmin(){
      +'<div class="mc-stats">'+box('총 방문자(누적)',st.total_visitantes,st.desde?'집계 시작 '+st.desde:'')+box('총 방문(일별 합계)',st.total_visitas)+box('총 페이지 조회',st.total_vistas)+'</div>'
      +'<h3 style="margin:14px 0 6px">최근 30일 방문자</h3><div class="vbars">'+D.map(d=>'<div class="vb" title="'+d.dia+' · 방문자 '+d.visitantes+' · 조회 '+d.vistas+'"><i style="height:'+Math.round(d.visitantes/mx*100)+'%"></i><small>'+(+d.dia.slice(8))+'</small></div>').join('')+'</div>'
      +'<p class="hint" style="margin-top:8px">막대에 마우스를 올리면 날짜별 숫자가 보여요.</p>';
+    const ex=await sb.rpc('gk_estadisticas_examen').then(r=>r,()=>({error:1}));
+    if(ex.error||!ex.data)body+='<h3 style="margin:18px 0 6px">📝 무료 한국어 시험</h3><p class="hint">시험 페이지 별도 통계가 꺼져 있어요 — Supabase SQL Editor에서 <code>supabase/2026-11-10-visitas-examen.sql</code>을 실행해 주세요.</p>';
+    else{const e=ex.data,ED=e.dias||[],emx=Math.max(1,...ED.map(d=>d.visitantes));
+      body+='<h3 style="margin:18px 0 6px">📝 무료 한국어 시험 (/examen-coreano/)</h3><p class="hint">시험 페이지를 연 방문자만 따로 센 숫자예요(위 사이트 전체 숫자에도 포함). 시험 완료 = 끝까지 풀고 결과를 본 횟수.</p>'
+       +'<div class="mc-stats">'+box('오늘 방문자',e.hoy_visitantes,'페이지 조회 '+n(e.hoy_vistas))+box('어제 방문자',e.ayer_visitantes)+box('최근 7일 방문자',e.semana_visitantes)+box('최근 30일 방문자',e.mes_visitantes)+'</div>'
+       +'<div class="mc-stats">'+box('총 방문자(누적)',e.total_visitantes,e.desde?'집계 시작 '+e.desde:'')+box('오늘 시험 완료',e.hoy_terminados)+box('최근 7일 시험 완료',e.semana_terminados)+box('총 시험 완료',e.total_terminados,'완료한 사람 '+n(e.total_personas_terminaron)+'명')+'</div>'
+       +'<div class="vbars">'+ED.map(d=>'<div class="vb" title="'+d.dia+' · 시험 방문자 '+d.visitantes+' · 완료 '+d.terminados+'"><i style="height:'+Math.round(d.visitantes/emx*100)+'%;background:#1c7ed6"></i><small>'+(+d.dia.slice(8))+'</small></div>').join('')+'</div>';}
   }else if(admTab==='salud'){
     const ck=async(name,fn,fix)=>{try{const r=await fn();return {name,ok:r===true,info:typeof r==='string'?r:'',fix}}catch(e){return {name,ok:false,info:String(e&&e.message||e).slice(0,120),fix}}};
     const errOf=r=>{if(r.error)throw new Error(r.error.message);return true};
@@ -1382,6 +1391,7 @@ async function vAdmin(){
       ck('경고 표(gk_advertencias)',async()=>errOf(await sb.from('gk_advertencias').select('id').limit(1)),F3),
       ck('회원 관리(gk_admin_miembros)',async()=>errOf(await sb.rpc('gk_admin_resumen')),'2026-11-09-miembros.sql'),
       ck('방문자 통계(gk_estadisticas_visitas)',async()=>errOf(await sb.rpc('gk_estadisticas_visitas')),'2026-11-09-visitas.sql'),
+      ck('시험 페이지 별도 통계(gk_estadisticas_examen)',async()=>errOf(await sb.rpc('gk_estadisticas_examen')),'2026-11-10-visitas-examen.sql'),
       ck('AI 자동 검수(gk_moderacion)',async()=>errOf(await sb.from('gk_moderacion').select('id').limit(1)),'2026-11-09-moderacion-ia.sql'),
       ck('정적 페이지(/g/, /p/)',async()=>{const r=await fetch('/g/skincare/',{cache:'no-store'});return r.ok||'아직 생성 전(최대 몇 분)'},'GitHub Actions'),
     ]);

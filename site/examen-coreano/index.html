@@ -555,7 +555,7 @@ function startTimer(){
   const up=()=>{const l=left();el.textContent=mmss(l);el.classList.toggle("low",l<5*60000);const p=$("#pauseLeft");if(p)p.textContent=mmss(l);if(l<=0)finish()};
   up();tick=setInterval(up,1000);
 }
-function finish(){clearInterval(tick);st.result=grade(st.ans,QUESTIONS,st.modo);save();go("resultado")}
+function finish(){clearInterval(tick);st.result=grade(st.ans,QUESTIONS,st.modo);save();try{window.gkPagina&&window.gkPagina("examen-fin")}catch(e){}go("resultado")}
 const inProgress=()=>st.ends>0&&!st.result;
 
 /* ---------- Portada ---------- */
@@ -811,7 +811,7 @@ function vResultado(){
 function boot(){
   QUESTIONS=st.qids.map(id=>BYID[id]);
   clearInterval(tick);$("#timer").hidden=true;askSubmit=false;
-  if(inProgress()&&left()<=0){st.result=grade(st.ans,QUESTIONS,st.modo);save();if(STORE&&P!=="resultado"){go("resultado");return}P="resultado"}
+  if(inProgress()&&left()<=0){st.result=grade(st.ans,QUESTIONS,st.modo);save();try{window.gkPagina&&window.gkPagina("examen-fin")}catch(e){}if(STORE&&P!=="resultado"){go("resultado");return}P="resultado"}
   if(ORDER.includes(P)){if(!inProgress()){P="inicio";vInicio()}else vSeccion(P)}
   else if(/^pausa-[VR]$/.test(P)){if(!inProgress())vInicio();else vPausa(P.slice(6))}
   else if(P==="resultado")vResultado();
@@ -820,6 +820,6 @@ function boot(){
 }
 boot();
 </script>
-<script>/* contador de visitas anónimo */(function(){try{var k='gk_vid',v=localStorage.getItem(k);if(!v){v=(crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)}));localStorage.setItem(k,v)}fetch('https://pimuwxsazuzmgwhbrzbx.supabase.co/rest/v1/rpc/gk_registrar_visita',{method:'POST',headers:{'apikey':'sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn','Content-Type':'application/json'},body:JSON.stringify({p_visitante:v}),keepalive:true}).catch(function(){})}catch(e){}})();</script>
+<script>/* contador de visitas anónimo */(function(){try{var k='gk_vid',v=localStorage.getItem(k);if(!v){v=(crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)}));localStorage.setItem(k,v)}fetch('https://pimuwxsazuzmgwhbrzbx.supabase.co/rest/v1/rpc/gk_registrar_visita',{method:'POST',headers:{'apikey':'sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn','Content-Type':'application/json'},body:JSON.stringify({p_visitante:v}),keepalive:true}).catch(function(){});window.gkPagina=function(pg){try{fetch('https://pimuwxsazuzmgwhbrzbx.supabase.co/rest/v1/rpc/gk_registrar_pagina',{method:'POST',headers:{'apikey':'sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn','Content-Type':'application/json'},body:JSON.stringify({p_visitante:v,p_pagina:pg}),keepalive:true}).catch(function(){})}catch(e){}};window.gkPagina('examen')}catch(e){}})();</script>
 </body>
 </html>
