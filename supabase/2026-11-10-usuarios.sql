@@ -9,7 +9,8 @@
 --     Cuentas de Google o anteriores: eligen su usuario en el sitio la próxima vez que entren.
 --  3) Entrar con usuario: gk_correo_para_entrar(usuario, contraseña) devuelve el correo SOLO si la
 --     contraseña es correcta; máximo 5 intentos fallidos cada 15 minutos por usuario.
---  4) Un usuario reservado por una cuenta que nunca confirmó su correo se libera a los 3 días.
+--  4) El usuario no puede ser igual al apodo de otra persona. En cuentas nuevas el apodo = usuario.
+--  5) Un usuario reservado por una cuenta que nunca confirmó su correo se libera a los 3 días.
 
 create table if not exists public.gk_usuarios (
   id uuid primary key references auth.users (id) on delete cascade,
@@ -57,6 +58,8 @@ begin
   if public.gk_usuario_prohibido(u) then return 'reservado'; end if;
   perform public.gk_usuario_liberar(u);
   if exists (select 1 from public.gk_usuarios where lower(usuario) = u) then return 'tomado'; end if;
+  -- tampoco puede ser el apodo de OTRA persona (evita hacerse pasar por alguien)
+  if exists (select 1 from public.profiles where lower(nickname) = u and id is distinct from auth.uid()) then return 'tomado'; end if;
   return 'libre';
 end $$;
 grant execute on function public.gk_usuario_disponible(text) to anon, authenticated;
@@ -74,6 +77,11 @@ begin
     insert into public.gk_usuarios (id, usuario) values (auth.uid(), u);
   exception when unique_violation then return 'tomado';
   end;
+  -- cuentas nuevas (p. ej. Google, menos de 1 día): el apodo pasa a ser el usuario, como en Instagram/TikTok
+  if exists (select 1 from auth.users where id = auth.uid() and created_at > now() - interval '1 day') then
+    update public.profiles set nickname = u
+     where id = auth.uid() and not exists (select 1 from public.profiles o where lower(o.nickname) = u and o.id <> auth.uid());
+  end if;
   return 'ok';
 end $$;
 grant execute on function public.gk_elegir_usuario(text) to authenticated;
