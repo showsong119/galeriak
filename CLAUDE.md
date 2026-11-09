@@ -198,3 +198,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - `.github/workflows/lighthouse.yml`(workflow_dispatch, inputs.urls) — 실제 사이트 모바일 Lighthouse, 결과는 실행 로그/요약. 실행: `gh api -X POST repos/showsong119/galeriak/actions/workflows/lighthouse.yml/dispatches -f ref=main`.
 - 홈: 글꼴 `media=print onload` 비동기, supabase.js는 `</footer>` 뒤 메인 스크립트 바로 앞(+preload), preconnect(gstatic·jsdelivr·supabase), `#main{min-height:100vh}`(CLS), 본문 링크 밑줄. 색: --brand #cc1f68, --hot #c8361a, --ok #16784d, 주황 배지 #c2410c(대비 4.5 이상). 권장사항 점수는 애드센스 제3자 쿠키로 79 고정(수정 불가).
 
+## 30. SEO (2026-11-09)
+- `SEO.md`: 키워드 지도·페이지 규칙(title 검색어 앞·60자, 첫 문단에 답, 질문형 H2, FAQ+FAQPage, 내부 링크 2+, 날짜 정보는 공식 출처 링크)·4주 일정. 새 가이드는 이 규칙대로.
+- 서치 콘솔: URL 접두어 `https://galeriakmx.com/`, HTML meta 2개(NyNr…, te6g…) site/index.html head — 지우지 말 것.
+
