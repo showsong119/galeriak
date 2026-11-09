@@ -201,4 +201,5 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 ## 30. SEO (2026-11-09)
 - `SEO.md`: 키워드 지도·페이지 규칙(title 검색어 앞·60자, 첫 문단에 답, 질문형 H2, FAQ+FAQPage, 내부 링크 2+, 날짜 정보는 공식 출처 링크)·4주 일정. 새 가이드는 이 규칙대로.
 - 서치 콘솔: URL 접두어 `https://galeriakmx.com/`, HTML meta 2개(NyNr…, te6g…) site/index.html head — 지우지 말 것.
+- gen-guias 메타 확장(2026-11-09): `seo`(<title>용, 64자 이내), `faq`([[질문,답],…] → 본문 끝 「Preguntas frecuentes」+FAQPage JSON-LD), `published`/`updated`(YYYY-MM-DD, 사이트맵 lastmod·표시 날짜). 새 가이드: niacinamida, boletos-kpop-mexico (18편). 생성 순서는 22번대로(일러스트 → og → gen-guias → set-adsense).
 

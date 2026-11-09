@@ -43,23 +43,24 @@ li{margin:4px 0}
 .exam-banner img{width:100%;height:auto;border-radius:12px}.exam-banner b{display:block;font-size:22px;line-height:1.25;color:#2f5bd8}.exam-banner span{display:block;font-size:15px;margin:6px 0 10px;color:#33333d}.exam-banner i{display:inline-block;font-style:normal;background:#c2410c;color:#fff;font-weight:800;border-radius:999px;padding:8px 16px}
 @media (max-width:600px){.exam-banner{grid-template-columns:1fr}}
 .cta{display:inline-block;background:var(--brand);color:#fff;text-decoration:none;font-weight:700;border-radius:10px;padding:11px 18px;margin-top:6px}
+.faq details{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0;background:#fff}.faq summary{font-weight:700;cursor:pointer}.faq p{margin:8px 0 0}
 footer{max-width:820px;margin:8px auto 32px;padding:0 16px;font-size:13px;color:var(--muted);text-align:center}footer a{color:var(--muted)}
 """
 
-def head(title, desc, url, extra='', og='/icons/icon-512.png'):
+def head(title, desc, url, extra='', og='/icons/icon-512.png', seo=None):
     return f"""<!DOCTYPE html>
 <html lang="es-MX">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{html.escape(title)} | GaleríaK</title>
+<title>{html.escape(seo or title)} | GaleríaK</title>
 <meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="article"><meta property="og:locale" content="es_MX">
 <meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}">
 <meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}{og}"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/icons/icon-192.png" type="image/png">
-<meta name="theme-color" content="#e5317d">
+<meta name="theme-color" content="#cc1f68">
 <!-- AdSense: pega aquí el script de tu cuenta cuando sea aprobada -->
 {extra}<style>{CSS}</style>
 </head>
@@ -86,6 +87,10 @@ EXAM_BANNER = ('<a class="exam-banner" href="/examen-coreano/"><div><b>Examen de
                '<span>30 preguntas estilo TOPIK, nivel del 1 al 6 y explicación de cada respuesta en español. Sin crear cuenta.</span>'
                '<i>Hacer el examen →</i></div><img src="/img/examen.svg" alt="Examen de coreano gratis" loading="lazy" width="1200" height="630"></a>')
 
+MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
+def fecha_txt(iso):
+    y, m, d = iso.split('-'); return f'{int(d)} de {MESES[int(m)-1]} de {y}'
+
 guides = []
 for f in sorted(SRC.glob('*.html')):
     raw = f.read_text()
@@ -101,22 +106,30 @@ for g in guides:
     parts = body.split('<h2>')
     if len(parts) > 3:
         body = '<h2>'.join(parts[:3]) + '\n<h2>' + '<h2>'.join(parts[3:])
+    upd = g.get('updated', DATE_ISO); pub = g.get('published', DATE_ISO)
+    upd_txt = fecha_txt(upd)
     ld = json.dumps({"@context": "https://schema.org", "@type": "Article", "headline": g['title'], "description": g['desc'],
-                     "inLanguage": "es-MX", "datePublished": DATE_ISO, "dateModified": DATE_ISO, "mainEntityOfPage": url,
+                     "inLanguage": "es-MX", "datePublished": pub, "dateModified": upd, "mainEntityOfPage": url,
                      "author": {"@type": "Organization", "name": "Equipo GaleríaK"}, "publisher": {"@type": "Organization", "name": "GaleríaK"}}, ensure_ascii=False)
+    faq = g.get('faq') or []
+    faq_html = ''
+    if faq:
+        ld += '</script>\n<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}, ensure_ascii=False)
+        faq_html = '<h2>Preguntas frecuentes</h2>\n<div class="faq">' + ''.join(f'<details><summary>{html.escape(q)}</summary><p>{html.escape(a)}</p></details>' for q, a in faq) + '</div>\n'
     others = [o for o in guides if o['slug'] != g['slug']]
     same = [o for o in others if o['cat'] == g['cat']] + [o for o in others if o['cat'] != g['cat']]
     im = img_of(g['slug'])
     hero = f'<figure class="hero"><img src="{im}" alt="{html.escape(g["short"])}" width="1200" height="630"></figure>' if im else ''
-    page = head(g['title'], g['desc'], url, f'<script type="application/ld+json">{ld}</script>\n', og_of(g['slug'])) + f"""<div class="wrap">
+    page = head(g['title'], g['desc'], url, f'<script type="application/ld+json">{ld}</script>\n', og_of(g['slug']), g.get('seo')) + f"""<div class="wrap">
 <article>
 <div class="crumb"><a href="/">Inicio</a> › <a href="/guias/">Guías</a> › {html.escape(g['cat'])}</div>
 <span class="cat">{html.escape(g['cat'])}</span>
 <h1>{html.escape(g['title'])}</h1>
-<p class="meta">Por el equipo de GaleríaK · Actualizado el {DATE_TXT}</p>
+<p class="meta">Por el equipo de GaleríaK · Actualizado el {upd_txt}</p>
 {hero}
 {body}
-{EXAM_BANNER}
+{faq_html}{EXAM_BANNER}
 </article>
 <section class="box more"><h2>Más guías</h2><ul class="list">{''.join(card(o) for o in same[:4])}</ul>
 <p><a class="cta" href="/examen-coreano/">Haz el examen de coreano gratis</a></p></section>
@@ -182,7 +195,8 @@ for slug, (title, desc, body) in PAGES.items():
     (d / 'index.html').write_text(head(title, desc, f'{SITE}/{slug}/') + f'<div class="wrap"><article>\n<div class="crumb"><a href="/">Inicio</a> › {html.escape(title)}</div>\n<h1>{html.escape(title)}</h1>\n<p class="meta">Actualizado el {DATE_TXT}</p>\n{body}\n</article></div>\n' + FOOT)
 
 # sitemap
-urls = ['/', '/examen-coreano/', '/guias/'] + [f'/guias/{g["slug"]}/' for g in guides] + ['/acerca/', '/contacto/', '/privacidad/', '/terminos/']
-sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'  <url><loc>{SITE}{u}</loc><lastmod>{DATE_ISO}</lastmod></url>\n' for u in urls) + '</urlset>\n'
+LAST = max([DATE_ISO] + [g.get('updated', DATE_ISO) for g in guides])
+urls = [('/', LAST), ('/examen-coreano/', LAST), ('/guias/', LAST)] + [(f'/guias/{g["slug"]}/', g.get('updated', DATE_ISO)) for g in guides] + [(u, DATE_ISO) for u in ['/acerca/', '/contacto/', '/privacidad/', '/terminos/']]
+sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'  <url><loc>{SITE}{u}</loc><lastmod>{d}</lastmod></url>\n' for u, d in urls) + '</urlset>\n'
 (ROOT / 'site/sitemap.xml').write_text(sm)
 print(f'{len(guides)} guías generadas')

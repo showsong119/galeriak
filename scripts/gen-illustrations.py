@@ -150,6 +150,8 @@ ART = {
  'apoyar-kpop-oficial': ('kpop', phone(820, 330, 1, K[2]) + heart(1040, 200, 1, K[3]) + heart(600, 420, .8, K[2], .8) + note(1050, 430, .9, K[3]), 'Celular con reproducción y corazones'),
  'particulas-coreanas': ('coreano', tile(600, 230, '은/는', '#fff', CO[2], w=190, fs=60) + tile(840, 230, '이/가', CO[2], '#fff', w=190, fs=60) + tile(720, 440, '을/를', CO[3], '#fff', w=190, fs=60) + tile(980, 440, '에서', '#fff', CO[3], w=170, fs=56), 'Partículas coreanas'),
  'numeros-coreanos': ('coreano', tile(600, 240, '하나', '#fff', CO[2], w=170, fs=56) + tile(800, 240, '둘', CO[2], '#fff', w=170, fs=66) + tile(1000, 240, '셋', '#fff', CO[2], w=170, fs=66) + tile(600, 440, '일', CO[3], '#fff', w=170, fs=66) + tile(800, 440, '이', '#fff', CO[3], w=170, fs=66) + tile(1000, 440, '삼', CO[3], '#fff', w=170, fs=66), 'Números nativos y sino-coreanos'),
+ 'niacinamida': ('beauty', bottle(780, 400, 1.05, '#ffb3cc', B[2], ko='세럼') + drop(980, 260, 1.4, '#ffd0e0') + drop(1040, 420, .9, B[3], .9) + sparkle(600, 200, 1.5, B[2]) + sparkle(1080, 170, 1, B[3], .8), 'Sérum con niacinamida'),
+ 'boletos-kpop-mexico': ('kpop', phone(760, 330, 1, K[2]) + lightstick(1010, 360, .95, K[2], K[3]) + note(600, 230, 1.1, K[3]) + sparkle(1080, 170, 1.3, K[3]), 'Celular con boleto y lightstick genérico'),
  'formal-informal-coreano': ('coreano', speech(520, 150, 420, 140, '안녕하세요', '#fff', CO[2], fs=50) + speech(760, 330, 300, 130, '안녕~', CO[3], '#fff', tail='right') + f'<text x="560" y="520" font-family="{FONT}" font-size="40" font-weight="900" fill="{CO[2]}">존댓말 · 반말</text>', 'Habla formal e informal'),
 }
 
