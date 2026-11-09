@@ -1,0 +1,35 @@
+name: diario
+# "Coreano del día": publica 1 lección por día en la galería Aprender coreano (8:13 a.m. CDMX).
+# La cola está en content/diario/cola/ y la llena la tarea programada de Claude.
+on:
+  schedule:
+    - cron: '13 14 * * *'   # 14:13 UTC = 8:13 CDMX
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: diario
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Publicar lección del día
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://pimuwxsazuzmgwhbrzbx.supabase.co' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/publicar-diario.mjs
+      - name: Guardar registro
+        run: |
+          git config user.name "galeriak-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A content/diario
+          git diff --cached --quiet || git commit -m "bot: coreano del día $(date -u +%F)"
+          git pull --rebase --autostash origin main && git push
