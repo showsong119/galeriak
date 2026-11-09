@@ -1,0 +1,45 @@
+name: lighthouse
+# PageSpeed Insights와 같은 Lighthouse로 실제 사이트(모바일)를 측정한다. 수동 실행 전용.
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: 'Espacio entre URLs'
+        default: 'https://galeriakmx.com/ https://galeriakmx.com/examen-coreano/ https://galeriakmx.com/guias/rutina-skincare-coreana/'
+
+permissions:
+  contents: read
+
+jobs:
+  medir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Lighthouse (móvil)
+        run: |
+          npm i -g lighthouse@12 >/dev/null 2>&1
+          mkdir -p out
+          i=0
+          for u in ${{ inputs.urls }}; do
+            i=$((i+1))
+            lighthouse "$u" --quiet --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=out/r$i.json --only-categories=performance,accessibility,best-practices,seo || true
+          done
+          node -e '
+            const fs=require("fs");
+            for(const f of fs.readdirSync("out").sort()){
+              const r=JSON.parse(fs.readFileSync("out/"+f));
+              const c=r.categories, s=k=>c[k]?Math.round(c[k].score*100):"-";
+              console.log(`\n### ${r.finalDisplayedUrl}\nRendimiento ${s("performance")} · Accesibilidad ${s("accessibility")} · Buenas prácticas ${s("best-practices")} · SEO ${s("seo")}`);
+              const a=r.audits;
+              for(const k of ["first-contentful-paint","largest-contentful-paint","total-blocking-time","cumulative-layout-shift","speed-index"]) console.log(`- ${k}: ${a[k]&&a[k].displayValue}`);
+              const lcp=a["largest-contentful-paint-element"]; if(lcp&&lcp.details) console.log("- LCP element: "+JSON.stringify(lcp.details).slice(0,300));
+              const bad=Object.values(a).filter(x=>x.score!==null&&x.score<0.9&&x.scoreDisplayMode!=="informative"&&x.scoreDisplayMode!=="notApplicable"&&x.scoreDisplayMode!=="manual").sort((x,y)=>x.score-y.score);
+              for(const x of bad){
+                let items="";
+                if(x.details&&x.details.items) items=" :: "+x.details.items.slice(0,4).map(it=>(it.url||it.node&&it.node.snippet||it.source&&it.source.url||it.label||it.groupLabel||"")+(it.wastedMs?" ("+Math.round(it.wastedMs)+"ms)":"")+(it.wastedBytes?" ("+Math.round(it.wastedBytes/1024)+"KB)":"")+(it.totalBytes&&!it.wastedBytes?" ("+Math.round(it.totalBytes/1024)+"KB)":"")).join(" | ").slice(0,500);
+                console.log(`  · [${x.score}] ${x.id}: ${x.displayValue||""}${items}`);
+              }
+            }' | tee -a "$GITHUB_STEP_SUMMARY"
