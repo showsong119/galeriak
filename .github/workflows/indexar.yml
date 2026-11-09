@@ -1,0 +1,43 @@
+name: indexar
+# Avisa a los buscadores de páginas nuevas o actualizadas después de cada despliegue del sitio y una vez al día.
+#  · IndexNow (Bing, Naver, Yandex, Seznam): automático, sin configuración.
+#  · Google (opcional): secreto GSC_SERVICE_ACCOUNT → reenvía el sitemap y revisa cada semana qué páginas están indexadas.
+on:
+  workflow_run:
+    workflows: ['Sitio en GitHub Pages']
+    types: [completed]
+  schedule:
+    - cron: '47 13 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: indexar
+  cancel-in-progress: false
+
+jobs:
+  avisar:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Esperar a que el sitio publicado se actualice
+        if: github.event_name == 'workflow_run'
+        run: sleep 60
+      - name: Avisar a buscadores
+        env:
+          GSC_SERVICE_ACCOUNT: ${{ secrets.GSC_SERVICE_ACCOUNT }}
+        run: node scripts/indexar.mjs
+      - name: Guardar estado
+        run: |
+          git config user.name "galeriak-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A seo
+          git diff --cached --quiet || git commit -m "bot: avisos a buscadores $(date -u +%F)"
+          git pull --rebase --autostash origin main && git push
