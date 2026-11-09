@@ -1,12 +1,18 @@
 name: moderar
 # Revisión automática con IA (OpenAI Moderation, gratis): cada 10 minutos revisa publicaciones y
 # comentarios nuevos, oculta lo grave y manda lo dudoso a la cola 🤖 AI 검수 del panel de administración.
+# EN PAUSA hasta que el sitio tenga 100+ visitantes al día (lo revisa el script en cada corrida y se activa solo).
+# Ejecución manual con "forzar = 1" para revisar aunque esté en pausa.
 # Necesita 2 secretos en GitHub › Settings › Secrets and variables › Actions:
 #   SUPABASE_SERVICE_ROLE_KEY y OPENAI_API_KEY. Sin ellos, termina en verde sin hacer nada.
 on:
   schedule:
     - cron: '*/10 * * * *'
   workflow_dispatch:
+    inputs:
+      forzar:
+        description: '1 = revisar aunque esté en pausa'
+        default: '0'
 
 permissions:
   contents: read
@@ -29,4 +35,5 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://pimuwxsazuzmgwhbrzbx.supabase.co' }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || secrets.OPENAI }}
+          MODERAR_FORZAR: ${{ inputs.forzar || '0' }}
         run: node scripts/moderar.mjs

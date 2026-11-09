@@ -24,7 +24,8 @@ export function readSiteConfig(indexHtml) {
   const url = (indexHtml.match(/const SUPABASE_URL='([^']+)'/) || [])[1];
   const key = (indexHtml.match(/const SUPABASE_KEY='([^']+)'/) || [])[1];
   const adsense = (indexHtml.match(/<script async src="https:\/\/pagead2\.googlesyndication\.com[^>]*><\/script>/) || [''])[0];
-  return { GALS: grab('GALS'), CATS: grab('CATS'), url, key, adsense };
+  const sel = (indexHtml.match(/const SEL='([^']+)'/) || [])[1];
+  return { GALS: grab('GALS'), CATS: grab('CATS'), url, key, adsense, sel };
 }
 
 export function bodyHTML(p, supaUrl) {
@@ -145,12 +146,42 @@ async function fetchData(cfg) {
   return { posts: visible, comments };
 }
 
+// ---------- portada precargada ----------
+// Las mismas consultas que vHome() en el sitio, hechas aquí al desplegar: la portada se dibuja sin esperar a la base de datos
+// y después se actualiza sola en segundo plano.
+export function trendFrom(rows, G) {
+  const m = {};
+  for (const p of rows) { if (!G[p.gallery_id]) continue; const x = m[p.gallery_id] ||= { id: p.gallery_id, posts: 0, score: 0 }; x.posts++; x.score += 3 + (p.comment_count || 0) + (p.up_count || 0); }
+  return Object.values(m).sort((a, b) => b.score - a.score);
+}
+export async function homePre(cfg, now = Date.now()) {
+  const D = 864e5, since = ms => encodeURIComponent(new Date(now - ms).toISOString());
+  const base = `posts?select=${cfg.sel}&is_deleted=eq.false`;
+  const top = ms => rest(cfg, `${base}&created_at=gte.${since(ms)}&is_pinned=eq.false&gallery_id=neq.asistencia&order=up_count.desc,comment_count.desc,created_at.desc&limit=10`);
+  const [day, week, deals, recent, tr] = await Promise.all([
+    top(D), top(7 * D),
+    rest(cfg, `${base}&gallery_id=eq.ofertas&deal_sold=eq.false&order=created_at.desc&limit=5`),
+    rest(cfg, `${base}&is_pinned=eq.false&gallery_id=neq.asistencia&order=created_at.desc&limit=10`),
+    rest(cfg, `posts?select=gallery_id,comment_count,up_count&is_deleted=eq.false&is_hidden=eq.false&gallery_id=neq.asistencia&created_at=gte.${since(7 * D)}&limit=2000`)
+  ]);
+  const G = Object.fromEntries(cfg.GALS.map(g => [g.id, g]));
+  return { t: now, day, week, deals, recent, trend: trendFrom(tr, G) };
+}
+export function injectPre(indexHtml, pre) {
+  const json = JSON.stringify(pre).replace(/</g, '\\u003c');
+  return indexHtml.replace(/window\.GK_PRE=[^;]*;\/\* GK_PRE \*\//, () => `window.GK_PRE=${json};/* GK_PRE */`);
+}
+
 export async function build(outDir, data) {
   const indexHtml = readFileSync(join(outDir, 'index.html'), 'utf8');
   const cfg = readSiteConfig(indexHtml);
   const guide = readFileSync(join(outDir, 'guias/doble-limpieza/index.html'), 'utf8');
   const css = (guide.match(/<style>([\s\S]*?)<\/style>/) || [, ''])[1];
   const ctx = { css, adsense: cfg.adsense, url: cfg.url };
+  if (!data && cfg.sel) {
+    try { writeFileSync(join(outDir, 'index.html'), injectPre(indexHtml, await homePre(cfg))); console.log('✅ Portada precargada'); }
+    catch (e) { console.warn('⚠️ Portada sin precarga (' + e.message + ')'); }
+  }
   if (!data) {
     try { data = await fetchData(cfg); }
     catch (e) { console.warn('⚠️ No se pudieron leer las publicaciones (' + e.message + '). Se generan solo las galerías.'); data = { posts: [], comments: [] }; }

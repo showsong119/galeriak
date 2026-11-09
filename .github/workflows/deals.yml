@@ -1,9 +1,11 @@
 name: deals
 # Bot de ofertas: corre todos los días a las 9:00 (hora CDMX) y cada vez que Claude
 # deja candidatos nuevos en deals/inbox/.
+# EN PAUSA (2026-11-09): el registro en Amazon Afiliados México no es posible por ahora.
+# Se quitó la ejecución diaria; vuelve a activarse descomentando el schedule cuando haya un programa de afiliados.
 on:
-  schedule:
-    - cron: '7 15 * * *'   # 15:07 UTC = 9:07 CDMX
+  # schedule:
+  #   - cron: '7 15 * * *'   # 15:07 UTC = 9:07 CDMX
   push:
     branches: [main]
     paths: ['deals/inbox/**']

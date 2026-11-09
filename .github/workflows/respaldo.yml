@@ -1,0 +1,41 @@
+name: respaldo
+# Respaldo semanal CIFRADO de la base de datos (domingo 09:17 UTC). Se guarda 90 días como artefacto de la ejecución.
+# Necesita los secretos SUPABASE_SERVICE_ROLE_KEY y BACKUP_PASSWORD. Sin BACKUP_PASSWORD no se genera nada.
+# Para abrirlo: descarga el artefacto y ejecuta
+#   openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in respaldo.enc -out respaldo.json.gz   (te pide la contraseña)
+on:
+  schedule:
+    - cron: '17 9 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  respaldar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Descargar tablas
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://pimuwxsazuzmgwhbrzbx.supabase.co' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          BACKUP_PASSWORD: ${{ secrets.BACKUP_PASSWORD }}
+        run: node scripts/respaldo.mjs
+      - name: Cifrar
+        if: hashFiles('respaldo.json.gz') != ''
+        env:
+          BACKUP_PASSWORD: ${{ secrets.BACKUP_PASSWORD }}
+        run: |
+          openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt -in respaldo.json.gz -out respaldo.enc -pass env:BACKUP_PASSWORD
+          rm -f respaldo.json.gz
+      - uses: actions/upload-artifact@v4
+        if: hashFiles('respaldo.enc') != ''
+        with:
+          name: respaldo-${{ github.run_number }}
+          path: respaldo.enc
+          retention-days: 90

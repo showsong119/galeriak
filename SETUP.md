@@ -48,3 +48,18 @@ update public.profiles set role = 'admin' where nickname = 'showsong117';
 5. 서치 콘솔 https://search.google.com/search-console/users?resource_id=https://galeriakmx.com/ → **사용자 추가** → 3번 계정의 이메일(…@…iam.gserviceaccount.com) → 권한 **소유자**
 6. https://github.com/showsong119/galeriak/settings/secrets/actions/new → Name `GSC_SERVICE_ACCOUNT`, Secret에 4번 JSON 파일 내용 전체 붙여넣기
 
+## 8. 밀린 SQL 한 번에 실행 — 2분
+1. https://github.com/showsong119/galeriak/blob/main/supabase/2026-11-09-TODO-en-orden.sql → 「Copy raw file」
+2. https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/sql/new → 붙여넣기 → Run (자동 번역 끄기)
+3. 확인: https://github.com/showsong119/galeriak/blob/main/supabase/verificar.sql 복사 → 새 쿼리 → Run → 15개 모두 ✅
+
+## 9. 주간 암호화 백업 켜기 — 2분
+1. 길고 기억할 수 있는 비밀번호를 하나 정해서 **종이나 비밀번호 관리 앱에 따로 적어 두기**(잃어버리면 백업을 못 엶)
+2. https://github.com/showsong119/galeriak/settings/secrets/actions/new → Name `BACKUP_PASSWORD`, Secret에 그 비밀번호
+3. 매주 일요일 자동 백업. 필요할 때 Claude에게 "백업 복원/열어줘"라고 하면 됨
+
+## 10. 가입 스팸 방지(캡차) 켜기 — 10분 (선택, 방문자가 늘기 전에 권장)
+1. https://dash.cloudflare.com/ → 무료 가입 → Turnstile → Add widget → 도메인 `galeriakmx.com`
+2. 나오는 **Site Key**(공개값)를 Claude에게 전달 → 사이트에 넣음
+3. **Secret Key**는 Supabase https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/auth/protection 의 CAPTCHA(Turnstile)에 붙여넣기 — 2번 반영 후에 켜기
+

@@ -54,3 +54,18 @@ test('utilidades', () => {
   assert.ok(!sm.includes('/p/1/') && sm.includes('/p/2/') && sm.includes('/guias/'));
   assert.ok(!bodyHTML({ author_id: 'otro', body: '[foto:' + UID + '/abcdef12.webp]' }, 'https://x').includes('<img'));
 });
+
+import { injectPre, trendFrom } from './build-static.mjs';
+test('portada precargada: se inserta en el marcador sin romper el HTML', () => {
+  const html = '<script>window.GK_PRE=null;/* GK_PRE */</script><p>x</p>';
+  const out = injectPre(html, { t: 1, recent: [{ title: '</script><b>hola' }] });
+  assert.match(out, /window\.GK_PRE=\{"t":1/);
+  assert.ok(!out.includes('</script><b>'), 'escapa </script>');
+  assert.equal((out.match(/<\/script>/g) || []).length, 1);
+  assert.equal(injectPre(out, { t: 2 }).match(/GK_PRE=\{"t":2\}/).length, 1);
+});
+test('tendencias: mismas reglas que el sitio', () => {
+  const G = { a: {}, b: {} };
+  const t = trendFrom([{ gallery_id: 'a', comment_count: 1, up_count: 0 }, { gallery_id: 'b', comment_count: 5, up_count: 2 }, { gallery_id: 'zz' }], G);
+  assert.deepEqual(t.map(x => [x.id, x.score]), [['b', 10], ['a', 4]]);
+});

@@ -208,3 +208,11 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 구글: Indexing API는 JobPosting/BroadcastEvent 전용이라 쓰지 않음(정책 위반). 선택 Secret `GSC_SERVICE_ACCOUNT`(서비스 계정 JSON, Search Console 속성 `https://galeriakmx.com/`에 소유자로 추가 필요)가 있으면 새 URL 있을 때 하루 1번 사이트맵 재제출 + 7일마다 URL 검사 API로 주요 페이지(고정 페이지+최근 글 20개, 최대 80) 색인 상태를 `seo/google-estado.json`에 기록. 없으면 건너뜀. 테스트 `scripts/indexar.test.mjs`.
 - 예약 작업 「GaleríaK 가이드 자동 작성 (주 2회)」(`trig_01XZ5m3yc8aEndygqrN686p8`, 화·금 13:37 America/Mexico_City): SEO.md 5장 백로그 ⏳ 위에서 2편 작성 → 일러스트·og·gen-guias·set-adsense·npm test → 백로그 ✅ → 푸시. 사용자 사전 승인(2026-11-09).
 
+## 32. 사용자 결정·정비 (2026-11-09 21시)
+- **아마존 보류**: 가입 불가. `.github/workflows/deals.yml` schedule 주석 처리(푸시·수동 실행만). 대체 제휴처가 생기면 재개. 예약 작업 「핫딜 큐레이션」은 태그가 없어 큐레이션을 건너뛰고 SNS 초안·운영실 동기화만 함.
+- **AI 검수 일시중지**: `moderar.mjs`가 매 실행마다 어제(CDMX) `gk_visitas` 방문자 수를 service role로 셈(`content-range`), `MIN_VISITANTES`(100) 미만이거나 표가 없으면 「En pausa」로 종료 → 100 이상이면 자동 재개. 수동 실행 입력 `forzar=1`(`MODERAR_FORZAR`)로 강제. cron은 그대로 */10.
+- **TODO SQL**: `supabase/2026-11-09-TODO-en-orden.sql` = visitas → miembros → apodo-admin → moderacion-ia → memes (원본 수정 시 같은 순서로 다시 cat). 스텁 DB에서 11-08 TODO 다음 실행 → verificar 15/15, 재실행 안전.
+- **홈 프리로드**: `build-static.mjs`의 `homePre()`가 vHome과 같은 쿼리(SEL은 index.html에서 읽음)+트렌드 목록을 만들어 `injectPre()`로 `window.GK_PRE=null;/* GK_PRE */` 마커(supabase.js 바로 앞)에 주입(배포 산출물만, 커밋 안 됨). vHome은 GK_PRE가 6시간 이내·관리자 아님·첫 사용이면 그 데이터로 즉시 그리고 60ms 뒤 GK_SNAP=1로 route() 재호출해 새 데이터로 교체. `trendFrom()` 공통 함수. 테스트 build-static.test 2개.
+- **백업**: `scripts/respaldo.mjs` + `.github/workflows/respaldo.yml`(일 09:17 UTC): posts·comments·votes·reports·galleries·profiles(이메일 없음)·mensajes·gk_* 를 gzip → `openssl enc -aes-256-cbc -pbkdf2 -iter 200000`(BACKUP_PASSWORD) → 아티팩트 90일. 비밀번호 없으면 아무것도 안 만듦(공개 저장소라 평문 업로드 금지).
+- 접근성: GALS 색 중 흰 글자 대비 4.5 미만 14개를 자동으로 어둡게, `.exambar .tag` #c2410c, `.empty a` 밑줄.
+

@@ -74,7 +74,7 @@ nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:now
 .guide img{display:block;width:100%;height:auto;aspect-ratio:1200/630;border-radius:10px;margin-bottom:8px;background:#f4f4f6}
 .gmini{display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);color:var(--ink);font-size:13px;font-weight:600;line-height:1.3}.gmini:last-child{border:0}.gmini img{width:72px;height:38px;object-fit:cover;border-radius:6px;flex:none}
 .exambar{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:center;background:linear-gradient(120deg,#2f5bd8,#5a7bff);color:#fff;border:0}.exambar img{width:100%;height:auto;border-radius:12px;display:block}
-.exambar h2{color:#fff;font-size:22px;margin:0 0 4px}.exambar p{margin:0 0 10px;color:#e8eeff;font-size:14px}.exambar .go{display:inline-block;background:#ffd400;color:#17171c;font-weight:900;border-radius:999px;padding:9px 18px}.exambar .tag{display:inline-block;background:#ff7a00;color:#fff;font-weight:900;border-radius:999px;padding:2px 10px;font-size:12px;margin-bottom:6px}
+.exambar h2{color:#fff;font-size:22px;margin:0 0 4px}.exambar p{margin:0 0 10px;color:#e8eeff;font-size:14px}.exambar .go{display:inline-block;background:#ffd400;color:#17171c;font-weight:900;border-radius:999px;padding:9px 18px}.exambar .tag{display:inline-block;background:#c2410c;color:#fff;font-weight:900;border-radius:999px;padding:2px 10px;font-size:12px;margin-bottom:6px}
 @media(max-width:700px){.exambar{grid-template-columns:1fr}.exambar img{max-height:170px;object-fit:cover}}
 .admdash{border:2px solid #2f5bd8;background:linear-gradient(180deg,#f3f6ff,#fff)}.adrow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin:8px 0}.adlbl{width:72px;font-weight:800;font-size:13px;align-self:center}
 .adt{flex:1;min-width:96px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 10px;text-decoration:none;color:inherit;display:flex;flex-direction:column}.adt b{font-size:20px;font-weight:900}.adt span{font-size:11.5px;color:var(--muted)}.adt.hot{border-color:#e5317d;background:#fff0f6}.adt.hot b{color:#e5317d}.adt:hover{border-color:#2f5bd8}
@@ -170,7 +170,7 @@ form textarea{min-height:160px;resize:vertical}
 .article .note{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:20px}
 .article a{color:var(--blue)}
 .empty{color:var(--muted);text-align:center;padding:24px}
-#main{min-height:100vh}main p a,.hint a{text-decoration:underline}
+#main{min-height:100vh}main p a,.hint a,.empty a{text-decoration:underline}
 footer{max-width:1120px;margin:0 auto;padding:10px 16px 40px;color:var(--muted);font-size:12px;text-align:center}
 footer a{margin:0 6px;text-decoration:underline}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:10px;padding:9px 14px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:50}
@@ -209,6 +209,7 @@ footer a{margin:0 6px;text-decoration:underline}
 </footer>
 <div class="toast" id="toast"></div>
 
+<script>window.GK_PRE=null;/* GK_PRE */</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 /* ================= GaleríaK – versión conectada a Supabase ================= */
@@ -248,30 +249,30 @@ const CATS=[
 ];
 // Orden de las galerías = orden en que se muestran (categoría por categoría; K-Pop de la A a la Z).
 const GALS=[
- {id:'asistencia',cat:'comunidad',name:'Asistencia diaria',desc:'Pasa lista cada día y gana +5 puntos',c:'#1d8a5a',icon:'✅',attend:true},
+ {id:'asistencia',cat:'comunidad',name:'Asistencia diaria',desc:'Pasa lista cada día y gana +5 puntos',c:'#1b8456',icon:'✅',attend:true},
  {id:'libre',cat:'comunidad',name:'Foro libre',desc:'Habla de lo que quieras: K-Beauty, K-Pop, tu día…',c:'#636e72',icon:'💬'},
- {id:'memes',cat:'comunidad',name:'Memes',desc:'Humor del día a día: memes originales o con su fuente',c:'#f39c12',icon:'😂'},
+ {id:'memes',cat:'comunidad',name:'Memes',desc:'Humor del día a día: memes originales o con su fuente',c:'#a0660b',icon:'😂'},
  {id:'solicitudes',cat:'comunidad',name:'Solicitar galería',desc:'Pide nuevas galerías de grupos, actores o marcas',c:'#2f5bd8',icon:'🙋'},
- {id:'skincare',cat:'beauty',name:'Skincare coreano',desc:'Rutinas, ingredientes y dudas de cuidado de la piel',c:'#e5317d'},
- {id:'maquillaje',cat:'beauty',name:'Maquillaje coreano',desc:'Cushions, tints, tonos para piel latina',c:'#d94f9a'},
+ {id:'skincare',cat:'beauty',name:'Skincare coreano',desc:'Rutinas, ingredientes y dudas de cuidado de la piel',c:'#d72e75'},
+ {id:'maquillaje',cat:'beauty',name:'Maquillaje coreano',desc:'Cushions, tints, tonos para piel latina',c:'#be4587'},
  {id:'resenas',cat:'beauty',name:'Reseñas',desc:'Reseñas honestas después de usar el producto',c:'#b83f7a'},
  {id:'idol-picks',cat:'beauty',name:'Productos de idols',desc:'Lo que usan los idols — siempre con fuente',c:'#8e44ad',needSource:true},
- {id:'ofertas',cat:'beauty',name:'Ofertas K-Beauty',desc:'Precios bajos en México, con enlace y tienda',c:'#e5482b',deal:true},
+ {id:'ofertas',cat:'beauty',name:'Ofertas K-Beauty',desc:'Precios bajos en México, con enlace y tienda',c:'#d24227',deal:true},
  {id:'kpop-general',cat:'kpop',name:'K-Pop general',desc:'Comebacks, conciertos en México y charla de todos los grupos',c:'#6c4bd8',icon:'🎤'},
- {id:'aespa',cat:'kpop',name:'aespa',desc:'Galería de fans de aespa',c:'#16a085'},
- {id:'ateez',cat:'kpop',name:'ATEEZ',desc:'Galería de fans de ATEEZ',c:'#d35400'},
- {id:'blackpink',cat:'kpop',name:'BLACKPINK',desc:'Galería de fans de BLACKPINK',c:'#e0457b'},
+ {id:'aespa',cat:'kpop',name:'aespa',desc:'Galería de fans de aespa',c:'#12836d'},
+ {id:'ateez',cat:'kpop',name:'ATEEZ',desc:'Galería de fans de ATEEZ',c:'#c64e00'},
+ {id:'blackpink',cat:'kpop',name:'BLACKPINK',desc:'Galería de fans de BLACKPINK',c:'#c93e6e'},
  {id:'bts',cat:'kpop',name:'BTS',desc:'Galería de fans de BTS',c:'#6c4bd8'},
  {id:'enhypen',cat:'kpop',name:'ENHYPEN',desc:'Galería de fans de ENHYPEN',c:'#34495e'},
- {id:'ive',cat:'kpop',name:'IVE',desc:'Galería de fans de IVE',c:'#e84393'},
+ {id:'ive',cat:'kpop',name:'IVE',desc:'Galería de fans de IVE',c:'#cc3a81'},
  {id:'le-sserafim',cat:'kpop',name:'LE SSERAFIM',desc:'Galería de fans de LE SSERAFIM',c:'#2d3436'},
- {id:'seventeen',cat:'kpop',name:'SEVENTEEN',desc:'Galería de fans de SEVENTEEN',c:'#5c7cfa'},
+ {id:'seventeen',cat:'kpop',name:'SEVENTEEN',desc:'Galería de fans de SEVENTEEN',c:'#506ddb'},
  {id:'stray-kids',cat:'kpop',name:'Stray Kids',desc:'Galería de fans de Stray Kids',c:'#c0392b'},
- {id:'twice',cat:'kpop',name:'TWICE',desc:'Galería de fans de TWICE',c:'#ff7a59'},
- {id:'txt',cat:'kpop',name:'TXT',desc:'Galería de fans de TOMORROW X TOGETHER',c:'#3498db'},
- {id:'kdramas',cat:'kdrama',name:'K-Dramas',desc:'Recomendaciones y comentarios (sin spoilers en el título)',c:'#00a383'},
+ {id:'twice',cat:'kpop',name:'TWICE',desc:'Galería de fans de TWICE',c:'#b75740'},
+ {id:'txt',cat:'kpop',name:'TXT',desc:'Galería de fans de TOMORROW X TOGETHER',c:'#2979af'},
+ {id:'kdramas',cat:'kdrama',name:'K-Dramas',desc:'Recomendaciones y comentarios (sin spoilers en el título)',c:'#008268'},
  {id:'coreano',cat:'vida',name:'Aprender coreano',desc:'Frases útiles, hangul y recursos',c:'#6d4c41'},
- {id:'viajes',cat:'vida',name:'Viaje a Corea',desc:'Compras, tax free y consejos para tu viaje',c:'#0984e3'}
+ {id:'viajes',cat:'vida',name:'Viaje a Corea',desc:'Compras, tax free y consejos para tu viaje',c:'#0876cc'}
 ];
 
 const G=Object.fromEntries(GALS.map(g=>[g.id,g]));
@@ -432,8 +433,11 @@ async function loadTrend(){
   if(Date.now()-TREND.at<5*60e3)return TREND.list;
   const {data,error}=await sb.from('posts').select('gallery_id,comment_count,up_count').eq('is_deleted',false).eq('is_hidden',false).neq('gallery_id','asistencia').gte('created_at',new Date(Date.now()-7*D).toISOString()).limit(2000);
   if(error)return TREND.list;
-  const m={};(data||[]).forEach(p=>{if(!G[p.gallery_id])return;const x=m[p.gallery_id]||(m[p.gallery_id]={id:p.gallery_id,posts:0,score:0});x.posts++;x.score+=3+(p.comment_count||0)+(p.up_count||0)});
-  TREND={at:Date.now(),list:Object.values(m).sort((a,b)=>b.score-a.score)};return TREND.list;
+  TREND={at:Date.now(),list:trendFrom(data)};return TREND.list;
+}
+function trendFrom(rows){
+  const m={};(rows||[]).forEach(p=>{if(!G[p.gallery_id])return;const x=m[p.gallery_id]||(m[p.gallery_id]={id:p.gallery_id,posts:0,score:0});x.posts++;x.score+=3+(p.comment_count||0)+(p.up_count||0)});
+  return Object.values(m).sort((a,b)=>b.score-a.score);
 }
 function trendList(list,n){
   const L=list.slice(0,n);
@@ -610,8 +614,12 @@ function admDash(v,r,ia){
 async function vHome(){
   nav('home');document.title='GaleríaK – Comunidad de K-Beauty y K-Pop en México';
   const since=ms=>new Date(Date.now()-ms).toISOString();
+  // Primera visita: usa la portada precargada al desplegar (sin esperar a la base de datos) y luego la actualiza.
+  const P=window.GK_PRE;let pre=null;
+  if(P&&!window.GK_PRE_USED&&MYROLE!=='admin'&&Date.now()-P.t<6*36e5){window.GK_PRE_USED=1;pre=P;
+    setTimeout(()=>{if(!location.hash||location.hash==='#home'){window.GK_SNAP=1;route()}},60)}
   const top=ms=>listQ().gte('created_at',since(ms)).eq('is_pinned',false).neq('gallery_id','asistencia').order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(10);
-  const [day,week,deals,recent,trend,vis,res,ia]=await Promise.all([
+  const [day,week,deals,recent,trend,vis,res,ia]=pre?[{data:pre.day},{data:pre.week},{data:pre.deals},{data:pre.recent},pre.trend||[],null,null,null]:await Promise.all([
     top(D),top(7*D),
     listQ().eq('gallery_id','ofertas').eq('deal_sold',false).order('created_at',{ascending:false}).limit(5),
     listQ().eq('is_pinned',false).neq('gallery_id','asistencia').order('created_at',{ascending:false}).limit(10),

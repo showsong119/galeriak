@@ -11,6 +11,11 @@
 //
 // Variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, OPENAI_API_KEY
 // Opcionales: LOOKBACK_H (48), MAX_ITEMS (150), DRY_RUN=1 (no escribe en la base de datos)
+//
+// PAUSA (decisión del dueño, 2026-11-09): la revisión solo se activa cuando el sitio tiene tráfico real.
+// Cada corrida mira cuántos visitantes hubo AYER (gk_visitas, hora CDMX). Si son menos de MIN_VISITANTES (100)
+// o la tabla de visitas no existe, no se revisa nada. Cuando se llega a 100, vuelve a funcionar sola.
+// MODERAR_FORZAR=1 (ejecución manual) se salta la pausa.
 
 import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -98,6 +103,23 @@ async function moderar(input) {
   return json.results?.[0];
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+export const MIN_VISITANTES = Number(env.MIN_VISITANTES || 100);
+
+// Fecha de ayer en la Ciudad de México (YYYY-MM-DD)
+export function ayerCDMX(now = new Date()) {
+  const f = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Mexico_City', year: 'numeric', month: '2-digit', day: '2-digit' });
+  return f.format(new Date(now.getTime() - 864e5));
+}
+export const activa = visitantes => visitantes != null && visitantes >= MIN_VISITANTES;
+
+async function visitantesAyer() {
+  const res = await fetch(`${env.SUPABASE_URL}/rest/v1/gk_visitas?select=visitante&dia=eq.${ayerCDMX()}`, {
+    headers: { ...sbHeaders(env.SUPABASE_SERVICE_ROLE_KEY), prefer: 'count=exact', range: '0-0' }
+  });
+  if (!res.ok) return null;
+  const m = (res.headers.get('content-range') || '').match(/\/(\d+)$/);
+  return m ? Number(m[1]) : null;
+}
 
 async function moderarConReintento(entrada) {
   for (let i = 0; i < 3; i++) {
@@ -125,6 +147,12 @@ export async function main() {
     // Sin llaves no es un error: salimos en verde para no mandar correos cada 10 minutos.
     console.log(`::warning::Revisión IA apagada: faltan los secretos ${missing.join(', ')} (GitHub › Settings › Secrets › Actions)`);
     return summary([`## Revisión IA`, `Apagada: faltan ${missing.join(', ')}`]);
+  }
+  if (env.MODERAR_FORZAR !== '1') {
+    const v = await visitantesAyer().catch(() => null);
+    if (!activa(v)) {
+      return summary(['## Revisión IA', `En pausa: ${v == null ? 'todavía no hay estadísticas de visitas' : `ayer hubo ${v} visitantes`}; se activa sola desde ${MIN_VISITANTES} visitantes al día.`]);
+    }
   }
   const since = new Date(Date.now() - LOOKBACK_H * 3600e3).toISOString();
 

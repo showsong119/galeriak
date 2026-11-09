@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { decidir, fotosDe, sinFotos, armarEntrada, puntajesAltos, extracto, main } from './moderar.mjs';
+import { decidir, fotosDe, sinFotos, armarEntrada, puntajesAltos, extracto, main, ayerCDMX, activa } from './moderar.mjs';
 
 const U = '0f8fad5b-d9cb-469f-a165-70867728950e';
 const res = (cats = {}, scores = {}, flagged = Object.values(cats).some(Boolean)) => ({ flagged, categories: cats, category_scores: scores });
@@ -56,4 +56,10 @@ test('sin llaves: termina sin error', async () => {
   process.env.SUPABASE_URL = 'https://x';
   const log = console.log; console.log = () => {};
   try { await main(); assert.notEqual(process.exitCode, 1); } finally { console.log = log; process.env = keep; }
+});
+
+test('pausa: solo se activa con 100+ visitantes ayer (hora CDMX)', () => {
+  assert.equal(activa(null), false); assert.equal(activa(99), false); assert.equal(activa(100), true);
+  assert.equal(ayerCDMX(new Date('2026-11-10T05:00:00Z')), '2026-11-08'); // 23:00 del 9 en CDMX → ayer = 8
+  assert.equal(ayerCDMX(new Date('2026-11-10T07:00:00Z')), '2026-11-09'); // 01:00 del 10 en CDMX → ayer = 9
 });
