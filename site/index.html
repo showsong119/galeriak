@@ -1479,7 +1479,7 @@ function validate(text){
 }
 const okUrl=u=>/^https:\/\/[^\s]+\.[^\s]+/.test(u);
 const safeUrl=u=>/^https:\/\//.test(String(u||''))?u:'';
-function errMsg(e){const m=(e&&e.message)||'';if(/Invalid login/i.test(m))return 'Correo o contraseña incorrectos.';if(/Email not confirmed/i.test(m))return 'Confirma tu correo: te enviamos un enlace.';if(/already registered/i.test(m))return 'Ese correo ya tiene cuenta. Entra con él.';if(/duplicate key.*nickname/i.test(m))return 'Ese apodo ya está en uso.';if(/rate limit/i.test(m))return 'Demasiados intentos. Espera un momento.';if(/row-level security/i.test(m))return 'Tu cuenta no puede realizar esta acción en este momento.';if(/_https/.test(m))return 'Los enlaces deben empezar con https://';return m||'Ocurrió un error.'}
+function errMsg(e){const m=(e&&e.message)||'';if(/Invalid login/i.test(m))return 'Correo o contraseña incorrectos.';if(/Email not confirmed/i.test(m))return 'Confirma tu correo: te enviamos un enlace.';if(/already registered/i.test(m))return 'Ese correo ya tiene cuenta. Entra con él.';if(/duplicate key.*nickname/i.test(m))return 'Ese apodo ya está en uso.';if(/sending confirmation|sending.*email|smtp/i.test(m))return 'No pudimos enviar el correo de confirmación en este momento. Intenta de nuevo en unos minutos o entra con Google.';if(/rate limit/i.test(m))return 'Demasiados intentos. Espera un momento.';if(/row-level security/i.test(m))return 'Tu cuenta no puede realizar esta acción en este momento.';if(/_https/.test(m))return 'Los enlaces deben empezar con https://';return m||'Ocurrió un error.'}
 
 /* ---------------- router ---------------- */
 let routeSeq=0,PREP=Promise.resolve();
