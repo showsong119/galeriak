@@ -70,6 +70,7 @@ nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:now
 .exambar{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:center;background:linear-gradient(120deg,#2f5bd8,#5a7bff);color:#fff;border:0}.exambar img{width:100%;height:auto;border-radius:12px;display:block}
 .exambar h2{color:#fff;font-size:22px;margin:0 0 4px}.exambar p{margin:0 0 10px;color:#e8eeff;font-size:14px}.exambar .go{display:inline-block;background:#ffd400;color:#17171c;font-weight:900;border-radius:999px;padding:9px 18px}.exambar .tag{display:inline-block;background:#ff7a00;color:#fff;font-weight:900;border-radius:999px;padding:2px 10px;font-size:12px;margin-bottom:6px}
 @media(max-width:700px){.exambar{grid-template-columns:1fr}.exambar img{max-height:170px;object-fit:cover}}
+.admvis{display:flex;align-items:center;gap:22px;flex-wrap:wrap;border:2px dashed #2f5bd8;background:#f3f6ff;color:inherit;text-decoration:none}.admvis b{font-size:15px}.admvis b small{display:block;font-size:11px;color:var(--muted);font-weight:600}.admvis span{display:flex;flex-direction:column;font-size:12px;color:var(--muted)}.admvis em{font-style:normal;font-size:22px;font-weight:900;color:#17171c}.admvis i{margin-left:auto;font-style:normal;font-size:13px;color:#2f5bd8;font-weight:700}
 .vbars{display:flex;align-items:flex-end;gap:3px;height:150px;border-bottom:1px solid var(--line);padding-top:6px}.vb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}.vb i{display:block;width:100%;min-height:2px;background:var(--brand);border-radius:4px 4px 0 0}.vb small{font-size:9px;color:var(--muted);margin-top:2px}
 .lv-lid{background:linear-gradient(90deg,#8e44ad,#e5317d);display:inline-flex;align-items:center;gap:3px;margin-left:3px}.lv-lid svg{width:12px;height:12px;flex:none}
 .row .t a.adv,.post h1.adv{color:#9a9aa6}.p-adv{background:#fff1d6;color:#a86400}.advbox{background:#fff6e5;border:1px solid #f5d39a;border-radius:12px;padding:10px 12px;margin:10px 0;font-size:14px}.lidbox{border-top:1px solid var(--line);margin-top:12px;background:#f7f0fb;border-radius:10px;padding:10px 12px}
@@ -441,20 +442,30 @@ const catCard=cid=>{const c=CATS.find(x=>x.id===cid),n=GALS.filter(g=>g.cat===ci
 const hotCard=()=>`<a class="gal gal-hot" href="#hoy"><span class="av flame">${FLAME}</span><div><b>Mejores de hoy</b><small>Lo más votado de todas las galerías</small></div></a>`;
 const welcome=()=>ME?'':`<div class="card" style="background:var(--brand-soft);border-color:#f6c3d8"><b>¡Bienvenida, bienvenido a GaleríaK!</b> La comunidad en español de K-Beauty y K-Pop. <a href="#entrar" style="color:var(--brand);font-weight:700">Crea tu cuenta</a> para publicar, comentar y votar.</div>`;
 
+/* solo administradores: visitantes en la portada */
+function admVisitBar(v){
+  if(MYROLE!=='admin'||!v)return '';
+  const go=`onclick="admTab='visitas';location.hash='#admin';return false" href="#admin"`;
+  if(v.error||!v.data)return `<div class="card admvis"><b>📊 방문자 (관리자만 보임)</b><span class="hint">통계가 아직 꺼져 있어요 — <code>2026-11-09-visitas.sql</code> 실행 필요</span></div>`;
+  const st=v.data,n=x=>Number(x||0).toLocaleString('ko-KR');
+  return `<a class="card admvis" ${go}><b>📊 방문자 <small>관리자만 보임</small></b>
+   <span><em>${n(st.hoy_visitantes)}</em>오늘 방문자</span><span><em>${n(st.hoy_vistas)}</em>오늘 조회</span><span><em>${n(st.ayer_visitantes)}</em>어제</span><span><em>${n(st.total_visitantes)}</em>총 방문자</span><i>자세히 →</i></a>`;
+}
 async function vHome(){
   nav('home');document.title='GaleríaK – Comunidad de K-Beauty y K-Pop en México';
   const since=ms=>new Date(Date.now()-ms).toISOString();
   const top=ms=>listQ().gte('created_at',since(ms)).eq('is_pinned',false).neq('gallery_id','asistencia').order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(10);
-  const [day,week,deals,recent,trend]=await Promise.all([
+  const [day,week,deals,recent,trend,vis]=await Promise.all([
     top(D),top(7*D),
     listQ().eq('gallery_id','ofertas').eq('deal_sold',false).order('created_at',{ascending:false}).limit(5),
     listQ().eq('is_pinned',false).neq('gallery_id','asistencia').order('created_at',{ascending:false}).limit(10),
-    loadTrend()
+    loadTrend(),
+    MYROLE==='admin'?sb.rpc('gk_estadisticas_visitas').then(r=>r,()=>({error:1})):null
   ]);
   if(recent.error)return fail(recent.error);
   const Dy=day.data||[],Wk=week.data||[],Dl=deals.data||[],R=recent.data||[];
   const bestL=Dy.length?Dy:Wk,bestT=Dy.length?'hoy':'esta semana';
-  return ad('leader')+welcome()+(isNewbie()?attendNudge():'')+`
+  return ad('leader')+admVisitBar(vis)+welcome()+(isNewbie()?attendNudge():'')+`
   <div class="card"><h2 style="color:var(--hot)">🔥 Mejores de ${bestT} <span class="hint" style="font-weight:400">· lo más votado de todas las galerías</span> <a class="more" href="#hoy">Ver todo</a></h2>${bestL.length?`<ul class="list">${bestL.slice(0,5).map((p,i)=>row(p,i+1,true)).join('')}</ul>`+(bestL.length>5?`<ul class="list" id="bestMore" hidden>${bestL.slice(5,10).map((p,i)=>row(p,i+6,true)).join('')}</ul><button class="btn" style="width:100%;margin-top:8px" onclick="const m=document.getElementById('bestMore');m.hidden=!m.hidden;this.textContent=m.hidden?'Ver más · TOP 10 ▾':'Ver menos ▴'">Ver más · TOP 10 ▾</button>`:''):'<div class="empty">Todavía no hay publicaciones con ♥. Dale ♥ a lo que te guste y aparecerá aquí.</div>'}</div>
   <a class="card exambar" href="/examen-coreano/"><div><span class="tag">GRATIS · SIN CUENTA</span><h2>📝 ¿Qué tanto coreano sabes?</h2><p>Examen estilo TOPIK con 30 preguntas de un banco de 180: vocabulario, lectura y audio. Nivel del 1 al 6 con explicación en español.</p><span class="go">Hacer el examen gratis →</span></div><img src="/img/examen.svg" alt="Examen de coreano gratis" width="1200" height="630"></a>
   <div class="card"><h2>📈 Galerías en tendencia <span class="hint" style="font-weight:400">· más activas esta semana</span> <a class="more" href="#galerias">Todas</a></h2>${trendList(trend,8)}</div>

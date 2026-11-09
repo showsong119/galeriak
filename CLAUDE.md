@@ -167,5 +167,5 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 ## 24. 방문자 통계·조회수 (2026-11-09)
 - SQL: `supabase/2026-11-09-visitas.sql` (추가 전용, 재실행 안전, 로컬 PG16 테스트 통과). **사용자 실행 필요.** 표 `gk_visitas(dia,visitante,vistas,primera)` 직접 접근 불가, `gk_registrar_visita(uuid)`(anon 가능, 하루·방문자당 1행, 조회 최대 500), `gk_estadisticas_visitas()`(관리자만: 오늘/어제/7일/30일/누적 방문자·조회, 최근 30일 `dias`). 날짜는 America/Mexico_City.
 - 방문자 ID = 브라우저 localStorage `gk_vid` 무작위 UUID(개인정보 아님, 개인정보처리방침에 고지). SPA는 `countVisit()`(route마다, 4초 간격 제한), 정적 페이지(가이드·acerca·contacto·/g/·/p/·시험·약관·개인정보)는 인라인 스크립트(gen-guias `VISIT_JS`, build-static `VISIT_JS`).
-- 관리자 탭 `visitas`(📊 방문자), 점검 탭·verificar.sql 13번.
+- 관리자 탭 `visitas`(📊 방문자), 점검 탭·verificar.sql 13번. 홈 맨 위 `admVisitBar()`(MYROLE=admin일 때만, 오늘·어제·총 방문자).
 - 조회수: 목록 `row()`와 글 화면, 정적 /p/·/g/에 👁 표시(모두에게 보임). `SEL`에 views 포함.
