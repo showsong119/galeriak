@@ -100,6 +100,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 아이돌 사진을 홍보물에 쓰지 않는다(저작권·초상권). 공식 사이트처럼 보이게 하지 않는다("comunidad no oficial").
 - 봇·홍보 문구는 멕시코 스페인어. 제휴 링크에는 고지 문구 포함.
 - 테스트: `npm test` / 드라이런: `npm run deals:dry`
+- **사용자 요청(2026-11-09): Supabase 작업을 안내할 때는 항상 바로 가기 링크를 함께 준다.** SQL Editor 새 쿼리 https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/sql/new · 테이블 https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/editor · API 키 https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/settings/api-keys · 인증 URL https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/auth/url-configuration · 스토리지 https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/storage/buckets. GitHub SQL 파일은 blob 링크(「Copy raw file」 버튼)도 함께.
 
 ## 12. 무료 한국어 시험 페이지 (/examen-coreano/)
 - `site/examen-coreano/index.html` 단일 파일. 30문항 CBT(어휘·문법 12 → 읽기 10 → 듣기 8), 30분, 영역마다 페이지 이동(`?p=V|pausa-V|R|pausa-R|L|resultado`), 상태는 localStorage `gk-examen-v1` (저장 불가 시 한 페이지 모드).
