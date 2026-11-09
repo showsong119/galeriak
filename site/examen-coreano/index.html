@@ -15,7 +15,10 @@
 <meta name="theme-color" content="#24357a">
 <link rel="icon" href="/icons/icon-192.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;700&family=Figtree:wght@400;500;600;700;800&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="/img/examen.svg" fetchpriority="high">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;700&family=Figtree:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;700&family=Figtree:wght@400;500;600;700;800&display=swap"></noscript>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"¿La prueba de nivel de coreano es gratis?","acceptedAnswer":{"@type":"Answer","text":"Sí. Es gratis y no necesitas crear una cuenta. Son 30 preguntas en 30 minutos y al final ves tu nivel estimado con explicaciones en español."}},
@@ -29,7 +32,7 @@
 :root{
   --paper:#f6f7fb; --sheet:#ffffff; --ink:#1b2440; --muted:#5d6584; --line:#dfe3ef;
   --omr:#d23a5b; --omr-soft:#fbe9ee; --navy:#24357a; --navy-soft:#e8ecfa;
-  --ok:#1f8a5b; --ok-soft:#e3f4ec; --bad:#c2410c; --bad-soft:#fdeee5; --brand:#e5317d;
+  --ok:#1f8a5b; --ok-soft:#e3f4ec; --bad:#c2410c; --bad-soft:#fdeee5; --brand:#cc1f68;
   --ko:"Hahmlet","Noto Serif KR","Apple SD Gothic Neo",serif;
   --ui:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
@@ -563,7 +566,7 @@ function vInicio(){
   page.innerHTML=`
   <div class="intro">
     <section class="sheet main">
-      <div class="eyebrow"><span style="background:#ff7a00;color:#fff;border-radius:999px;padding:2px 10px;margin-right:6px;font-weight:900;letter-spacing:.04em">GRATIS</span>Examen de coreano · estilo TOPIK · 180 preguntas</div>
+      <div class="eyebrow"><span style="background:#c2410c;color:#fff;border-radius:999px;padding:2px 10px;margin-right:6px;font-weight:900;letter-spacing:.04em">GRATIS</span>Examen de coreano · estilo TOPIK · 180 preguntas</div>
       <img src="/img/examen.svg" alt="Examen de coreano gratis" width="1200" height="630" style="display:block;width:100%;max-width:520px;height:auto;border-radius:14px;margin:10px 0 6px">
       <h1>¿Qué tanto coreano sabes? <span class="ko">한국어 실력 진단</span></h1>
       <p>Una prueba de nivel en computadora o celular, con el formato de los exámenes oficiales: hoja de respuestas, tiempo límite y tres secciones. Al terminar ves tu nivel estimado del 1 al 6, tus puntos fuertes y la explicación de cada pregunta en español.</p>

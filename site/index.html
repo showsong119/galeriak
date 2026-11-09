@@ -14,10 +14,14 @@
 <title>GaleríaK – Comunidad de K-Beauty, K-Pop y ofertas en México</title>
 <meta name="description" content="Comunidad en español para fans de la cosmética coreana, K-Pop y K-Dramas en México: galerías por tema e idol, ofertas de K-Beauty, rankings de Corea y guías para comprar productos originales.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://pimuwxsazuzmgwhbrzbx.supabase.co" crossorigin>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
 <style>
-:root{--bg:#f4f4f6;--card:#fff;--ink:#17171c;--muted:#6b6b76;--line:#e6e6ec;--brand:#e5317d;--brand-soft:#fde8f1;--blue:#2f5bd8;--hot:#e5482b;--ok:#1d8a5a}
+:root{--bg:#f4f4f6;--card:#fff;--ink:#17171c;--muted:#6b6b76;--line:#e6e6ec;--brand:#cc1f68;--brand-soft:#fde8f1;--blue:#2f5bd8;--hot:#c8361a;--ok:#16784d}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
@@ -166,6 +170,7 @@ form textarea{min-height:160px;resize:vertical}
 .article .note{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:20px}
 .article a{color:var(--blue)}
 .empty{color:var(--muted);text-align:center;padding:24px}
+#main{min-height:100vh}main p a,.hint a{text-decoration:underline}
 footer{max-width:1120px;margin:0 auto;padding:10px 16px 40px;color:var(--muted);font-size:12px;text-align:center}
 footer a{margin:0 6px;text-decoration:underline}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:10px;padding:9px 14px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:50}
@@ -204,6 +209,7 @@ footer a{margin:0 6px;text-decoration:underline}
 </footer>
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 /* ================= GaleríaK – versión conectada a Supabase ================= */
 const SUPABASE_URL='https://pimuwxsazuzmgwhbrzbx.supabase.co';
