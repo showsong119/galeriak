@@ -32,3 +32,10 @@ https://afiliados.amazon.com.mx 에서 가입 (사이트 주소: `https://galeri
 ```sql
 update public.profiles set role = 'admin' where nickname = 'showsong117';
 ```
+
+## 6. AI 자동 검수 켜기 (무료) — 10분
+1. Supabase → SQL Editor → `supabase/2026-11-09-moderacion-ia.sql` 붙여넣기 → Run (브라우저 자동 번역 끄기)
+2. https://platform.openai.com/api-keys → **Create new secret key** → 복사 (Moderation은 무료)
+3. https://github.com/showsong119/galeriak/settings/secrets/actions/new → Name `OPENAI_API_KEY`, Secret에 붙여넣기 → Add secret (4번 `SUPABASE_SERVICE_ROLE_KEY`도 있어야 작동)
+4. 사이트 관리자 › 🩺 점검에서 'AI 자동 검수' ✅ → 10분 안에 관리자 › 🤖 AI 검수 탭에 결과가 쌓이기 시작
+

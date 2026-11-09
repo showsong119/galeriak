@@ -1,0 +1,32 @@
+name: moderar
+# Revisión automática con IA (OpenAI Moderation, gratis): cada 10 minutos revisa publicaciones y
+# comentarios nuevos, oculta lo grave y manda lo dudoso a la cola 🤖 AI 검수 del panel de administración.
+# Necesita 2 secretos en GitHub › Settings › Secrets and variables › Actions:
+#   SUPABASE_SERVICE_ROLE_KEY y OPENAI_API_KEY. Sin ellos, termina en verde sin hacer nada.
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: moderar
+  cancel-in-progress: false
+
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Revisar contenido nuevo
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://pimuwxsazuzmgwhbrzbx.supabase.co' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node scripts/moderar.mjs
