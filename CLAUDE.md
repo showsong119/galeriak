@@ -100,6 +100,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 아이돌 사진을 홍보물에 쓰지 않는다(저작권·초상권). 공식 사이트처럼 보이게 하지 않는다("comunidad no oficial").
 - 봇·홍보 문구는 멕시코 스페인어. 제휴 링크에는 고지 문구 포함.
 - 테스트: `npm test` / 드라이런: `npm run deals:dry`. **site/index.html 수정 후 반드시 `npm test`** — `scripts/sitio.test.mjs`가 인라인 스크립트 문법을 검사(2026-11-09 쉼표 하나로 사이트 전체가 멈춘 사고 재발 방지).
+- **사용자 요청(2026-11-10): 복붙 안내는 고정 형식** — 단계마다 `① 복사할 내용(코드 상자, 짧으면 채팅에 직접)` → 바로 다음 줄 `👉 붙일 곳: <바로 가기 링크>` → `무엇을 누름(Save/Run)`. 붙일 내용과 붙일 곳을 떨어뜨리지 말 것.
 - **사용자 요청(2026-11-09): Supabase 작업을 안내할 때는 항상 바로 가기 링크를 함께 준다.** SQL Editor 새 쿼리 https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/sql/new · 테이블 https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/editor · API 키 https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/settings/api-keys · 인증 URL https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/auth/url-configuration · 스토리지 https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/storage/buckets. GitHub SQL 파일은 blob 링크(「Copy raw file」 버튼)도 함께.
 
 ## 12. 무료 한국어 시험 페이지 (/examen-coreano/)
