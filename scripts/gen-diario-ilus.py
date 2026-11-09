@@ -3,7 +3,7 @@
 Lee content/diario/{cola,publicadas}/*.json con el campo opcional
   "ilus": {"ko": "대박!", "rom": "daebak", "es": "¡Increíble!", "motivo": "kdrama"}
 y genera site/img/diario/<nombre-del-archivo>.svg (1200x630).
-La mascota Tteoki (un tteok redondito) es un personaje original de GaleríaK:
+La mascota Bomi (cachorro de tigre con bufanda de colores) es un personaje original de GaleríaK:
 no se usan fotos, idols ni personajes de terceros.
 Uso: python3 scripts/gen-diario-ilus.py
 """
@@ -27,23 +27,42 @@ PAL = {
 INK = '#3b2f3f'
 
 
-def tteoki(x, y, s=1.0, mood='feliz'):
-    """Mascota: tteok blanco con mejillas rosas y un brote en la cabeza."""
-    mouth = ('<path d="M-22 22q11 14 22 0q11 14 22 0" fill="none" stroke="#3b2f3f" stroke-width="6" stroke-linecap="round"/>'
+def bomi(x, y, s=1.0, mood='feliz'):
+    """Mascota Bomi: cachorro de tigre redondito (guiño al tigre de la pintura popular coreana)
+    con bufanda de franjas de colores (saekdong coreano, que en México recuerda al sarape)."""
+    O, OD, W = '#ffa94d', '#f08c00', '#fff8ec'
+    mouth = ('<path d="M-16 34q8 10 16 0q8 10 16 0" fill="none" stroke="#3b2f3f" stroke-width="5" stroke-linecap="round"/>'
              if mood == 'feliz' else
-             '<ellipse cx="0" cy="26" rx="16" ry="14" fill="#3b2f3f"/><ellipse cx="0" cy="32" rx="9" ry="6" fill="#ff8fab"/>')
+             '<ellipse cx="0" cy="38" rx="13" ry="12" fill="#3b2f3f"/><ellipse cx="0" cy="43" rx="8" ry="5" fill="#ff8fab"/>')
+    # orden del saekdong (no arcoíris): rosa, amarillo, azul, rojo, verde, blanco
+    stripes = ['#f06595', '#fcc419', '#339af0', '#e03131', '#40c057', '#fff']
+    band = ''.join(f'<rect x="{-160 + i * 28}" y="-40" width="28" height="140" fill="{stripes[i % 6]}"/>' for i in range(12))
+    end = ''.join(f'<rect x="-22" y="{i * 16}" width="44" height="16" fill="{stripes[i % 6]}"/>' for i in range(6))
+    fringe = ''.join(f'<path d="M{-18 + i * 9} 96v14" stroke="{INK}" stroke-width="4" stroke-linecap="round"/>' for i in range(5))
     return f'''<g transform="translate({x} {y}) scale({s})">
-<ellipse cx="0" cy="150" rx="150" ry="22" fill="#000" opacity=".08"/>
-<path d="M-48-130q-30-40 6-62q22 22-6 62z" fill="#69db7c" stroke="{INK}" stroke-width="6" stroke-linejoin="round"/>
-<path d="M-40-132q10-48 52-44q-6 38-52 44z" fill="#8ce99a" stroke="{INK}" stroke-width="6" stroke-linejoin="round"/>
-<path d="M-158 40c0-110 70-172 158-172s158 62 158 172c0 70-62 104-158 104s-158-34-158-104z" fill="#fffaf2" stroke="{INK}" stroke-width="7"/>
-<path d="M-120 70c40 30 200 30 240 0" fill="none" stroke="#f3e3d3" stroke-width="10" stroke-linecap="round"/>
-<ellipse cx="-58" cy="-6" rx="17" ry="22" fill="{INK}"/><ellipse cx="58" cy="-6" rx="17" ry="22" fill="{INK}"/>
-<circle cx="-52" cy="-14" r="6" fill="#fff"/><circle cx="64" cy="-14" r="6" fill="#fff"/>
-<ellipse cx="-100" cy="30" rx="26" ry="15" fill="#ffa8c5" opacity=".85"/><ellipse cx="100" cy="30" rx="26" ry="15" fill="#ffa8c5" opacity=".85"/>
-<g transform="translate(0 0)">{mouth}</g>
-<ellipse cx="-160" cy="40" rx="26" ry="20" fill="#fffaf2" stroke="{INK}" stroke-width="6" transform="rotate(-30 -160 40)"/>
-<ellipse cx="164" cy="-10" rx="26" ry="20" fill="#fffaf2" stroke="{INK}" stroke-width="6" transform="rotate(-60 164 -10)"/>
+<ellipse cx="0" cy="168" rx="150" ry="20" fill="#000" opacity=".08"/>
+<path d="M118 120c70 0 86-60 54-84" fill="none" stroke="{INK}" stroke-width="30" stroke-linecap="round"/>
+<path d="M118 120c70 0 86-60 54-84" fill="none" stroke="{O}" stroke-width="18" stroke-linecap="round"/>
+<path d="M160 80l22 4M152 104l22-6" stroke="{INK}" stroke-width="6" stroke-linecap="round"/>
+<path d="M-120 160c-10-90 30-130 120-130s130 40 120 130z" fill="{O}" stroke="{INK}" stroke-width="7" stroke-linejoin="round"/>
+<ellipse cx="0" cy="120" rx="62" ry="40" fill="{W}"/>
+<ellipse cx="-70" cy="158" rx="34" ry="20" fill="{W}" stroke="{INK}" stroke-width="6"/><ellipse cx="70" cy="158" rx="34" ry="20" fill="{W}" stroke="{INK}" stroke-width="6"/>
+<circle cx="-118" cy="-118" r="40" fill="{O}" stroke="{INK}" stroke-width="7"/><circle cx="118" cy="-118" r="40" fill="{O}" stroke="{INK}" stroke-width="7"/>
+<circle cx="-116" cy="-114" r="20" fill="#ffc9d6"/><circle cx="116" cy="-114" r="20" fill="#ffc9d6"/>
+<ellipse cx="0" cy="-20" rx="170" ry="140" fill="{O}" stroke="{INK}" stroke-width="7"/>
+<path d="M-22-158q8 22 0 40M0-160v46M22-158q-8 22 0 40" fill="none" stroke="{INK}" stroke-width="9" stroke-linecap="round"/>
+<path d="M-168-30q34 4 46 20M-166 10q30-2 44 10M168-30q-34 4-46 20M166 10q-30-2-44 10" fill="none" stroke="{INK}" stroke-width="8" stroke-linecap="round"/>
+<ellipse cx="0" cy="34" rx="78" ry="56" fill="{W}"/>
+<ellipse cx="-62" cy="-28" rx="18" ry="23" fill="{INK}"/><ellipse cx="62" cy="-28" rx="18" ry="23" fill="{INK}"/>
+<circle cx="-55" cy="-37" r="7" fill="#fff"/><circle cx="69" cy="-37" r="7" fill="#fff"/>
+<ellipse cx="-108" cy="14" rx="24" ry="14" fill="#ff8fab" opacity=".8"/><ellipse cx="108" cy="14" rx="24" ry="14" fill="#ff8fab" opacity=".8"/>
+<path d="M-12 10h24l-12 12z" fill="#e8590c" stroke="{INK}" stroke-width="4" stroke-linejoin="round"/>
+<g>{mouth}</g>
+<g transform="translate(0 92)">
+<g transform="translate(70 18) rotate(-10)"><clipPath id="se"><rect x="-22" y="0" width="44" height="96" rx="8"/></clipPath><g clip-path="url(#se)">{end}</g><rect x="-22" y="0" width="44" height="96" rx="8" fill="none" stroke="{INK}" stroke-width="5"/>{fringe}</g>
+<clipPath id="sc"><path d="M-150-16Q0 34 150-16L150 18Q0 68-150 18Z"/></clipPath>
+<g clip-path="url(#sc)">{band}</g><path d="M-150-16Q0 34 150-16L150 18Q0 68-150 18Z" fill="none" stroke="{INK}" stroke-width="6" stroke-linejoin="round"/>
+</g>
 </g>'''
 
 
@@ -110,7 +129,7 @@ def svg(ilus, numero=''):
 <rect width="1200" height="630" fill="url(#bg)"/><rect width="1200" height="630" fill="url(#dots)"/>
 {sparkle(1110, 80, 1.2, c2, .7)}{sparkle(560, 570, .9, c1, .5)}{sparkle(60, 300, .8, c2, .6)}
 {prop(motivo, c1, c2)}
-{tteoki(270, 370, 1.0, 'wow' if ko.endswith('!') else 'feliz')}
+{bomi(270, 345, .95, 'wow' if ko.endswith('!') else 'feliz')}
 <g filter="url(#sh)"><path d="M560 96h560a40 40 0 0 1 40 40v300a40 40 0 0 1-40 40H600a40 40 0 0 1-40-40V330l-62-20 62-40V136a40 40 0 0 1 40-40z" fill="#fff" stroke="{INK}" stroke-width="7" stroke-linejoin="round"/></g>
 <rect x="600" y="122" width="{len(lab) * 15 + 36}" height="44" rx="22" fill="{c1}"/>
 <text x="618" y="152" font-family="{FONT}" font-size="24" font-weight="800" fill="#fff">{escape(lab)}</text>

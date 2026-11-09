@@ -225,6 +225,6 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 
 ## 34. 본문 가독성·레슨 일러스트 (2026-11-09 21시)
 - `fmtBody(body,authorId,fotoUrl)`(site/index.html과 build-static.mjs에 같은 코드, `.fb` CSS): 빈 줄 문단 → `<p>`(줄바꿈 `<br>`), `• - * 1.` 줄 → `<ul>`, 문단 첫 글자 💡📌⚠️ → `.bx.tip`, ✏️✍️ → `.bx.reto`, `Respuesta:`/`Solución:` → `<details class="bx resp">`, 한글 → `<span class="ko">`, `**굵게**`, 내부 경로(/examen-coreano/·/guias/·/acerca/·/contacto/) 링크, `[foto:]`(작성자 폴더만), `[ilus:slug]` → `/img/diario/slug.svg`. 사이트 글쓰기는 관리자 아니면 `[ilus:` 거부. `plainBody`는 [ilus:] 줄 제외. 테스트 build-static.test 'formato legible'.
-- 레슨 JSON `ilus:{ko(≤14,한글),rom(≤28),es(≤34),motivo kpop|kdrama|cultura|comida|expresiones|hangul}` → `python3 scripts/gen-diario-ilus.py` → `site/img/diario/<파일명>.svg`(오리지널 마스코트 Tteoki, 1200x630). `publicar-diario.mjs`: `validar(l,파일명)`이 ilus 필드·svg 존재 검사, `armarPost`가 본문 맨 앞에 `[ilus:<파일명>]`, 게시 후 `ilustrarPublicadas()`가 최근 publicadas 10개 중 그림 없는 글에 PATCH(#1 소급). 대기열 테스트는 ilus 필수.
+- 레슨 JSON `ilus:{ko(≤14,한글),rom(≤28),es(≤34),motivo kpop|kdrama|cultura|comida|expresiones|hangul}` → `python3 scripts/gen-diario-ilus.py` → `site/img/diario/<파일명>.svg`(오리지널 마스코트 Bomi(색동 목도리 아기 호랑이, 이전 Tteoki 대체), 1200x630). `publicar-diario.mjs`: `validar(l,파일명)`이 ilus 필드·svg 존재 검사, `armarPost`가 본문 맨 앞에 `[ilus:<파일명>]`, 게시 후 `ilustrarPublicadas()`가 최근 publicadas 10개 중 그림 없는 글에 PATCH(#1 소급). 대기열 테스트는 ilus 필수.
 - 예약 작업 「매일 한국어 콘텐츠」 프롬프트에 ilus·형식 규칙·gen-diario-ilus 단계 추가(2026-11-09).
 
