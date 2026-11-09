@@ -39,7 +39,7 @@ nav.main{max-width:1120px;margin:0 auto;display:flex;gap:4px;padding:0 12px 8px;
 nav.main::-webkit-scrollbar{display:none}
 nav.main a{padding:6px 12px;border-radius:999px;font-weight:600;color:var(--muted);white-space:nowrap}
 nav.main a.on{background:var(--ink);color:#fff}
-nav.main a.nav-exam{background:#2f5bd8;color:#fff;font-weight:900;box-shadow:0 2px 8px rgba(47,91,216,.35)}nav.main a.nav-exam:hover{background:#1f45b8;color:#fff}nav.main a.nav-exam em{font-style:normal;background:#ffd400;color:#17171c;border-radius:999px;padding:0 6px;margin-left:5px;font-size:11px;font-weight:900}
+.anon{font-weight:600;color:#4b5563}nav.main a.nav-exam{background:#2f5bd8;color:#fff;font-weight:900;box-shadow:0 2px 8px rgba(47,91,216,.35)}nav.main a.nav-exam:hover{background:#1f45b8;color:#fff}nav.main a.nav-exam em{font-style:normal;background:#ffd400;color:#17171c;border-radius:999px;padding:0 6px;margin-left:5px;font-size:11px;font-weight:900}
 nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:nowrap}.hoy-more{margin-left:auto;align-self:center}@media(max-width:700px){.tabs{flex-wrap:wrap}.hoy-more{flex-basis:100%;margin:6px 0 0}}nav.main a.nav-hoy.on{background:var(--hot);color:#fff}nav.main a.nav-att{color:var(--ok);font-weight:800}nav.main a.nav-att.on{background:var(--ok);color:#fff}
 .att{border:2px solid #bfe6cf;background:linear-gradient(135deg,#ecfaf2,#fff 70%);border-radius:14px;padding:14px 16px;margin-bottom:12px}.att h3{margin:0 0 6px;font-size:17px;color:var(--ok)}.att .chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.att .chips button{border:1px solid #bfe6cf;background:#fff;border-radius:99px;padding:5px 10px;font-size:13px;cursor:pointer}.att form{display:flex;gap:8px;flex-wrap:wrap}.att input{flex:1;min-width:200px}.att .btn-ok{background:var(--ok);color:#fff;border-color:var(--ok);font-weight:800}.att-done{font-weight:700;color:var(--ok)}.att-new{border-color:#f6c3d8;background:linear-gradient(135deg,#fde8f1,#fff 70%)}.att-new h3{color:var(--brand)}
 .demo{background:#fff7d6;border-bottom:1px solid #f1e3a4;color:#7a5b00;font-size:12.5px;text-align:center;padding:6px 10px}
@@ -252,6 +252,7 @@ const GALS=[
  {id:'asistencia',cat:'comunidad',name:'Asistencia diaria',desc:'Pasa lista cada día y gana +5 puntos',c:'#1b8456',icon:'✅',attend:true},
  {id:'libre',cat:'comunidad',name:'Foro libre',desc:'Habla de lo que quieras: K-Beauty, K-Pop, tu día…',c:'#636e72',icon:'💬'},
  {id:'memes',cat:'comunidad',name:'Memes',desc:'Humor del día a día: memes originales o con su fuente',c:'#a0660b',icon:'😂'},
+ {id:'anonimo',cat:'comunidad',name:'Anónimo',desc:'Cuenta lo que quieras sin mostrar tu apodo (solo texto, con reglas)',c:'#4b5563',icon:'🎭',anon:true},
  {id:'solicitudes',cat:'comunidad',name:'Solicitar galería',desc:'Pide nuevas galerías de grupos, actores o marcas',c:'#2f5bd8',icon:'🙋'},
  {id:'skincare',cat:'beauty',name:'Skincare coreano',desc:'Rutinas, ingredientes y dudas de cuidado de la piel',c:'#d72e75'},
  {id:'maquillaje',cat:'beauty',name:'Maquillaje coreano',desc:'Cushions, tints, tonos para piel latina',c:'#be4587'},
@@ -333,7 +334,7 @@ function ago(t){t=new Date(t).getTime();const d=Date.now()-t;if(d<60e3)return'ah
 const BOT='Bot de ofertas';
 // Ofertas del bot: el precio solo se muestra durante 24 h (regla de Amazon sobre precios)
 const priceShown=p=>!!p.deal_price&&!(p.anon_name===BOT&&Date.now()-new Date(p.created_at).getTime()>D);
-const nick=p=>p.author_id?`<span class="nk" data-uid="${esc(p.author_id)}" data-gal="${esc(p.gallery_id||'')}">${esc(p.profiles&&p.profiles.nickname||'usuario')}</span>`:(p.anon_name?`${esc(p.anon_name)} <span class="pill p-gal">Bot</span>`:'usuario');
+const nick=p=>p.author_id&&G[p.gallery_id]&&G[p.gallery_id].anon?`<span class="anon">🎭 Anónimo${p._op?' <span class="pill p-gal">Autor</span>':''}</span>${MYROLE==='admin'?` <span class="hint" title="Solo lo ve el administrador">(${esc(p.profiles&&p.profiles.nickname||'usuario')})</span>`:''}`:p.author_id?`<span class="nk" data-uid="${esc(p.author_id)}" data-gal="${esc(p.gallery_id||'')}">${esc(p.profiles&&p.profiles.nickname||'usuario')}</span>`:(p.anon_name?`${esc(p.anon_name)} <span class="pill p-gal">Bot</span>`:'usuario');
 // Los anuncios automáticos de AdSense se colocan solos; las cajas de prueba solo se ven con ?demo=ads
 const AD_DEMO=/[?&]demo=ads/.test(location.search);
 const ad=k=>AD_DEMO?`<div class="ad ad-${k}">Publicidad</div>`:'';
@@ -692,7 +693,7 @@ async function vGal(gid){
   ${pages>1?`<div class="pager">${Array.from({length:Math.min(pages,10)},(_,i)=>`<button data-page="${i+1}" class="${galPage===i+1?'on':''}">${i+1}</button>`).join('')}</div>`:''}</div>`;
 }
 /* ---------------- avisos fijos por galería (📌 Aviso) ---------------- */
-const AVISO_TIPO={asistencia:'asistencia',skincare:'beauty',maquillaje:'beauty',resenas:'resenas','idol-picks':'idol',ofertas:'ofertas',kdramas:'kdrama',viajes:'viajes',coreano:'coreano',libre:'libre',memes:'memes',solicitudes:'solicitudes'};
+const AVISO_TIPO={asistencia:'asistencia',skincare:'beauty',maquillaje:'beauty',resenas:'resenas','idol-picks':'idol',ofertas:'ofertas',kdramas:'kdrama',viajes:'viajes',coreano:'coreano',libre:'libre',memes:'memes',anonimo:'anonimo',solicitudes:'solicitudes'};
 const AVISO_ESP={
  asistencia:g=>`<h2>Cómo funciona ${g}</h2><ul>
   <li>Pasa lista <b>una vez al día</b> con un saludo corto (hora de la Ciudad de México). Cada día cuenta +${ATT_PTS} puntos para tu nivel.</li>
@@ -755,6 +756,14 @@ const AVISO_ESP={
   <li>Búrlate de las situaciones, no de las personas: nada de burlas por físico, origen, religión o forma de ser, ni política partidista.</li>
   <li>No pongas datos personales ni capturas de chats privados con nombres visibles.</li>
   <li>Todas las publicaciones pasan por revisión automática; si algo se oculta por error, responde al mensaje y lo revisamos.</li></ul>`,
+ anonimo:g=>`<h2>Reglas de ${g}: anónimo no es sin reglas</h2><ul>
+  <li>Los demás usuarios ven <b>Anónimo</b> en lugar de tu apodo y tu nivel. <b>El equipo de moderación sí puede ver qué cuenta publicó</b>, solo para atender reportes.</li>
+  <li><b>Leer:</b> todo el mundo · <b>Publicar:</b> desde Lv.1 (${LEVELS[1][1]} puntos), máximo 5 al día · <b>Comentar:</b> cualquier persona con cuenta. Solo texto: aquí no se suben fotos.</li>
+  <li>No reveles datos personales tuyos ni de nadie: nombre real, escuela, trabajo, dirección, teléfono, redes o fotos.</li>
+  <li>Prohibido “exponer”, acusar o difundir chismes sobre personas reales identificables, incluidos idols, actores y cuentas de fans.</li>
+  <li>Nada de insultos, acoso, amenazas, odio, contenido sexual, spam ni ventas. No te hagas pasar por otra persona ni por el equipo.</li>
+  <li>¿Pasas por un momento difícil? Habla también con alguien de confianza. La <b>Línea de la Vida</b> atiende gratis las 24 horas: <b>800 911 2000</b>. En una emergencia, llama al 911.</li>
+  <li>Quien abuse del anonimato recibe precaución, advertencia o suspensión y puede perder el acceso a esta galería.</li></ul>`,
  solicitudes:g=>`<h2>Cómo pedir una nueva galería</h2><ul>
   <li>Escribe en el título el nombre del grupo, artista, drama o marca que quieres.</li>
   <li>Revisa antes en <a href="#galerias">Todas las galerías</a> que no exista.</li>
@@ -1079,8 +1088,8 @@ async function vPost(id){
    ${admPostPanel(p)}${advAdminPanel(p)}${lidPostPanel(p)}${mgrPostPanel(p)}
   </div>
   <div class="card cmts"><h3>Comentarios (${C.length})</h3>
-   ${C.map(c=>`<div class="cmt"><div class="who">${nick({...c,gallery_id:p.gallery_id})}<span>${ago(c.created_at)}</span>${c.is_hidden?'<span class="pill p-sold">Oculto</span>':''}${admCmtBtn(c)}${mgrCmtBtn(c,p)}</div><p>${esc(c.body)}</p>${cmtBtns(c)}</div>`).join('')||'<div class="hint">Sé la primera persona en comentar.</div>'}
-   ${p.is_deleted?'<p class="hint" style="margin-top:12px">Esta publicación fue eliminada.</p>':ADV.has(+p.id)&&MYROLE!=='admin'?'<p class="hint" style="margin-top:12px">💬 Comentarios pausados: esta publicación está en revisión.</p>':ME?`<form id="cform" style="margin-top:12px"><div class="f"><textarea id="cbody" maxlength="1000" style="min-height:80px" placeholder="Escribe un comentario respetuoso"></textarea></div><div class="err" id="cerr"></div><button class="btn btn-dark">Comentar</button></form>`:`<p style="margin-top:12px"><a href="#entrar" style="color:var(--blue);font-weight:700">Entra</a> para comentar.</p>`}
+   ${C.map(c=>`<div class="cmt"><div class="who">${nick({...c,gallery_id:p.gallery_id,_op:c.author_id&&c.author_id===p.author_id})}<span>${ago(c.created_at)}</span>${c.is_hidden?'<span class="pill p-sold">Oculto</span>':''}${admCmtBtn(c)}${mgrCmtBtn(c,p)}</div><p>${esc(c.body)}</p>${cmtBtns(c)}</div>`).join('')||'<div class="hint">Sé la primera persona en comentar.</div>'}
+   ${p.is_deleted?'<p class="hint" style="margin-top:12px">Esta publicación fue eliminada.</p>':ADV.has(+p.id)&&MYROLE!=='admin'?'<p class="hint" style="margin-top:12px">💬 Comentarios pausados: esta publicación está en revisión.</p>':ME?`<form id="cform" style="margin-top:12px"><div class="f"><textarea id="cbody" maxlength="1000" style="min-height:80px" placeholder="Escribe un comentario respetuoso"></textarea></div><div class="err" id="cerr"></div><button class="btn btn-dark">Comentar</button></form>`:`<div class="att" style="margin-top:12px">💬 <b>Para comentar necesitas una cuenta.</b> Es gratis y toma un minuto. <a href="#entrar" style="color:var(--blue);font-weight:700">Entrar o crear cuenta</a></div>`}
   </div>`;
 }
 function vWrite(gid){
@@ -1088,7 +1097,8 @@ function vWrite(gid){
   if(g.attend){setTimeout(()=>go('g-asistencia'),0);return loading()}
   WFOTOS=[];
   if(!ME)return `<div class="card empty">Para publicar necesitas una cuenta. <a href="#entrar" style="color:var(--blue);font-weight:700">Entrar o registrarse</a></div>`;
-  return `<div class="card"><div class="gh">${av(g)}<div><h1>Escribir en ${esc(g.name)}</h1><p>Publicas como <b>${esc(MYNICK)}</b>. Lee las <a href="#reglas" style="color:var(--blue)">reglas</a>.</p></div></div>
+  return `<div class="card"><div class="gh">${av(g)}<div><h1>Escribir en ${esc(g.name)}</h1><p>${g.anon?'Publicas como <b>🎭 Anónimo</b>: los demás no verán tu apodo (el equipo de moderación sí). Lee las <a href="#aviso-anonimo" style="color:var(--blue)">reglas de Anónimo</a>.':`Publicas como <b>${esc(MYNICK)}</b>. Lee las <a href="#reglas" style="color:var(--blue)">reglas</a>.`}</p></div></div>
+  ${g.anon&&!canAnon()?`<div class="att att-new">🎭 Para publicar en Anónimo necesitas <b>Lv.1</b> (${LEVELS[1][1]} puntos). <a href="#g-asistencia" style="color:var(--ok);font-weight:700">Pasa lista</a> y comenta para subir de nivel. Mientras tanto puedes leer y comentar.</div>`:''}
   ${isNewbie()&&!ATT.today?`<div class="att att-new"><b>💡 Consejo:</b> tu cuenta está en Lv.0. Empieza <a href="#g-asistencia" style="color:var(--ok);font-weight:700">pasando lista en Asistencia diaria</a> (+${ATT_PTS} puntos) y luego vuelve a escribir aquí.</div>`:''}
   <form id="wform">
    <div class="f"><label>Galería</label><select id="wg">${CATS.map(c=>`<optgroup label="${c.icon} ${esc(c.name)}">${GALS.filter(x=>x.cat===c.id&&!x.attend).map(x=>`<option value="${x.id}" ${x.id===g.id?'selected':''}>${esc(x.name)}</option>`).join('')}</optgroup>`).join('')}</select></div>
@@ -1096,13 +1106,14 @@ function vWrite(gid){
    <div id="dealFields" style="display:none"><div class="two"><div class="f"><label>Precio</label><input id="wprice" maxlength="20" placeholder="$299 MXN"></div><div class="f"><label>Tienda</label><input id="wstore" maxlength="40" placeholder="Amazon MX, Sephora…"></div></div><div class="f"><label>Enlace de la oferta</label><input id="wurl" placeholder="https://"></div></div>
    <div id="srcField" style="display:none" class="f"><label>Fuente (obligatoria)</label><input id="wsrc" placeholder="Enlace a entrevista, video oficial o publicación del artista/marca"></div>
    <div class="f"><label>Contenido</label><textarea id="wbody" maxlength="5000" required></textarea><div class="hint">No compartas datos personales. Máximo 3 enlaces.</div></div>
-   ${photoBox()}
+   <div id="photoWrap" style="${g.anon?'display:none':''}">${photoBox()}</div>
    ${MYROLE==='admin'?'<div class="f"><label style="font-weight:600"><input type="checkbox" id="wpin" style="width:auto"> 📌 Publicar como aviso fijo (solo administradores)</label></div>':''}
    <div class="err" id="werr"></div>
    <button class="btn btn-brand" id="wsend">Publicar</button> <a class="btn" href="#g-${g.id}">Cancelar</a>
   </form></div>`;
 }
-function syncWriteFields(){const g=G[$('#wg').value];$('#dealFields').style.display=g.deal?'':'none';$('#srcField').style.display=g.needSource?'':'none'}
+const canAnon=()=>MYROLE==='admin'||!!(MYLV&&MYLV.puntos>=LEVELS[1][1]);
+function syncWriteFields(){const g=G[$('#wg').value];if($('#photoWrap'))$('#photoWrap').style.display=g.anon?'none':'';$('#dealFields').style.display=g.deal?'':'none';$('#srcField').style.display=g.needSource?'':'none'}
 function vAuth(){
   nav('');
   if(ME)return `<div class="card empty">Ya iniciaste sesión como <b>${esc(MYNICK)}</b>. <a href="#home" style="color:var(--blue)">Ir al inicio</a></div>`;
@@ -1549,6 +1560,7 @@ document.addEventListener('submit',async e=>{
     if(g.needSource){const s=$('#wsrc').value.trim();if(!okUrl(s))return err.textContent='En esta galería la fuente es obligatoria (enlace https://…).';row.source_url=s}
     if(MYROLE==='admin'&&$('#wpin')&&$('#wpin').checked)row.is_pinned=true;
     if(/\[foto:/i.test(body))return err.textContent='Usa el botón de fotos para agregar imágenes.';
+    if(g.anon){if(!canAnon())return err.textContent=`Para publicar en Anónimo necesitas Lv.1 (${LEVELS[1][1]} puntos).`;WFOTOS=[]}
     busy(true);
     if(WFOTOS.length){if(!canPhoto()){busy(false);return err.textContent=`Las fotos son para Lv.${FOTO_LV} o más.`}
       try{const marks=await uploadPhotos();row.body=body+'\n\n'+marks.join('\n')}catch(e){busy(false);return err.textContent=e.message||'No se pudieron subir las fotos.'}}

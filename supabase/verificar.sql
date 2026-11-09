@@ -23,7 +23,10 @@ with c(orden, revision, ok, archivo) as (values
   (12,'Al menos 1 administrador',              exists (select 1 from public.profiles where role = 'admin'),                '5장 SQL: 관리자 추가'),
   (13,'Contador de visitas (gk_visitas)',      to_regprocedure('public.gk_estadisticas_visitas()') is not null,            '2026-11-09-visitas.sql'),
   (14,'Gestión de miembros (gk_sanciones)',     to_regprocedure('public.gk_admin_miembros()') is not null,                    '2026-11-09-miembros.sql'),
-  (15,'Revisión automática IA (gk_moderacion)', to_regclass('public.gk_moderacion') is not null,                             '2026-11-09-moderacion-ia.sql')
+  (15,'Revisión automática IA (gk_moderacion)', to_regclass('public.gk_moderacion') is not null,                             '2026-11-09-moderacion-ia.sql'),
+  (16,'Anónimo + comentarios solo miembros',   to_regprocedure('public.gk_puede_anonimo()') is not null
+                                                and exists (select 1 from pg_policies where tablename = 'comments' and policyname = 'gk_cmt_solo_miembros'),
+                                                                                                                             '2026-11-09-anonimo.sql')
 )
 select orden as "#", revision as "Revisión", case when ok then '✅ listo' else '❌ falta' end as "Estado",
        case when ok then '' else archivo end as "Ejecutar"

@@ -216,3 +216,10 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - **백업**: `scripts/respaldo.mjs` + `.github/workflows/respaldo.yml`(일 09:17 UTC): posts·comments·votes·reports·galleries·profiles(이메일 없음)·mensajes·gk_* 를 gzip → `openssl enc -aes-256-cbc -pbkdf2 -iter 200000`(BACKUP_PASSWORD) → 아티팩트 90일. 비밀번호 없으면 아무것도 안 만듦(공개 저장소라 평문 업로드 금지).
 - 접근성: GALS 색 중 흰 글자 대비 4.5 미만 14개를 자동으로 어둡게, `.exambar .tag` #c2410c, `.empty a` 밑줄.
 
+## 33. 댓글 회원 전용·익명 갤러리 (2026-11-09 21시)
+- 사용자 결정: 게시글 본문은 모두 공개(비회원 미리보기 제한 없음). 댓글은 회원만 — 화면(비회원은 가입 안내 박스) + SQL restrictive insert 정책 `gk_cmt_solo_miembros`(auth.uid() 있음·author_id=auth.uid()·정지 아님).
+- 갤러리 `anonimo`(GALS `anon:true`, 🎭, #4b5563). `nick()`이 anon 갤러리면 '🎭 Anónimo'(+댓글 `_op`면 'Autor', 관리자만 실제 닉네임 회색 표시), `.nk` 미사용(레벨 배지 없음). 글쓰기: '🎭 Anónimo로 게시' 안내, `canAnon()`(admin 또는 puntos≥LEVELS[1][1]=30), 사진 상자 숨김(`#photoWrap`).
+- SQL `supabase/2026-11-09-anonimo.sql`(재실행 안전, 로컬 PG16 권한 테스트 5개 통과): galleries 등록, `gk_puede_anonimo()`(정지 아님, admin 통과, 하루 5개, gk_niveles 30점↑), posts restrictive insert `gk_anonimo_publicar`(anonimo면 위 함수 + `[foto:` 금지), 📌 규칙 글(관리자, 제목 중복 시 건너뜀). `2026-11-09-TODO-en-orden.sql` 끝에 포함, verificar 16번, galerias-faltantes 목록 추가.
+- build-static: posts 조회 `gallery_id=not.in.(asistencia,anonimo)`, anon 갤러리 /g/ 페이지·사이트맵 생략(목록 링크는 /#g-anonimo), `homePre`는 anon 글의 profiles·author_id 제거.
+- 한계: anon 키로 posts.author_id·profiles는 여전히 읽힘(화면 익명). 완전 익명이 필요하면 작성자를 별도 관리자 전용 표로 옮기는 구조 변경을 사용자 승인 후 진행.
+

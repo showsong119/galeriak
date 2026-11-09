@@ -115,7 +115,7 @@ ${posts.length ? `<ul class="list">${posts.slice(0, 50).map(p => `<li><a href="/
 
 export function renderIndex(CATS, GALS, counts, ctx) {
   const body = `<article><h1>Todas las galerías de GaleríaK</h1><p class="big">Comunidad en español para fans del K-Beauty, el K-Pop, los K-Dramas y la cultura coreana en México.</p>
-${CATS.map(c => `<h2>${esc(c.icon || '')} ${esc(c.name)}</h2><p>${esc(c.desc || '')}</p><ul class="galgrid">${GALS.filter(g => g.cat === c.id).map(g => `<li><a href="${g.attend ? '/#g-' + g.id : '/g/' + g.id + '/'}"><b>${esc(g.name)}</b><small>${esc(g.desc)}${counts[g.id] ? ` · ${counts[g.id]} publicaciones` : ''}</small></a></li>`).join('')}</ul>`).join('\n')}
+${CATS.map(c => `<h2>${esc(c.icon || '')} ${esc(c.name)}</h2><p>${esc(c.desc || '')}</p><ul class="galgrid">${GALS.filter(g => g.cat === c.id).map(g => `<li><a href="${g.attend || g.anon ? '/#g-' + g.id : '/g/' + g.id + '/'}"><b>${esc(g.name)}</b><small>${esc(g.desc)}${counts[g.id] ? ` · ${counts[g.id]} publicaciones` : ''}</small></a></li>`).join('')}</ul>`).join('\n')}
 </article>`;
   return page({ title: 'Galerías de K-Beauty, K-Pop y K-Dramas en español | GaleríaK', desc: 'Todas las galerías de GaleríaK: skincare y maquillaje coreano, ofertas, grupos de K-Pop, K-Dramas y aprender coreano. Comunidad de fans en México.', canonical: `${BASE}/g/`, jsonld: null, body, css: ctx.css, adsense: ctx.adsense });
 }
@@ -133,7 +133,7 @@ async function rest(cfg, path) {
   return r.json();
 }
 async function fetchData(cfg) {
-  const posts = await rest(cfg, `posts?select=id,gallery_id,author_id,anon_name,title,body,deal_price,deal_store,views,up_count,comment_count,created_at,profiles(nickname)&is_deleted=eq.false&is_hidden=eq.false&gallery_id=neq.asistencia&order=created_at.desc&limit=${MAX_POSTS}`);
+  const posts = await rest(cfg, `posts?select=id,gallery_id,author_id,anon_name,title,body,deal_price,deal_store,views,up_count,comment_count,created_at,profiles(nickname)&is_deleted=eq.false&is_hidden=eq.false&gallery_id=not.in.(asistencia,anonimo)&order=created_at.desc&limit=${MAX_POSTS}`);
   let warned = new Set();
   try { (await rest(cfg, 'gk_advertencias?select=post_id&estado=eq.activa&limit=2000')).forEach(r => warned.add(+r.post_id)); } catch { /* aún no existe */ }
   const visible = posts.filter(p => !warned.has(+p.id));
@@ -165,7 +165,9 @@ export async function homePre(cfg, now = Date.now()) {
     rest(cfg, `posts?select=gallery_id,comment_count,up_count&is_deleted=eq.false&is_hidden=eq.false&gallery_id=neq.asistencia&created_at=gte.${since(7 * D)}&limit=2000`)
   ]);
   const G = Object.fromEntries(cfg.GALS.map(g => [g.id, g]));
-  return { t: now, day, week, deals, recent, trend: trendFrom(tr, G) };
+  // Galerías anónimas: no dejar el apodo ni la cuenta en el HTML público
+  const strip = rows => rows.map(p => G[p.gallery_id]?.anon ? { ...p, author_id: p.author_id ? 'anon' : null, profiles: null } : p);
+  return { t: now, day: strip(day), week: strip(week), deals, recent: strip(recent), trend: trendFrom(tr, G) };
 }
 export function injectPre(indexHtml, pre) {
   const json = JSON.stringify(pre).replace(/</g, '\\u003c');
@@ -193,7 +195,7 @@ export async function build(outDir, data) {
   const counts = {};
   let nPosts = 0, nIndexed = 0;
   for (const p of data.posts) {
-    const g = G[p.gallery_id]; if (!g) continue;
+    const g = G[p.gallery_id]; if (!g || g.anon) continue;
     counts[g.id] = (counts[g.id] || 0) + 1;
     const cm = byPost[p.id] || [];
     mkdirSync(join(outDir, 'p', String(p.id)), { recursive: true });
@@ -202,7 +204,7 @@ export async function build(outDir, data) {
     if (!isThin(p, cm.length)) { nIndexed++; sm.push({ loc: `${BASE}/p/${p.id}/`, lastmod: day(cm.length ? cm[cm.length - 1].created_at : p.created_at) }); }
   }
   for (const g of cfg.GALS) {
-    if (g.attend) continue;
+    if (g.attend || g.anon) continue;
     const ps = data.posts.filter(p => p.gallery_id === g.id);
     mkdirSync(join(outDir, 'g', g.id), { recursive: true });
     writeFileSync(join(outDir, 'g', g.id, 'index.html'), renderGallery(g, cfg.CATS.find(c => c.id === g.cat), ps, ctx));
