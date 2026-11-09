@@ -989,7 +989,7 @@ function attendNudge(){
   return `<div class="card att ${nb?'att-new':''}" style="margin-bottom:12px"><h3>${nb?'🎉 Empieza en Lv.0: pasa tu primera lista':'✅ Aún no pasas lista hoy'}</h3><p style="margin:0 0 8px">${nb?`Gana tus primeros +${ATT_PTS} puntos en 10 segundos.`:`+${ATT_PTS} puntos${ATT.streak?` · racha de ${ATT.streak} ${ATT.streak===1?'día':'días'}`:''}`}</p><a class="btn btn-ok" href="#g-asistencia">✅ Pasar lista</a></div>`;
 }
 async function sendAttend(){if(needUsr())return;
-  const err=$('#atterr');err.textContent='';
+  const err=$('#atterr');err.textContent='';const busy=v=>{const b=$('#attsend');if(b)b.disabled=v};
   if(ATT.today)return err.textContent='Ya pasaste lista hoy. ¡Vuelve mañana!';
   await loadAttend();if(ATT.today){toast('Ya pasaste lista hoy');return route()}
   const msg=($('#attmsg').value.trim()||'¡Presente! ✋').slice(0,80);

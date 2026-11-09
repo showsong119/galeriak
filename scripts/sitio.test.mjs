@@ -16,3 +16,17 @@ for (const f of ['site/index.html', 'site/examen-coreano/index.html']) {
     }
   });
 }
+
+// 2026-11-10: sendAttend usaba busy() del manejador de formularios → ReferenceError y la asistencia no se guardaba.
+test('busy() solo se usa donde está definido', () => {
+  const html = readFileSync(new URL('../site/index.html', import.meta.url), 'utf8');
+  const ini = html.indexOf("document.addEventListener('submit'");
+  const fin = html.indexOf('\n});', ini);
+  let i = -1, malos = [];
+  while ((i = html.indexOf('busy(', i + 1)) !== -1) {
+    if (i > ini && i < fin) continue;                         // dentro del manejador: busy está definido
+    const f = html.lastIndexOf('function ', i);
+    if (!/const busy\s*=/.test(html.slice(f, i))) malos.push(html.slice(Math.max(0, i - 60), i + 10).replace(/\s+/g, ' '));
+  }
+  assert.deepEqual(malos, []);
+});
