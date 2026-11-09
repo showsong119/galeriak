@@ -242,6 +242,7 @@ const CATS=[
 const GALS=[
  {id:'asistencia',cat:'comunidad',name:'Asistencia diaria',desc:'Pasa lista cada día y gana +5 puntos',c:'#1d8a5a',icon:'✅',attend:true},
  {id:'libre',cat:'comunidad',name:'Foro libre',desc:'Habla de lo que quieras: K-Beauty, K-Pop, tu día…',c:'#636e72',icon:'💬'},
+ {id:'memes',cat:'comunidad',name:'Memes K-Pop y K-Drama',desc:'Humor de fandom: memes originales o con su fuente',c:'#f39c12',icon:'😂'},
  {id:'solicitudes',cat:'comunidad',name:'Solicitar galería',desc:'Pide nuevas galerías de grupos, actores o marcas',c:'#2f5bd8',icon:'🙋'},
  {id:'skincare',cat:'beauty',name:'Skincare coreano',desc:'Rutinas, ingredientes y dudas de cuidado de la piel',c:'#e5317d'},
  {id:'maquillaje',cat:'beauty',name:'Maquillaje coreano',desc:'Cushions, tints, tonos para piel latina',c:'#d94f9a'},
@@ -674,7 +675,7 @@ async function vGal(gid){
   ${pages>1?`<div class="pager">${Array.from({length:Math.min(pages,10)},(_,i)=>`<button data-page="${i+1}" class="${galPage===i+1?'on':''}">${i+1}</button>`).join('')}</div>`:''}</div>`;
 }
 /* ---------------- avisos fijos por galería (📌 Aviso) ---------------- */
-const AVISO_TIPO={asistencia:'asistencia',skincare:'beauty',maquillaje:'beauty',resenas:'resenas','idol-picks':'idol',ofertas:'ofertas',kdramas:'kdrama',viajes:'viajes',coreano:'coreano',libre:'libre',solicitudes:'solicitudes'};
+const AVISO_TIPO={asistencia:'asistencia',skincare:'beauty',maquillaje:'beauty',resenas:'resenas','idol-picks':'idol',ofertas:'ofertas',kdramas:'kdrama',viajes:'viajes',coreano:'coreano',libre:'libre',memes:'memes',solicitudes:'solicitudes'};
 const AVISO_ESP={
  asistencia:g=>`<h2>Cómo funciona ${g}</h2><ul>
   <li>Pasa lista <b>una vez al día</b> con un saludo corto (hora de la Ciudad de México). Cada día cuenta +${ATT_PTS} puntos para tu nivel.</li>
@@ -729,6 +730,13 @@ const AVISO_ESP={
   <li>Aquí puedes hablar de todo un poco, siempre con respeto.</li>
   <li>Si tu tema tiene una galería propia (ofertas, skincare, un grupo), publícalo allá para que más gente lo vea.</li>
   <li>No se permite política partidista agresiva, contenido para adultos ni cadenas o spam.</li></ul>`,
+ memes:g=>`<h2>Reglas de ${g}: humor sí, daño no</h2><ul>
+  <li><b>Lo mejor: memes hechos por ti.</b> Usa plantillas en blanco, tus propias fotos o solo texto. Los memes originales con más ♥ llegan a <b>Mejores de hoy</b>.</li>
+  <li><b>¿Viste un meme buenísimo en Reddit, TikTok o Instagram?</b> No lo descargues y vuelvas a subir: comparte <b>el enlace a la publicación original</b> y menciona a quien lo hizo. Los memes ajenos resubidos sin fuente se ocultan.</li>
+  <li>Nada de ediciones sexuales, deepfakes ni montajes que humillen a personas reales (idols, actores o miembros de la comunidad). Recuerda que muchos idols son menores de edad.</li>
+  <li>Sin fan wars: búrlate de las situaciones de fan, no de otros fandoms ni de nadie por su físico, origen o forma de ser.</li>
+  <li>No pongas datos personales ni capturas de chats privados con nombres visibles.</li>
+  <li>Todas las publicaciones pasan por revisión automática; si algo se oculta por error, responde al mensaje y lo revisamos.</li></ul>`,
  solicitudes:g=>`<h2>Cómo pedir una nueva galería</h2><ul>
   <li>Escribe en el título el nombre del grupo, artista, drama o marca que quieres.</li>
   <li>Revisa antes en <a href="#galerias">Todas las galerías</a> que no exista.</li>

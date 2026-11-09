@@ -20,6 +20,7 @@ begin
   for r in select * from (values
     ('asistencia', 'Asistencia diaria', 'Pasa lista cada día y gana +5 puntos', 'comunidad'),
     ('libre', 'Foro libre', 'Habla de lo que quieras: K-Beauty, K-Pop, tu día…', 'comunidad'),
+    ('memes', 'Memes K-Pop y K-Drama', 'Humor de fandom: memes originales o con su fuente', 'comunidad'),
     ('solicitudes', 'Solicitar galería', 'Pide nuevas galerías de grupos, actores o marcas', 'comunidad'),
     ('skincare', 'Skincare coreano', 'Rutinas, ingredientes y dudas de cuidado de la piel', 'beauty'),
     ('maquillaje', 'Maquillaje coreano', 'Cushions, tints, tonos para piel latina', 'beauty'),

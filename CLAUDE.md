@@ -181,3 +181,10 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 사이트: 관리자 탭 `ia`(🤖 AI 검수, `IA_CAT` 한국어 라벨, 필터 `window.iaF` 대기 중/전체, `data-iares="<id>|restaurar|confirmar|eliminar"` → `iaResClick`), 대시보드 `admDash(v,r,ia)` 'AI 검수 대기' 칸, 점검 탭 항목, verificar 15번. 제재(경고·정지)는 자동으로 하지 않음.
 - 약관 `#moderacion`·개인정보처리방침 '4. Con quién compartimos datos'에 OpenAI 고지.
 - 2026-11-09 17:30: 사용자가 OpenAI 키를 Secret 이름 `OPENAI`로 입력 → 워크플로가 `OPENAI_API_KEY || OPENAI` 둘 다 읽게 수정. 첫 수동 실행: 키 2개 OK, Supabase 접속 OK, `gk_moderacion` 표 없음(PGRST205) → SQL 실행 대기.
+
+## 27. 밈 게시판 (2026-11-09)
+- GALS에 `memes`(Comunidad, 😂, #f39c12), `AVISO_TIPO.memes`, `AVISO_ESP.memes`(오리지널 우선·타 플랫폼은 원본 링크+출처만·재업로드 금지·실존 인물 성적/모욕 합성·딥페이크 금지·팬워 금지·AI 검수 고지).
+- SQL `supabase/2026-11-09-memes.sql`(galleries 등록 + 운영팀 오리지널 첫 글 6개, 재실행 안전, 로컬 PG16 확인). `galerias-faltantes.sql` 목록에도 memes 추가. **사용자 실행 필요.**
+- 사용자 요청이었던 "레딧 등 인기 글 긁어와 게시"는 저작권·레딧 약관·AdSense 문제로 하지 않기로 함 → 다른 플랫폼 글을 복사 게시하지 말 것. 첫 글·주간 [Reto]는 Claude가 직접 쓴 내용으로.
+- 사진 업로드는 기존대로 Lv.2(DB 정책 `gk_puede_fotos`).
+
