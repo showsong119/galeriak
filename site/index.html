@@ -70,7 +70,20 @@ nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:now
 .exambar{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:center;background:linear-gradient(120deg,#2f5bd8,#5a7bff);color:#fff;border:0}.exambar img{width:100%;height:auto;border-radius:12px;display:block}
 .exambar h2{color:#fff;font-size:22px;margin:0 0 4px}.exambar p{margin:0 0 10px;color:#e8eeff;font-size:14px}.exambar .go{display:inline-block;background:#ffd400;color:#17171c;font-weight:900;border-radius:999px;padding:9px 18px}.exambar .tag{display:inline-block;background:#ff7a00;color:#fff;font-weight:900;border-radius:999px;padding:2px 10px;font-size:12px;margin-bottom:6px}
 @media(max-width:700px){.exambar{grid-template-columns:1fr}.exambar img{max-height:170px;object-fit:cover}}
-.admvis{display:flex;align-items:center;gap:22px;flex-wrap:wrap;border:2px dashed #2f5bd8;background:#f3f6ff;color:inherit;text-decoration:none}.admvis b{font-size:15px}.admvis b small{display:block;font-size:11px;color:var(--muted);font-weight:600}.admvis span{display:flex;flex-direction:column;font-size:12px;color:var(--muted)}.admvis em{font-style:normal;font-size:22px;font-weight:900;color:#17171c}.admvis i{margin-left:auto;font-style:normal;font-size:13px;color:#2f5bd8;font-weight:700}
+.admdash{border:2px solid #2f5bd8;background:linear-gradient(180deg,#f3f6ff,#fff)}.adrow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin:8px 0}.adlbl{width:72px;font-weight:800;font-size:13px;align-self:center}
+.adt{flex:1;min-width:96px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 10px;text-decoration:none;color:inherit;display:flex;flex-direction:column}.adt b{font-size:20px;font-weight:900}.adt span{font-size:11.5px;color:var(--muted)}.adt.hot{border-color:#e5317d;background:#fff0f6}.adt.hot b{color:#e5317d}.adt:hover{border-color:#2f5bd8}
+.adbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.btn-p{background:#2f5bd8!important;color:#fff!important;border-color:#2f5bd8!important}
+.mfils{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}.mfils button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer}.mfils button b{color:var(--muted);margin-left:2px}.mfils button.on{background:#17171c;color:#fff;border-color:#17171c}.mfils button.on b{color:#ffd400}
+.mtools{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}.mtools input{flex:1;min-width:160px}.mtools select{padding:8px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.mlist{list-style:none;margin:8px 0 0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}.mlist li{display:grid;grid-template-columns:minmax(0,2.4fr) 1.1fr .8fr 1fr .9fr 24px;gap:8px;align-items:center;padding:10px 12px;border-top:1px solid var(--line)}
+.mlist .mhead{background:#f6f6f9;font-size:12px;font-weight:800;color:var(--muted);border-top:0}.mlist .mgrp{display:block;background:#fafafc;font-weight:800;font-size:13px;padding:7px 12px;color:#2f5bd8}.mlist .mgrp small{color:var(--muted);font-weight:600}
+.mrow{cursor:pointer}.mrow:hover{background:#fafbff}.mrow.open{background:#f3f6ff}.mrow small{display:block;font-size:11px;color:var(--muted)}.mrow b{font-size:13.5px}.m-ban{box-shadow:inset 4px 0 #e53935}.m-adv{box-shadow:inset 4px 0 #ff8a00}.m-pre{box-shadow:inset 4px 0 #f5c400}
+.mbs{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}.mb{font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;background:#f0f0f4;color:#55555f;white-space:nowrap}.mb-sus{background:#ffe5e5;color:#c62828}.mb-adv{background:#fff1e0;color:#d46b00}.mb-pre{background:#fff9d6;color:#8a6d00}.mb-rep{background:#ffeef5;color:#c2185b}.mb-new{background:#e7f6ee;color:#1d8a5a}.mb-adm{background:#e8eeff;color:#2f5bd8}
+.mlist .mdet{display:block;background:#f8f9ff;padding:14px}.mgridd{display:grid;grid-template-columns:1fr 1fr;gap:16px}.mgridd h4{margin:0 0 6px;font-size:14px}
+.mhist{list-style:none;margin:0;padding:0}.mhist li{display:block!important;border-top:1px dashed var(--line)!important;padding:6px 0!important;font-size:13px}.mhist li.off{opacity:.5;text-decoration:line-through}.mhist small{display:block;color:var(--muted);font-size:11px}.mhist .btn{padding:1px 8px;font-size:11px;float:right}
+.mtypes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}.mtypes label{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:#fff;font-size:13px;cursor:pointer}
+.mmots{display:flex;gap:4px;flex-wrap:wrap;margin:8px 0}.mmots button{font-size:11.5px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 9px;cursor:pointer}#mmotivo{width:100%;margin-bottom:6px}#mdias{padding:6px;border:1px solid var(--line);border-radius:8px}.mwarn{color:#d46b00;font-weight:700;font-size:13px;margin:4px 0}
+@media(max-width:760px){.mlist li{grid-template-columns:1fr 1fr;}.mlist .mhead{display:none}.mrow .mc1{grid-column:1/-1}.mrow .mc6{display:none}.mgridd{grid-template-columns:1fr}.adlbl{width:100%}}
 .vbars{display:flex;align-items:flex-end;gap:3px;height:150px;border-bottom:1px solid var(--line);padding-top:6px}.vb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}.vb i{display:block;width:100%;min-height:2px;background:var(--brand);border-radius:4px 4px 0 0}.vb small{font-size:9px;color:var(--muted);margin-top:2px}
 .lv-lid{background:linear-gradient(90deg,#8e44ad,#e5317d);display:inline-flex;align-items:center;gap:3px;margin-left:3px}.lv-lid svg{width:12px;height:12px;flex:none}
 .row .t a.adv,.post h1.adv{color:#9a9aa6}.p-adv{background:#fff1d6;color:#a86400}.advbox{background:#fff6e5;border:1px solid #f5d39a;border-radius:12px;padding:10px 12px;margin:10px 0;font-size:14px}.lidbox{border-top:1px solid var(--line);margin-top:12px;background:#f7f0fb;border-radius:10px;padding:10px 12px}
@@ -432,7 +445,7 @@ function meBox(){
 
 function nav(cur){
   const items=[['home','Inicio'],['hoy','🔥 Mejores de hoy'],['g-asistencia','✅ Asistencia'],['g-libre','💬 Foro libre'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y coreano'],['guias','Guías'],['galerias','Galerías'],['/examen-coreano/','📝 Examen de coreano<em>GRATIS</em>']];
-  if(MYROLE==='admin')items.push(['admin','관리자']);
+  if(MYROLE==='admin')items.push(['admin','🛠️ 관리자'],['miembros','👥 회원']);
   renderQbar();
   $('#nav').innerHTML=items.map(([h,n])=>`<a href="${h[0]==='/'?h:'#'+h}" class="${cur===h?'on':''}${h==='hoy'?' nav-hoy':''}${h==='g-asistencia'?' nav-att':''}${h==='/examen-coreano/'?' nav-exam':''}">${n}</a>`).join('');
 }
@@ -442,30 +455,165 @@ const catCard=cid=>{const c=CATS.find(x=>x.id===cid),n=GALS.filter(g=>g.cat===ci
 const hotCard=()=>`<a class="gal gal-hot" href="#hoy"><span class="av flame">${FLAME}</span><div><b>Mejores de hoy</b><small>Lo más votado de todas las galerías</small></div></a>`;
 const welcome=()=>ME?'':`<div class="card" style="background:var(--brand-soft);border-color:#f6c3d8"><b>¡Bienvenida, bienvenido a GaleríaK!</b> La comunidad en español de K-Beauty y K-Pop. <a href="#entrar" style="color:var(--brand);font-weight:700">Crea tu cuenta</a> para publicar, comentar y votar.</div>`;
 
-/* solo administradores: visitantes en la portada */
-function admVisitBar(v){
-  if(MYROLE!=='admin'||!v)return '';
-  const go=`onclick="admTab='visitas';location.hash='#admin';return false" href="#admin"`;
-  if(v.error||!v.data)return `<div class="card admvis"><b>📊 방문자 (관리자만 보임)</b><span class="hint">통계가 아직 꺼져 있어요 — <code>2026-11-09-visitas.sql</code> 실행 필요</span></div>`;
-  const st=v.data,n=x=>Number(x||0).toLocaleString('ko-KR');
-  return `<a class="card admvis" ${go}><b>📊 방문자 <small>관리자만 보임</small></b>
-   <span><em>${n(st.hoy_visitantes)}</em>오늘 방문자</span><span><em>${n(st.hoy_vistas)}</em>오늘 조회</span><span><em>${n(st.ayer_visitantes)}</em>어제</span><span><em>${n(st.total_visitantes)}</em>총 방문자</span><i>자세히 →</i></a>`;
+/* ---------------- 👥 회원 관리 (solo administradores) ---------------- */
+let mFil='all',mSort='new',mQ='',mShow=50,mOpen=null,MEM=null,MEM_T=0,MEM_OFF=false;
+const M_SORTS=[['new','가입일 최신순'],['old','가입일 오래된순'],['risk','주의 필요순'],['pts','점수 높은순'],['posts','글 많은순'],['login','최근 접속순'],['name','닉네임 가나다순']];
+const M_MOT=['Spam o publicidad','Lenguaje ofensivo','Acoso a otros miembros','Contenido inapropiado','Datos personales de terceros','Publicaciones repetidas','Fuera de tema'];
+const mBan=u=>u.banned_until&&new Date(u.banned_until).getTime()>Date.now();
+const mDays=t=>t?Math.floor((Date.now()-new Date(t).getTime())/D):null;
+const mRisk=u=>(mBan(u)?50:0)+u.advertencias*10+u.avisos_activos*6+u.precauciones*4+u.reportes*2+u.avisos_post;
+const mDate=t=>t?new Date(t).toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}):'-';
+async function loadMem(force){
+  if(!force&&MEM&&Date.now()-MEM_T<60000)return MEM;
+  const {data,error}=await sb.rpc('gk_admin_miembros');
+  if(error){MEM_OFF=true;throw error}
+  MEM_OFF=false;MEM=data||[];MEM_T=Date.now();return MEM;
 }
+function mBadges(u){
+  const b=[];
+  if(u.role==='admin')b.push('<span class="mb mb-adm">관리자</span>');
+  if(mBan(u)){const y=new Date(u.banned_until).getFullYear()>2100;b.push('<span class="mb mb-sus">🔴 정지중 '+(y?'(영구)':'~'+esc(mDate(u.banned_until)))+'</span>')}
+  if(u.advertencias)b.push('<span class="mb mb-adv">🟠 경고 '+u.advertencias+'</span>');
+  if(u.precauciones)b.push('<span class="mb mb-pre">🟡 주의 '+u.precauciones+'</span>');
+  if(u.reportes)b.push('<span class="mb mb-rep">🚩 신고 '+u.reportes+'</span>');
+  if(u.avisos_activos)b.push('<span class="mb mb-rep">⚠️ 방장경고 글 '+u.avisos_activos+'</span>');
+  if(u.notas)b.push('<span class="mb">📝 메모 '+u.notas+'</span>');
+  if(mDays(u.created_at)<7)b.push('<span class="mb mb-new">🆕 신규</span>');
+  return b.join('');
+}
+const M_FILS=[['all','전체',u=>true],['nuevos','🆕 신규 7일',u=>mDays(u.created_at)<7],['pre','🟡 주의',u=>u.precauciones>0],['adv','🟠 경고',u=>u.advertencias>0],['sus','🔴 정지중',mBan],['rep','🚩 신고받음',u=>u.reportes>0||u.avisos_activos>0],['nota','📝 메모 있음',u=>u.notas>0],['inact','💤 30일 미접속',u=>u.last_sign_in_at&&mDays(u.last_sign_in_at)>=30]];
+function mGroup(u){const d=mDays(u.created_at);return d<1?'오늘 가입':d<2?'어제 가입':d<7?'이번 주 가입 (7일 이내)':d<30?'이번 달 가입 (30일 이내)':d<90?'1~3개월 전 가입':'3개월 이전 가입'}
+async function vMiembros(){
+  nav('miembros');
+  if(!ME)return '<div class="card empty">먼저 <a href="#entrar" style="color:var(--blue);font-weight:700">로그인</a>해 주세요.</div>';
+  if(MYROLE!=='admin')return '<div class="card empty">관리자만 볼 수 있는 페이지입니다.</div>';
+  document.title='회원 관리 – GaleríaK';
+  let all;
+  try{all=await loadMem()}catch(e){
+    return '<div class="card"><h2>👥 회원 관리</h2><p>회원 관리 기능이 아직 켜지지 않았습니다. Supabase SQL Editor에서 <code>supabase/2026-11-09-miembros.sql</code>을 실행해 주세요. (브라우저 자동 번역을 끄고, GitHub의 Copy raw file 버튼으로 복사)</p><p class="hint">'+esc(e.message||'')+'</p><p><a class="btn" href="#admin" onclick="admTab=\'users\'">기존 사용자 목록 보기 →</a></p></div>';
+  }
+  const q=mQ.trim().toLowerCase();
+  const fil=(M_FILS.find(f=>f[0]===mFil)||M_FILS[0])[2];
+  let L=all.filter(fil).filter(u=>!q||String(u.nickname||'').toLowerCase().includes(q));
+  const T=x=>x?new Date(x).getTime():0;
+  const S={new:(a,b)=>T(b.created_at)-T(a.created_at),old:(a,b)=>T(a.created_at)-T(b.created_at),risk:(a,b)=>mRisk(b)-mRisk(a)||T(b.created_at)-T(a.created_at),pts:(a,b)=>b.puntos-a.puntos,posts:(a,b)=>(b.posts+b.comments)-(a.posts+a.comments),login:(a,b)=>T(b.last_sign_in_at)-T(a.last_sign_in_at),name:(a,b)=>String(a.nickname||'').localeCompare(String(b.nickname||''),'es')};
+  L.sort(S[mSort]||S.new);
+  const shown=L.slice(0,mShow),grouped=mSort==='new'||mSort==='old';
+  const cnt=f=>all.filter(f[2]).length;
+  let last='',rows='';
+  shown.forEach(u=>{
+    if(grouped){const g=mGroup(u);if(g!==last){last=g;rows+='<li class="mgrp">'+g+' <small>'+L.filter(x=>mGroup(x)===g).length+'명</small></li>'}}
+    const d=mDays(u.created_at),lg=u.last_sign_in_at?mDays(u.last_sign_in_at):null,open=mOpen===u.id;
+    const lvl=u.role==='admin'?'':(()=>{const [n]=levelOf(u.puntos,u.asistencias);return '<span class="lv lv'+n+'">Lv.'+n+'</span>'})();
+    rows+='<li class="mrow'+(mBan(u)?' m-ban':u.advertencias?' m-adv':u.precauciones?' m-pre':'')+(open?' open':'')+'" data-mopen="'+u.id+'">'
+     +'<div class="mc1"><b>'+esc(u.nickname||'(sin apodo)')+'</b> '+lvl+'<div class="mbs">'+mBadges(u)+'</div></div>'
+     +'<div class="mc2"><b>'+mDate(u.created_at)+'</b><small>'+(d<1?'오늘 가입':d+'일 전 가입')+'</small></div>'
+     +'<div class="mc3"><b>'+(lg==null?'-':lg<1?'오늘':lg+'일 전')+'</b><small>최근 접속</small></div>'
+     +'<div class="mc4"><b>'+u.posts+' / '+u.comments+'</b><small>글 / 댓글 · ♥'+u.likes+'</small></div>'
+     +'<div class="mc5"><b>'+u.puntos+'</b><small>점수 · 출석 '+u.asistencias+'</small></div>'
+     +'<div class="mc6">'+(open?'▴':'▾')+'</div></li>'
+     +(open?'<li class="mdet" id="mdet">'+mDetailSkeleton(u)+'</li>':'');
+  });
+  return '<div class="card"><h2>👥 회원 관리 <span class="hint" style="font-weight:400">· 총 '+all.length+'명</span><a class="more" href="#admin">← 관리자 페이지</a></h2>'
+   +'<div class="mfils">'+M_FILS.map(f=>'<button data-mfil="'+f[0]+'" class="'+(mFil===f[0]?'on':'')+'">'+f[1]+' <b>'+cnt(f)+'</b></button>').join('')+'</div>'
+   +'<div class="mtools"><input id="mq" value="'+esc(mQ)+'" placeholder="닉네임 검색" autocomplete="off"><select id="msort" aria-label="정렬">'+M_SORTS.map(s=>'<option value="'+s[0]+'"'+(mSort===s[0]?' selected':'')+'>'+s[1]+'</option>').join('')+'</select><button class="btn" data-mcsv="1">⬇️ CSV</button><button class="btn" data-mreload="1">↻ 새로고침</button></div>'
+   +'<p class="hint">줄을 누르면 상세 정보와 조치(메모·주의·경고·정지)가 열려요. 단계: 🟡 주의 → 🟠 경고 → 🔴 정지. 경고 2회 이상이면 정지를 검토하세요. 주의·경고·정지는 회원에게 쪽지로 알릴 수 있어요(메모는 회원에게 안 보임).</p>'
+   +(L.length?'<ul class="mlist"><li class="mhead"><div class="mc1">회원 · 상태</div><div class="mc2">가입일</div><div class="mc3">접속</div><div class="mc4">활동</div><div class="mc5">점수</div><div class="mc6"></div></li>'+rows+'</ul>':'<div class="empty">조건에 맞는 회원이 없어요.</div>')
+   +(L.length>mShow?'<button class="btn" style="width:100%;margin-top:10px" data-mmore="1">더 보기 ('+mShow+' / '+L.length+')</button>':'')
+   +'</div>';
+}
+function mDetailSkeleton(u){
+  const adm=u.role==='admin';
+  return '<div class="mgridd"><div><h4>📋 기록</h4><div id="mhist" class="hint">불러오는 중…</div><h4 style="margin-top:12px">📝 최근 글</h4><div id="mposts" class="hint">불러오는 중…</div></div>'
+   +'<div>'+(adm?'<p class="hint">관리자 계정에는 조치를 할 수 없어요.</p>':
+    '<h4>⚖️ 조치하기</h4><div class="mtypes">'+[['nota','📝 메모'],['precaucion','🟡 주의'],['advertencia','🟠 경고'],['suspension','🔴 정지']].map((t,i)=>'<label><input type="radio" name="mtipo" value="'+t[0]+'"'+(i===(u.advertencias>=2?3:u.precauciones||u.advertencias?2:1)?' checked':'')+'> '+t[1]+'</label>').join('')+'</div>'
+    +'<div id="mdiasw"><select id="mdias"><option value="1">1일 정지</option><option value="3">3일 정지</option><option value="7" selected>7일 정지</option><option value="30">30일 정지</option><option value="36500">영구 정지</option></select></div>'
+    +'<div class="mmots">'+M_MOT.map(m=>'<button type="button" data-mmot="'+esc(m)+'">'+esc(m)+'</button>').join('')+'</div>'
+    +'<textarea id="mmotivo" rows="2" maxlength="300" placeholder="사유 (회원에게 보내는 내용이라 스페인어로 써 주세요)"></textarea>'
+    +'<label class="hint" id="mavisaw"><input type="checkbox" id="mavisar" checked> 회원에게 쪽지(✉️)로 알리기</label>'
+    +(u.advertencias>=2&&!mBan(u)?'<p class="mwarn">⚠️ 이미 경고 '+u.advertencias+'회 — 정지를 검토할 때예요.</p>':'')
+    +'<button class="btn btn-p" data-msanc="'+u.id+'" style="width:100%;margin-top:6px">조치 저장</button>'
+    +(mBan(u)?'<button class="btn" data-munban="'+u.id+'" style="width:100%;margin-top:6px">🔓 정지 해제</button>':''))
+   +'</div></div>';
+}
+const M_TIPO={nota:'📝 메모',precaucion:'🟡 주의',advertencia:'🟠 경고',suspension:'🔴 정지'};
+async function mLoadDetail(uid){
+  const [h,p]=await Promise.all([sb.from('gk_sanciones').select('id,tipo,motivo,dias,created_at,activa,retirada_at').eq('usuario',uid).order('created_at',{ascending:false}).limit(30),
+    sb.from('posts').select('id,title,gallery_id,created_at,is_hidden,is_deleted').eq('author_id',uid).order('created_at',{ascending:false}).limit(5)]);
+  const hb=$('#mhist'),pb=$('#mposts');if(!hb)return;
+  hb.innerHTML=h.error?esc(errMsg(h.error)):(h.data.length?'<ul class="mhist">'+h.data.map(s=>'<li class="'+(s.activa?'':'off')+'">'+(s.activa?'<button class="btn" data-mret="'+s.id+'">취소</button>':'')+'<b>'+M_TIPO[s.tipo]+(s.tipo==='suspension'?' '+(s.dias>=36500?'영구':s.dias+'일'):'')+'</b> '+esc(s.motivo)+'<small>'+mDate(s.created_at)+(s.activa?'':' · 취소됨')+'</small></li>').join('')+'</ul>':'기록 없음 — 깨끗한 회원이에요 ✨');
+  pb.innerHTML=p.error?esc(errMsg(p.error)):(p.data.length?'<ul class="mhist">'+p.data.map(x=>'<li><a href="#p-'+x.id+'">'+esc(x.title)+'</a><small>'+esc((G[x.gallery_id]||{name:x.gallery_id}).name)+' · '+ago(x.created_at)+(x.is_hidden?' · 숨김':'')+(x.is_deleted?' · 삭제':'')+'</small></li>').join('')+'</ul>':'아직 쓴 글이 없어요.');
+  mSyncForm();
+}
+function mSyncForm(){const r=document.querySelector('input[name=mtipo]:checked');if(!r)return;const t=r.value;
+  $('#mdiasw').style.display=t==='suspension'?'':'none';const a=$('#mavisar');a.disabled=t==='nota';$('#mavisaw').style.opacity=t==='nota'?.4:1}
+function mCsv(){
+  const L=MEM||[],c=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const h=['apodo','rol','registro','ultimo_acceso','publicaciones','comentarios','likes','asistencias','puntos','reportes','avisos_lider','precauciones','advertencias','suspendido_hasta'];
+  const csv=[h.join(',')].concat(L.map(u=>[u.nickname,u.role||'',mDate(u.created_at),mDate(u.last_sign_in_at),u.posts,u.comments,u.likes,u.asistencias,u.puntos,u.reportes,u.avisos_post,u.precauciones,u.advertencias,mBan(u)?mDate(u.banned_until):''].map(c).join(','))).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv'}));a.download='galeriak-miembros-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+}
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('[data-mfil],[data-mopen],[data-mmore],[data-mreload],[data-mcsv],[data-mmot],[data-msanc],[data-munban],[data-mret]');if(!t||MYROLE!=='admin')return;
+  const d=t.dataset;
+  if(d.mfil){mFil=d.mfil;mShow=50;mOpen=null;route();return}
+  if(d.mmore){mShow+=50;route();return}
+  if(d.mreload){MEM=null;route();return}
+  if(d.mcsv){mCsv();return}
+  if(d.mmot){const ta=$('#mmotivo');ta.value=ta.value?ta.value+'. '+d.mmot:d.mmot;ta.focus();return}
+  if(d.mopen){if(e.target.closest('a,button,input,select,textarea'))return;mOpen=mOpen===d.mopen?null:d.mopen;const y=window.scrollY;await route();window.scrollTo(0,y);if(mOpen)mLoadDetail(mOpen);return}
+  let res;t.disabled=true;
+  if(d.msanc){
+    const tipo=(document.querySelector('input[name=mtipo]:checked')||{}).value,mot=$('#mmotivo').value.trim();
+    if(mot.length<2){t.disabled=false;toast('사유를 써 주세요.');$('#mmotivo').focus();return}
+    const dias=tipo==='suspension'?+$('#mdias').value:null;
+    if(tipo!=='nota'&&!confirm(M_TIPO[tipo]+(dias?(dias>=36500?' (영구)':' ('+dias+'일)'):'')+' 조치를 저장할까요?'+($('#mavisar').checked?'\n회원에게 쪽지가 갑니다.':''))){t.disabled=false;return}
+    res=await sb.rpc('gk_sancionar',{p_usuario:d.msanc,p_tipo:tipo,p_motivo:mot,p_dias:dias,p_avisar:tipo!=='nota'&&$('#mavisar').checked});
+  }else if(d.mret){if(!confirm('이 기록을 취소할까요? (정지라면 정지도 풀려요)')){t.disabled=false;return}res=await sb.rpc('gk_retirar_sancion',{p_id:+d.mret})}
+  else if(d.munban){
+    const u=(MEM||[]).find(x=>x.id===d.munban);
+    const h=await sb.from('gk_sanciones').select('id').eq('usuario',d.munban).eq('tipo','suspension').eq('activa',true);
+    if(h.data&&h.data.length){for(const s of h.data){res=await sb.rpc('gk_retirar_sancion',{p_id:s.id});if(res.error)break}}
+    if(!res||!res.error){res=await sb.from('profiles').update({banned_until:null}).eq('id',d.munban).select('id')}
+  }
+  if(res&&res.error){t.disabled=false;toast(errMsg(res.error));return}
+  toast('처리했습니다.');MEM=null;const y=window.scrollY;await route();window.scrollTo(0,y);if(mOpen)mLoadDetail(mOpen);
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='msort'){mSort=e.target.value;mShow=50;route()}
+  else if(e.target.name==='mtipo')mSyncForm();
+});
+document.addEventListener('keydown',e=>{if(e.target.id==='mq'&&e.key==='Enter'){mQ=e.target.value;mShow=50;route()}});
+document.addEventListener('input',e=>{if(e.target.id!=='mq')return;clearTimeout(window._mqT);window._mqT=setTimeout(()=>{mQ=e.target.value;mShow=50;route().then(()=>{const i=$('#mq');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}})},450)});
+
+/* panel de administración en la portada */
+function admDash(v,r){
+  if(MYROLE!=='admin')return '';
+  const n=x=>Number(x||0).toLocaleString('ko-KR'),st=v&&!v.error&&v.data,rs=r&&!r.error&&r.data;
+  const tile=(ico,label,val,href,warn,on)=>'<a class="adt'+(warn&&val>0?' hot':'')+'" href="'+href+'"'+(on?' onclick="'+on+'"':'')+'><b>'+(val==null?'–':n(val))+'</b><span>'+ico+' '+label+'</span></a>';
+  return '<div class="card admdash"><h2>🛠️ 관리자 대시보드 <span class="hint" style="font-weight:400">· 관리자에게만 보여요</span></h2>'
+   +'<div class="adrow"><div class="adlbl">📊 방문자</div>'+(st?tile('','오늘 방문자',st.hoy_visitantes,'#admin',0,"admTab='visitas'")+tile('','오늘 조회',st.hoy_vistas,'#admin',0,"admTab='visitas'")+tile('','어제 방문자',st.ayer_visitantes,'#admin',0,"admTab='visitas'")+tile('','총 방문자',st.total_visitantes,'#admin',0,"admTab='visitas'"):'<span class="hint">방문자 통계 꺼짐 — <code>2026-11-09-visitas.sql</code> 실행 필요</span>')+'</div>'
+   +'<div class="adrow"><div class="adlbl">✅ 할 일</div>'+(rs?tile('🔎','검토 대기 글',rs.revisar,'#admin',1,"admTab='review'")+tile('🚩','신고 (7일)',rs.reportes_7d,'#admin',1,"admTab='reports'")+tile('⚠️','방장 경고 대기',rs.avisos_activos,'#admin',1,"admTab='avisos'")+tile('✉️','안 읽은 문의',rs.mensajes,'#mensajes',1):'<span class="hint">요약 꺼짐 — <code>2026-11-09-miembros.sql</code> 실행 필요</span>')+'</div>'
+   +'<div class="adrow"><div class="adlbl">👥 회원</div>'+(rs?tile('','전체 회원',rs.miembros,'#miembros',0,"mFil='all'")+tile('🆕','오늘 가입',rs.nuevos_hoy,'#miembros',0,"mFil='nuevos'")+tile('🆕','7일 가입',rs.nuevos_7d,'#miembros',0,"mFil='nuevos'")+tile('🟡','주의·경고 중',rs.con_advertencia,'#miembros',0,"mFil='adv'")+tile('🔴','정지중',rs.suspendidos,'#miembros',0,"mFil='sus'"):'')+'</div>'
+   +'<div class="adbtns"><a class="btn btn-p" href="#admin">🛠️ 관리자 페이지</a><a class="btn" href="#miembros">👥 회원 관리</a><a class="btn" href="#admin" onclick="admTab=\'visitas\'">📊 방문자 통계</a></div></div>';
+}
+
 async function vHome(){
   nav('home');document.title='GaleríaK – Comunidad de K-Beauty y K-Pop en México';
   const since=ms=>new Date(Date.now()-ms).toISOString();
   const top=ms=>listQ().gte('created_at',since(ms)).eq('is_pinned',false).neq('gallery_id','asistencia').order('up_count',{ascending:false}).order('comment_count',{ascending:false}).order('created_at',{ascending:false}).limit(10);
-  const [day,week,deals,recent,trend,vis]=await Promise.all([
+  const [day,week,deals,recent,trend,vis,res]=await Promise.all([
     top(D),top(7*D),
     listQ().eq('gallery_id','ofertas').eq('deal_sold',false).order('created_at',{ascending:false}).limit(5),
     listQ().eq('is_pinned',false).neq('gallery_id','asistencia').order('created_at',{ascending:false}).limit(10),
     loadTrend(),
-    MYROLE==='admin'?sb.rpc('gk_estadisticas_visitas').then(r=>r,()=>({error:1})):null
+    MYROLE==='admin'?sb.rpc('gk_estadisticas_visitas').then(r=>r,()=>({error:1})):null,
+    MYROLE==='admin'?sb.rpc('gk_admin_resumen').then(r=>r,()=>({error:1})):null
   ]);
   if(recent.error)return fail(recent.error);
   const Dy=day.data||[],Wk=week.data||[],Dl=deals.data||[],R=recent.data||[];
   const bestL=Dy.length?Dy:Wk,bestT=Dy.length?'hoy':'esta semana';
-  return ad('leader')+admVisitBar(vis)+welcome()+(isNewbie()?attendNudge():'')+`
+  return ad('leader')+admDash(vis,res)+welcome()+(isNewbie()?attendNudge():'')+`
   <div class="card"><h2 style="color:var(--hot)">🔥 Mejores de ${bestT} <span class="hint" style="font-weight:400">· lo más votado de todas las galerías</span> <a class="more" href="#hoy">Ver todo</a></h2>${bestL.length?`<ul class="list">${bestL.slice(0,5).map((p,i)=>row(p,i+1,true)).join('')}</ul>`+(bestL.length>5?`<ul class="list" id="bestMore" hidden>${bestL.slice(5,10).map((p,i)=>row(p,i+6,true)).join('')}</ul><button class="btn" style="width:100%;margin-top:8px" onclick="const m=document.getElementById('bestMore');m.hidden=!m.hidden;this.textContent=m.hidden?'Ver más · TOP 10 ▾':'Ver menos ▴'">Ver más · TOP 10 ▾</button>`:''):'<div class="empty">Todavía no hay publicaciones con ♥. Dale ♥ a lo que te guste y aparecerá aquí.</div>'}</div>
   <a class="card exambar" href="/examen-coreano/"><div><span class="tag">GRATIS · SIN CUENTA</span><h2>📝 ¿Qué tanto coreano sabes?</h2><p>Examen estilo TOPIK con 30 preguntas de un banco de 180: vocabulario, lectura y audio. Nivel del 1 al 6 con explicación en español.</p><span class="go">Hacer el examen gratis →</span></div><img src="/img/examen.svg" alt="Examen de coreano gratis" width="1200" height="630"></a>
   <div class="card"><h2>📈 Galerías en tendencia <span class="hint" style="font-weight:400">· más activas esta semana</span> <a class="more" href="#galerias">Todas</a></h2>${trendList(trend,8)}</div>
@@ -1082,7 +1230,7 @@ async function vAdmin(){
   if(!ME)return '<div class="card empty">먼저 <a href="#entrar" style="color:var(--blue);font-weight:700">로그인</a>해 주세요.</div>';
   if(MYROLE!=='admin')return '<div class="card empty">관리자만 볼 수 있는 페이지입니다.</div>';
   document.title='관리자 – GaleríaK';
-  const TABS=[['review','검토 필요'],['reports','신고 내역'],['hidden','숨긴 글'],['users','사용자'],['managers','🛡️ 매니저·방장'],['avisos','⚠️ 방장 경고'],['visitas','📊 방문자'],['salud','🩺 점검']];
+  const TABS=[['review','검토 필요'],['reports','신고 내역'],['hidden','숨긴 글'],['users','👥 회원 관리'],['managers','🛡️ 매니저·방장'],['avisos','⚠️ 방장 경고'],['visitas','📊 방문자'],['salud','🩺 점검']];
   let body='';
   if(admTab==='review'){
     const {data,error}=await sb.from('posts').select(ADM_POST).eq('needs_review',true).order('created_at',{ascending:false}).limit(50);
@@ -1130,6 +1278,7 @@ async function vAdmin(){
       ck('사진 권한 함수(gk_puede_fotos)',async()=>{const r=await sb.rpc('gk_puede_fotos');errOf(r);return true},F2),
       ck('방장 역할(rol)',async()=>errOf(await sb.from('gk_managers').select('rol').limit(1)),F3),
       ck('경고 표(gk_advertencias)',async()=>errOf(await sb.from('gk_advertencias').select('id').limit(1)),F3),
+      ck('회원 관리(gk_admin_miembros)',async()=>errOf(await sb.rpc('gk_admin_resumen')),'2026-11-09-miembros.sql'),
       ck('방문자 통계(gk_estadisticas_visitas)',async()=>errOf(await sb.rpc('gk_estadisticas_visitas')),'2026-11-09-visitas.sql'),
       ck('정적 페이지(/g/, /p/)',async()=>{const r=await fetch('/g/skincare/',{cache:'no-store'});return r.ok||'아직 생성 전(최대 몇 분)'},'GitHub Actions'),
     ]);
@@ -1154,6 +1303,7 @@ async function vAdmin(){
      +order.filter(g=>(MGR.has(g.id)&&MGR.get(g.id).size)||LID.has(g.id)).map(g=>'<h3 style="margin:10px 0 4px">'+esc(g.name)+'</h3><ul class="list">'+(LID.has(g.id)?'<li class="row"><div class="t"><b>'+esc(names[LID.get(g.id)]||'?')+'</b> '+liderBadge(g.id)+' <button class="btn" style="padding:2px 8px;font-size:11px;margin-left:8px" data-mgrdel="'+g.id+'|'+LID.get(g.id)+'">해제</button></div></li>':'')+[...(MGR.get(g.id)||[])].map(u=>'<li class="row"><div class="t"><b>'+esc(names[u]||u.slice(0,8))+'</b> '+mgrBadge(g.id)+' <button class="btn" style="padding:2px 8px;font-size:11px;margin-left:8px" data-mgrdel="'+g.id+'|'+u+'">해제</button></div></li>').join('')+'</ul>').join('')
      +(all.length?'':'<div class="empty">아직 지정된 매니저가 없습니다.</div>');
   }else{
+    if(!MEM_OFF){location.hash='#miembros';return loading()}
     const {data,error}=await sb.rpc('admin_users',{p_search:admQ||null});
     if(error)return fail(error);
     body='<form id="admsearch" style="display:flex;gap:6px;margin-bottom:8px"><input id="admq" value="'+esc(admQ)+'" placeholder="닉네임 검색"><button class="btn" style="white-space:nowrap">검색</button></form>'
@@ -1214,6 +1364,7 @@ async function route(){
     else if(h==='mi-cuenta')html=await vMiCuenta();
     else if(h==='entrar')html=vAuth();
     else if(h==='admin')html=await vAdmin();
+    else if(h==='miembros')html=await vMiembros();
     else if(h==='nueva-clave')html=vNewPass();
     else if(h==='buscar')html=await vSearch($('#q').value);
     else if(h==='mejores')html=await vBest();

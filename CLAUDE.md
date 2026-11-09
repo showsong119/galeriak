@@ -169,3 +169,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 방문자 ID = 브라우저 localStorage `gk_vid` 무작위 UUID(개인정보 아님, 개인정보처리방침에 고지). SPA는 `countVisit()`(route마다, 4초 간격 제한), 정적 페이지(가이드·acerca·contacto·/g/·/p/·시험·약관·개인정보)는 인라인 스크립트(gen-guias `VISIT_JS`, build-static `VISIT_JS`).
 - 관리자 탭 `visitas`(📊 방문자), 점검 탭·verificar.sql 13번. 홈 맨 위 `admVisitBar()`(MYROLE=admin일 때만, 오늘·어제·총 방문자).
 - 조회수: 목록 `row()`와 글 화면, 정적 /p/·/g/에 👁 표시(모두에게 보임). `SEL`에 views 포함.
+
+## 25. 관리자 대시보드·회원 관리 (2026-11-09)
+- SQL: `supabase/2026-11-09-miembros.sql` (추가 전용, 재실행 안전, 로컬 PG16 테스트 통과). **사용자 실행 필요.** 표 `gk_sanciones(usuario,tipo 'nota'|'precaucion'|'advertencia'|'suspension',motivo,dias,por,created_at,activa,retirada_*)` RLS: 관리자 전체, 회원은 본인 것(메모 제외)만 읽기, 쓰기는 RPC만. `gk_sancionar(p_usuario,p_tipo,p_motivo,p_dias,p_avisar)`(관리자만, 관리자 계정 불가, 정지는 profiles.banned_until 갱신(36500일=영구), p_avisar면 `mensajes`에 스페인어 쪽지), `gk_retirar_sancion(p_id)`(정지 취소 시 banned_until=null), `gk_admin_miembros()`(가입일=auth.users.created_at, 최근 접속, 글·댓글·♥·출석·점수, 받은 신고, 방장 경고 글, 주의·경고·정지·메모 수), `gk_admin_resumen()`(검토 대기·7일 신고·방장 경고·안 읽은 문의·회원·오늘/7일 가입·정지·주의경고 회원).
+- 사이트: 홈 맨 위 `admDash()`(관리자만: 방문자 4칸·할 일 4칸·회원 5칸, 각 칸 클릭 시 해당 화면), 메뉴 `🛠️ 관리자`·`👥 회원`, 경로 `#miembros` `vMiembros()`: 필터 칩(전체·신규7일·주의·경고·정지중·신고받음·메모·30일 미접속), 정렬(가입일 최신/오래된·주의 필요순(mRisk)·점수·글·최근 접속·닉네임), 가입일 정렬 시 기간별 묶음(오늘/어제/7일/30일/1~3개월/이전), 50명씩 더 보기, CSV, 줄 클릭 → 기록·최근 글·조치(메모/주의/경고/정지 1·3·7·30일·영구, 스페인어 사유 칩, 쪽지 알림)·정지 해제. 관리자 탭 '👥 회원 관리'는 `#miembros`로 이동(SQL 없으면 옛 admin_users 목록). 점검 탭·verificar 14번.

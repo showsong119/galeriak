@@ -21,7 +21,8 @@ with c(orden, revision, ok, archivo) as (values
   (11,'Galerías nuevas registradas (kpop-general, asistencia)', to_regclass('public.galleries') is null or (select count(*) = 2 from public.galleries g where to_jsonb(g) ->> coalesce((select a.attname from pg_constraint c join pg_attribute a on a.attrelid = c.confrelid and a.attnum = c.confkey[1] where c.conname = 'posts_gallery_id_fkey' limit 1), 'id') in ('kpop-general', 'asistencia')),
                                                                                                                              '2026-11-08-galerias-faltantes.sql'),
   (12,'Al menos 1 administrador',              exists (select 1 from public.profiles where role = 'admin'),                '5장 SQL: 관리자 추가'),
-  (13,'Contador de visitas (gk_visitas)',      to_regprocedure('public.gk_estadisticas_visitas()') is not null,            '2026-11-09-visitas.sql')
+  (13,'Contador de visitas (gk_visitas)',      to_regprocedure('public.gk_estadisticas_visitas()') is not null,            '2026-11-09-visitas.sql'),
+  (14,'Gestión de miembros (gk_sanciones)',     to_regprocedure('public.gk_admin_miembros()') is not null,                    '2026-11-09-miembros.sql')
 )
 select orden as "#", revision as "Revisión", case when ok then '✅ listo' else '❌ falta' end as "Estado",
        case when ok then '' else archivo end as "Ejecutar"
