@@ -382,6 +382,10 @@ let USR_OK=null,MYUSR=null;
 const usrOk=()=>USR_OK!==null?Promise.resolve(USR_OK):sb.rpc('gk_usuario_disponible',{p_usuario:'zzzz'}).then(r=>USR_OK=!r.error,()=>USR_OK=false);
 const USR_RE=/^[a-z][a-z0-9_]{3,19}$/;
 // Sin usuario no se participa (leer sí). Devuelve true si mandó a elegirlo.
+// Reenviar el correo de confirmación (cuenta creada pero sin confirmar)
+window.gkResend=async(mail,btn)=>{if(!mail)return;if(btn){btn.disabled=true;btn.textContent='Enviando…'}
+  const {error}=await sb.auth.resend({type:'signup',email:mail,options:{emailRedirectTo:location.origin+location.pathname}});
+  if(btn){btn.textContent=error?'No se pudo enviar. Intenta en unos minutos.':'✅ Te lo enviamos otra vez';setTimeout(()=>{btn.disabled=false},60000)}};
 const needUsr=()=>{if(ME&&MYUSR===''){toast('Antes de participar, elige tu usuario 🪪');go('usuario');return true}return false};
 const USR_MSG={libre:'✅ Disponible',tomado:'❌ Ese usuario ya está en uso',reservado:'❌ Ese usuario está reservado',invalido:'4 a 20: letras minúsculas, números y _ (empieza con letra)'};
 const withTimeout=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
@@ -1610,7 +1614,7 @@ document.addEventListener('submit',async e=>{
       const {data,error}=await sb.auth.signUp({email:mail,password:pass,options:{data:{nickname:n,age_confirmed:true,...(u?{usuario:u}:{})},emailRedirectTo:location.origin+location.pathname,...capOpt()}});
       busy(false);capReset();
       if(error)return err.textContent=errMsg(error);
-      if(!data.session){$('#main').innerHTML=`<div class="card empty" style="max-width:440px;margin:0 auto">📩 Te enviamos un correo a <b>${esc(mail)}</b>. Abre el enlace para confirmar tu cuenta y después entra.<br><br><button class="btn btn-brand" data-auth="in">Ya confirmé, entrar</button></div>`;return}
+      if(!data.session){$('#main').innerHTML=`<div class="card empty" style="max-width:440px;margin:0 auto">📩 Te enviamos un correo a <b>${esc(mail)}</b>.<br>Abre el enlace para <b>confirmar tu cuenta</b> y después entra.<p class="hint" style="margin:10px 0">¿No llega? Revisa <b>Spam</b> o <b>Promociones</b>. Puede tardar unos minutos.</p><button class="btn btn-brand" data-auth="in">Ya confirmé, entrar</button> <button class="btn" type="button" onclick="gkResend(${esc(JSON.stringify(mail))},this)">Reenviar correo</button></div>`;return}
       await refreshSession();try{sessionStorage.removeItem('gk_new')}catch(_){}toast('¡Cuenta creada! Empieza en Lv.0: pasa tu primera lista ✅');go('g-asistencia');
     }else{
       let em=mail;
@@ -1622,6 +1626,7 @@ document.addEventListener('submit',async e=>{
         em=r.data;
       }
       const {error}=await sb.auth.signInWithPassword({email:em,password:pass,options:capOpt()});busy(false);capReset();
+      if(error&&/not confirmed/i.test(error.message||'')){err.innerHTML='📩 Primero confirma tu correo con el enlace que te enviamos (revisa Spam). <button class="btn" type="button" style="margin-top:6px" onclick="gkResend('+esc(JSON.stringify(em))+',this)">Reenviar correo de confirmación</button>';return}
       if(error)return err.textContent=errMsg(error);
       await refreshSession();toast('¡Hola, '+MYNICK+'!');go('home');
     }

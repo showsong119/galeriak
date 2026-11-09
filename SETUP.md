@@ -63,3 +63,17 @@ update public.profiles set role = 'admin' where nickname = 'showsong117';
 2. 나오는 **Site Key**(공개값)를 Claude에게 전달 → 사이트에 넣음
 3. **Secret Key**는 Supabase https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/auth/protection 의 CAPTCHA(Turnstile)에 붙여넣기 — 2번 반영 후에 켜기
 
+
+## 11. 이메일 인증 메일이 실제로 가도록 (Resend 무료 연결) — 2026-11-10
+Supabase 기본 메일 발송은 **테스트용**이라 시간당 2통, 그리고 팀원 주소로만 보내짐 → 일반 회원은 인증 메일을 못 받음. 무료 Resend(하루 100통·월 3,000통)를 연결한다.
+1. https://resend.com 가입(구글 계정 가능) → Domains → Add Domain → `galeriakmx.com`
+2. Resend가 보여 주는 DNS 레코드(TXT·MX 등)를 Netlify DNS에 추가: https://app.netlify.com/teams/ → Domains → galeriakmx.com → DNS settings → Add new record (값을 그대로 복사) → Resend에서 Verify
+3. Resend → API Keys → Create API Key(권한 Sending access) → 키 복사(채팅에 붙이지 말 것)
+4. Supabase → Authentication → Emails → SMTP Settings: https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/auth/smtp
+   - Enable Custom SMTP 켬 · Sender email `no-reply@galeriakmx.com` · Sender name `GaleríaK`
+   - Host `smtp.resend.com` · Port `465` · Username `resend` · Password = 3번 API 키 → Save
+5. 인증 켜짐 확인: https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/auth/providers → Email → **Confirm email 켬**
+6. 메일 문구(스페인어): https://supabase.com/dashboard/project/pimuwxsazuzmgwhbrzbx/auth/templates
+   - Confirm signup: 제목 `Confirma tu cuenta de GaleríaK 💌`, 본문 = `supabase/correos/confirmar-cuenta.html`
+   - Reset password: 제목 `Crea una contraseña nueva para GaleríaK`, 본문 = `supabase/correos/restablecer-contrasena.html`
+7. 시험: 다른 이메일로 가입 → 메일 도착·버튼 → 로그인 되는지 확인
