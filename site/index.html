@@ -130,6 +130,7 @@ nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:now
 .post h1{font-size:20px;margin:4px 0 6px}
 .post .pmeta{font-size:12.5px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px}
 .post .body{white-space:pre-wrap;word-wrap:break-word;font-size:15px;line-height:1.7;margin:16px 0}
+.fb{white-space:normal!important}.fb p{margin:0 0 12px}.fb ul{margin:0 0 12px;padding-left:22px}.fb li{margin:4px 0}.fb .ko{font-weight:700;color:#364fc7}.fb .bx{display:block;border-radius:12px;padding:12px 14px;margin:0 0 12px}.fb .tip{background:#fff8e1;border-left:4px solid #f59f00}.fb .reto{background:#f3f0ff;border-left:4px solid #7048e8}.fb .resp{background:#ebfbee;border-left:4px solid #2f9e44}.fb .resp summary{cursor:pointer;font-weight:700;color:#1b6b2f}.fb .resp[open] summary{margin-bottom:6px}.fb figure.ilus{margin:0 0 14px}.fb figure.ilus img{display:block;width:100%;height:auto;border-radius:14px}.fb a{text-decoration:underline}
 .post .body img.pimg{display:block;max-width:100%;max-height:80vh;border-radius:12px;margin:10px 0;background:#f1f1f4}
 .photos{border:1px dashed var(--line);border-radius:12px;padding:10px 12px;margin:-4px 0 12px;background:#fafafc}.photos.locked{background:#f6f6f8;color:var(--muted)}.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.thumbs div{position:relative}.thumbs img{width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}.thumbs button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:#17171c;color:#fff;font-size:12px;cursor:pointer}
 .dealbox{border:1px solid #ffd2c8;background:#fff6f3;border-radius:12px;padding:12px;margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
@@ -860,11 +861,31 @@ async function uploadPhotos(){
   return marks;
 }
 // muestra el texto con las fotos (solo fotos del bucket y de la carpeta del autor)
-function bodyHTML(p){
-  return String(p.body||'').split('\n').map(line=>{const m=line.trim().match(FOTO_RE);
-    if(m&&m[1]===p.author_id)return `<img class="pimg" loading="lazy" src="${SUPABASE_URL}/storage/v1/object/public/${FOTO_BUCKET}/${m[1]}/${m[2]}.${m[3]}" alt="Foto de la publicación">`;
-    return esc(line)}).join('\n');
+// Formato legible del cuerpo: párrafos, listas, 💡 consejos, ✏️ retos, respuestas plegables, coreano resaltado e ilustraciones [ilus:nombre]
+function fmtBody(body,authorId,fotoUrl){
+  const E=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const inl=s=>E(s).replace(/\*\*([^*\n]{1,80})\*\*/g,'<b>$1</b>').replace(/[가-힣][가-힣0-9 ?!~.,]*[가-힣?!~]|[가-힣]/g,m=>`<span class="ko">${m}</span>`).replace(/(^|\s)(\/(?:examen-coreano|guias|acerca|contacto)\/[a-z0-9\-\/]*)/g,'$1<a href="$2">$2</a>');
+  const FOTO=/^\[foto:([0-9a-f-]{36})\/([A-Za-z0-9_-]{6,40})\.(webp|jpg|png)\]$/,ILUS=/^\[ilus:([a-z0-9-]{2,60})\]$/;
+  const out=[];
+  for(const blk of String(body||'').replace(/\r/g,'').split(/\n\s*\n/)){
+    const L=blk.split('\n').map(x=>x.trim()).filter(Boolean);if(!L.length)continue;
+    const f=L[0];
+    if(/^(✏️|✍️)/.test(f)){out.push(`<div class="bx reto">${L.map(inl).join('<br>')}</div>`);continue}
+    if(/^(💡|📌|⚠️)/.test(f)){out.push(`<div class="bx tip">${L.map(inl).join('<br>')}</div>`);continue}
+    if(/^(Respuesta|Respuestas|Solución)\s*:/i.test(f)){out.push(`<details class="bx resp"><summary>👀 Ver respuesta</summary>${L.map(x=>inl(x.replace(/^(Respuestas?|Solución)\s*:\s*/i,''))).join('<br>')}</details>`);continue}
+    let p=[],ul=[];const flushP=()=>{if(p.length)out.push(`<p>${p.join('<br>')}</p>`);p=[]},flushU=()=>{if(ul.length)out.push(`<ul>${ul.join('')}</ul>`);ul=[]};
+    for(const x of L){
+      let m;
+      if((m=x.match(FOTO))){flushP();flushU();if(m[1]===authorId)out.push(`<img class="pimg" loading="lazy" src="${fotoUrl}/${m[1]}/${m[2]}.${m[3]}" alt="Foto de la publicación">`);continue}
+      if((m=x.match(ILUS))){flushP();flushU();out.push(`<figure class="ilus"><img src="/img/diario/${m[1]}.svg" alt="Ilustración de GaleríaK" width="1200" height="630" loading="lazy"></figure>`);continue}
+      if((m=x.match(/^(?:[•·▪◦]|[-*](?=\s)|\d{1,2}[.)](?=\s))\s*(.+)$/))){flushP();ul.push(`<li>${inl(m[1])}</li>`);continue}
+      flushU();p.push(inl(x));
+    }
+    flushP();flushU();
+  }
+  return out.join('');
 }
+function bodyHTML(p){return fmtBody(p.body,p.author_id,SUPABASE_URL+'/storage/v1/object/public/'+FOTO_BUCKET)}
 
 /* managers por galería: tabla gk_managers (el equipo los nombra) */
 let MGR=new Map(),MGR_OK=false,mgrReady=Promise.resolve();
@@ -1080,7 +1101,7 @@ async function vPost(id){
    ${ADV.has(+p.id)?`<div class="advbox">⚠️ <b>Esta publicación recibió una advertencia</b> del líder de la galería (motivo: ${esc(ADV.get(+p.id).motivo)}). Los comentarios están pausados mientras el equipo de GaleríaK la revisa y decide si se elimina o se reactiva.</div>`:''}
    <div class="pmeta"><span>${nick(p)}</span><span>${ago(p.created_at)}</span><span title="Vistas">👁 ${(p.views||0)+1}</span><span>♥ ${p.up_count}</span><span>💬 ${C.length}</span></div>
    ${p.deal_price?`<div class="dealbox"><div><div class="hint">Precio</div><div class="price" style="font-size:20px">${priceShown(p)?esc(p.deal_price):'Revisa el precio actual'}</div></div><div><div class="hint">Tienda</div><b>${esc(p.deal_store)}</b></div><div style="margin-left:auto">${p.deal_sold?'<span class="pill p-sold">Agotado</span>':(safeUrl(p.deal_url)?`<a href="${esc(p.deal_url)}" target="_blank" rel="nofollow sponsored noopener">Ir a la oferta →</a>`:`<span class="hint">${esc(p.deal_url||'Sin enlace')}</span>`)}</div></div>`:''}
-   <div class="body">${bodyHTML(p)}</div>
+   <div class="body fb">${bodyHTML(p)}</div>
    ${p.source_url?`<div class="srcbox"><b>Fuente:</b> ${safeUrl(p.source_url)?`<a href="${esc(p.source_url)}" target="_blank" rel="nofollow noopener">${esc(p.source_url)}</a>`:esc(p.source_url)}</div>`:''}
    ${ad('post')}
    ${p.is_deleted?'':`<div class="votes"><button class="v-up" data-vote="1" style="${myVote===1?'background:var(--brand-soft)':''}">♥ Me gusta ${p.up_count}</button><button data-vote="-1" style="${myVote===-1?'background:#eee':''}">👎 ${p.down_count}</button></div>`}
@@ -1560,6 +1581,7 @@ document.addEventListener('submit',async e=>{
     if(g.needSource){const s=$('#wsrc').value.trim();if(!okUrl(s))return err.textContent='En esta galería la fuente es obligatoria (enlace https://…).';row.source_url=s}
     if(MYROLE==='admin'&&$('#wpin')&&$('#wpin').checked)row.is_pinned=true;
     if(/\[foto:/i.test(body))return err.textContent='Usa el botón de fotos para agregar imágenes.';
+    if(/\[ilus:/i.test(body)&&MYROLE!=='admin')return err.textContent='Las ilustraciones [ilus:] son solo para el equipo.';
     if(g.anon){if(!canAnon())return err.textContent=`Para publicar en Anónimo necesitas Lv.1 (${LEVELS[1][1]} puntos).`;WFOTOS=[]}
     busy(true);
     if(WFOTOS.length){if(!canPhoto()){busy(false);return err.textContent=`Las fotos son para Lv.${FOTO_LV} o más.`}

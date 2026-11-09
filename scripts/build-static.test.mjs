@@ -69,3 +69,17 @@ test('tendencias: mismas reglas que el sitio', () => {
   const t = trendFrom([{ gallery_id: 'a', comment_count: 1, up_count: 0 }, { gallery_id: 'b', comment_count: 5, up_count: 2 }, { gallery_id: 'zz' }], G);
   assert.deepEqual(t.map(x => [x.id, x.score]), [['b', 10], ['a', 4]]);
 });
+
+test('formato legible del cuerpo', async () => {
+  const { fmtBody, plainBody } = await import('./build-static.mjs');
+  const h = fmtBody('[ilus:002-oppa-unnie]\n\nHola 오빠\n• uno\n• dos\n\n💡 Dato\n\nRespuesta: 형\n\n<script>x</script> /examen-coreano/', 'u', 'X');
+  assert.match(h, /^<figure class="ilus"><img src="\/img\/diario\/002-oppa-unnie\.svg"/);
+  assert.match(h, /<span class="ko">오빠<\/span>/);
+  assert.match(h, /<ul><li>uno<\/li><li>dos<\/li><\/ul>/);
+  assert.match(h, /class="bx tip"/);
+  assert.match(h, /<details class="bx resp"><summary>👀 Ver respuesta<\/summary><span class="ko">형<\/span>/);
+  assert.ok(!h.includes('<script>'));
+  assert.match(h, /<a href="\/examen-coreano\/">/);
+  assert.ok(!fmtBody('[ilus:../x]', 'u', 'X').includes('<img'));
+  assert.equal(plainBody('[ilus:abc]\n\nTexto'), 'Texto');
+});

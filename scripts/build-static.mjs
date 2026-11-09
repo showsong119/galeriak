@@ -13,7 +13,7 @@ const MAX_POSTS = 1500;
 // ---------- utilidades ----------
 export const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const FOTO_RE = /^\[foto:([0-9a-f-]{36})\/([A-Za-z0-9_-]{6,40})\.(webp|jpg|png)\]$/;
-export const plainBody = b => String(b || '').split('\n').filter(l => !FOTO_RE.test(l.trim())).join('\n').trim();
+export const plainBody = b => String(b || '').split('\n').filter(l => !FOTO_RE.test(l.trim()) && !/^\[ilus:[a-z0-9-]+\]$/.test(l.trim())).join('\n').trim();
 export const snippet = (s, n = 155) => { const t = String(s || '').replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : t; };
 const day = d => new Date(d).toISOString().slice(0, 10);
 const fecha = d => new Date(d).toLocaleDateString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'long', year: 'numeric' });
@@ -28,13 +28,31 @@ export function readSiteConfig(indexHtml) {
   return { GALS: grab('GALS'), CATS: grab('CATS'), url, key, adsense, sel };
 }
 
-export function bodyHTML(p, supaUrl) {
-  return String(p.body || '').split('\n').map(line => {
-    const m = line.trim().match(FOTO_RE);
-    if (m && m[1] === p.author_id) return `<img class="pimg" loading="lazy" src="${supaUrl}/storage/v1/object/public/post-images/${m[1]}/${m[2]}.${m[3]}" alt="Foto de la publicación">`;
-    return esc(line);
-  }).join('\n');
+// Formato legible del cuerpo: párrafos, listas, 💡 consejos, ✏️ retos, respuestas plegables, coreano resaltado e ilustraciones [ilus:nombre]
+export function fmtBody(body,authorId,fotoUrl){
+  const E=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const inl=s=>E(s).replace(/\*\*([^*\n]{1,80})\*\*/g,'<b>$1</b>').replace(/[가-힣][가-힣0-9 ?!~.,]*[가-힣?!~]|[가-힣]/g,m=>`<span class="ko">${m}</span>`).replace(/(^|\s)(\/(?:examen-coreano|guias|acerca|contacto)\/[a-z0-9\-\/]*)/g,'$1<a href="$2">$2</a>');
+  const FOTO=/^\[foto:([0-9a-f-]{36})\/([A-Za-z0-9_-]{6,40})\.(webp|jpg|png)\]$/,ILUS=/^\[ilus:([a-z0-9-]{2,60})\]$/;
+  const out=[];
+  for(const blk of String(body||'').replace(/\r/g,'').split(/\n\s*\n/)){
+    const L=blk.split('\n').map(x=>x.trim()).filter(Boolean);if(!L.length)continue;
+    const f=L[0];
+    if(/^(✏️|✍️)/.test(f)){out.push(`<div class="bx reto">${L.map(inl).join('<br>')}</div>`);continue}
+    if(/^(💡|📌|⚠️)/.test(f)){out.push(`<div class="bx tip">${L.map(inl).join('<br>')}</div>`);continue}
+    if(/^(Respuesta|Respuestas|Solución)\s*:/i.test(f)){out.push(`<details class="bx resp"><summary>👀 Ver respuesta</summary>${L.map(x=>inl(x.replace(/^(Respuestas?|Solución)\s*:\s*/i,''))).join('<br>')}</details>`);continue}
+    let p=[],ul=[];const flushP=()=>{if(p.length)out.push(`<p>${p.join('<br>')}</p>`);p=[]},flushU=()=>{if(ul.length)out.push(`<ul>${ul.join('')}</ul>`);ul=[]};
+    for(const x of L){
+      let m;
+      if((m=x.match(FOTO))){flushP();flushU();if(m[1]===authorId)out.push(`<img class="pimg" loading="lazy" src="${fotoUrl}/${m[1]}/${m[2]}.${m[3]}" alt="Foto de la publicación">`);continue}
+      if((m=x.match(ILUS))){flushP();flushU();out.push(`<figure class="ilus"><img src="/img/diario/${m[1]}.svg" alt="Ilustración de GaleríaK" width="1200" height="630" loading="lazy"></figure>`);continue}
+      if((m=x.match(/^(?:[•·▪◦]|[-*](?=\s)|\d{1,2}[.)](?=\s))\s*(.+)$/))){flushP();ul.push(`<li>${inl(m[1])}</li>`);continue}
+      flushU();p.push(inl(x));
+    }
+    flushP();flushU();
+  }
+  return out.join('');
 }
+export function bodyHTML(p, supaUrl) { return fmtBody(p.body, p.author_id, `${supaUrl}/storage/v1/object/public/post-images`); }
 
 // Página delgada (casi sin texto y sin comentarios): no se indexa ni va al sitemap
 export const isThin = (p, nComments) => plainBody(p.body).length < 60 && !nComments;
@@ -56,7 +74,7 @@ ${robots ? `<meta name="robots" content="${robots}">\n` : ''}<meta property="og:
 ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>\n` : ''}${adsense}
 <style>${css}
 .list{list-style:none;margin:0;padding:0}.list li{border-bottom:1px solid var(--line);padding:10px 0}.list li a{font-weight:600;text-decoration:none;color:var(--ink)}.list small{display:block;color:var(--muted);font-size:13px}
-.pbody{white-space:pre-wrap;word-wrap:break-word;line-height:1.75}.pimg{display:block;max-width:100%;border-radius:12px;margin:10px 0}
+.pbody{white-space:pre-wrap;word-wrap:break-word;line-height:1.75}.fb{white-space:normal!important}.fb p{margin:0 0 12px}.fb ul{margin:0 0 12px;padding-left:22px}.fb li{margin:4px 0}.fb .ko{font-weight:700;color:#364fc7}.fb .bx{display:block;border-radius:12px;padding:12px 14px;margin:0 0 12px}.fb .tip{background:#fff8e1;border-left:4px solid #f59f00}.fb .reto{background:#f3f0ff;border-left:4px solid #7048e8}.fb .resp{background:#ebfbee;border-left:4px solid #2f9e44}.fb .resp summary{cursor:pointer;font-weight:700;color:#1b6b2f}.fb .resp[open] summary{margin-bottom:6px}.fb figure.ilus{margin:0 0 14px}.fb figure.ilus img{display:block;width:100%;height:auto;border-radius:14px}.fb a{text-decoration:underline}.pimg{display:block;max-width:100%;border-radius:12px;margin:10px 0}
 .cmt{border-top:1px solid var(--line);padding:10px 0;font-size:15px}.cmt b{font-size:13px}.cmt p{margin:4px 0 0;white-space:pre-wrap}
 .btns{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}.btnp{display:inline-block;background:var(--brand);color:#fff!important;text-decoration:none;font-weight:700;border-radius:999px;padding:10px 18px}.btns a.sec{background:#fff;color:var(--ink)!important;border:1px solid var(--line)}
 .galgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;padding:0;list-style:none}.galgrid a{display:block;border:1px solid var(--line);border-radius:12px;padding:10px 12px;text-decoration:none;color:var(--ink);background:#fff}.galgrid small{display:block;color:var(--muted);font-size:12px}
@@ -91,7 +109,7 @@ export function renderPost(p, g, comments, ctx) {
 <span class="cat">${esc(g.name)}</span>
 <h1>${esc(p.title)}</h1>
 <p class="meta">${esc(nick)} · ${fecha(p.created_at)} · 👁 ${p.views || 0} · ♥ ${p.up_count || 0} · 💬 ${comments.length}</p>
-<div class="pbody">${bodyHTML(p, ctx.url)}</div>
+<div class="pbody fb">${bodyHTML(p, ctx.url)}</div>
 ${p.deal_price ? `<p><b>Tienda:</b> ${esc(p.deal_store || '')} · revisa el precio actual en la tienda.</p>` : ''}
 <div class="btns"><a class="btnp" href="/#p-${p.id}">💬 Comentar o dar ♥</a><a class="btnp sec" href="/#g-${g.id}">Más de ${esc(g.name)}</a></div>
 </article>
