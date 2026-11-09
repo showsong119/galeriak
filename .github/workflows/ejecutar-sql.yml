@@ -1,0 +1,22 @@
+name: ejecutar-sql
+# Ejecuta un archivo de supabase/ en la base de datos real. Solo a mano (workflow_dispatch).
+on:
+  workflow_dispatch:
+    inputs:
+      archivo:
+        description: "Ruta, p. ej. supabase/2026-11-10-TODO-en-orden.sql"
+        required: true
+permissions:
+  contents: read
+jobs:
+  sql:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/ejecutar-sql.mjs
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          ARCHIVO: ${{ inputs.archivo }}

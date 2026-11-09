@@ -1,0 +1,25 @@
+name: configurar-correo
+# Resend + Netlify DNS + Supabase SMTP/plantillas, todo automático. Ejecutar a mano.
+on:
+  workflow_dispatch:
+    inputs:
+      nueva_clave:
+        description: "1 = crear otra clave SMTP en Resend"
+        required: false
+        default: "0"
+permissions:
+  contents: read
+jobs:
+  correo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/configurar-correo.mjs
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          NUEVA_CLAVE: ${{ inputs.nueva_clave }}
