@@ -52,3 +52,20 @@
 ## 4. 역할
 - Claude: 키워드별 글 작성·제목/FAQ 수정·구조화 데이터·내부 링크, 서치 콘솔 캡처 분석
 - 민석님: 서치 콘솔 색인 요청(하루 10개), 2~4주마다 「실적」「페이지」 캡처 공유, SNS 프로필에 링크
+
+## 5. 가이드 백로그 (예약 작업이 위에서부터 2편씩 씀 — 끝나면 상태를 ✅로)
+| 순서 | slug | 노릴 검색어 | 분류 | 상태 |
+|---|---|---|---|---|
+| 1 | niacinamida | niacinamida para qué sirve | K-Beauty | ✅ 2026-11-09 |
+| 2 | boletos-kpop-mexico | cómo comprar boletos kpop México | K-Pop | ✅ 2026-11-09 |
+| 3 | topik-mexico | TOPIK México / dónde presentar el TOPIK en México | Coreano | ⏳ |
+| 4 | serum-coreano | sérum coreano para principiantes | K-Beauty | ⏳ |
+| 5 | palabras-kpop-significado | qué significa oppa, daebak, aegyo | Coreano | ⏳ |
+| 6 | kdramas-principiantes | kdramas para principiantes | K-Drama | ⏳ |
+| 7 | acido-salicilico-coreano | ácido salicílico para poros / BHA coreano | K-Beauty | ⏳ |
+| 8 | lightstick-kpop | qué es un lightstick y cómo conectarlo | K-Pop | ⏳ |
+| 9 | aprender-coreano-gratis | cómo aprender coreano gratis desde cero | Coreano | ⏳ |
+| 10 | manchas-skincare-coreano | skincare coreano para manchas | K-Beauty | ⏳ |
+| 11 | comida-coreana-mexico | comida coreana para principiantes (qué pedir) | Corea | ⏳ |
+| 12 | beca-gks-mexico | beca GKS México requisitos (solo con fuentes oficiales) | Coreano | ⏳ |
+백로그가 3편 이하로 남으면 예약 작업이 SEO.md 1장 규칙에 맞는 새 주제를 아래에 추가한다(검색 수요 근거를 한 줄로).
