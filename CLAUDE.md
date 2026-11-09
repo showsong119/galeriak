@@ -63,7 +63,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 입력: `deals/inbox/*.json` → 검증(ASIN 10자, 제목 4–120자, 가격 범위) → 7일 내 같은 ASIN 중복 제거 → `posts`에 insert
 - insert 형태: `{gallery_id:'ofertas', anon_name:'Bot de ofertas', title, body, deal_price:'$289 MXN'|'Ver precio en Amazon', deal_store:'Amazon México', deal_url:'https://www.amazon.com.mx/dp/<ASIN>?tag=<TAG>', needs_review:true}`
   - needs_review=true → 바로 보이고, 관리자 '검토 필요' 대기열에도 뜸 (자동 게시 + 사후 검수)
-- 필요 값: `SUPABASE_SERVICE_ROLE_KEY`(GitHub Secret, **아직 미입력**), `AMAZON_TAG`(secret 또는 deals/config.json, **아직 미가입**)
+- 필요 값: `SUPABASE_SERVICE_ROLE_KEY`(GitHub Secret, **2026-11-09 입력 확인 — moderar 실행에서 Supabase 인증 통과**), `AMAZON_TAG`(secret 또는 deals/config.json, **아직 미가입**)
 - 선택: `PAAPI_ACCESS_KEY/SECRET_KEY` — Amazon PA-API 5 (판매 3건 이후 발급). 있으면 가격 검증 + 할인 상품 자동 탐색. **키가 없어 실호출 미검증**
 - Supabase 새 키(`sb_secret_…`)는 `apikey` 헤더만, 옛 JWT 키는 Authorization도 함께 보냄
 - 키가 없으면 `deals/last-run.json`에 `status:"sin-configurar", missing:[...]` 기록 후 종료
@@ -179,4 +179,4 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 봇: `scripts/moderar.mjs` + `.github/workflows/moderar.yml`(cron `*/10`, workflow_dispatch). Secrets `SUPABASE_SERVICE_ROLE_KEY`·`OPENAI_API_KEY`(없으면 ::warning 후 exit 0). 최근 `LOOKBACK_H`(48)시간, 실행당 `MAX_ITEMS`(150). 제외: 봇(anon_name 'Bot de ofertas'), 관리자 글. 사진은 `[foto:<author_id>/…]`만 public URL로 전송(사진 오류 400 → 텍스트만 재시도 후 'fotos-sin-revisar'로 revisar). `decidir()`: OCULTAR(sexual/minors·sexual·violence/graphic·self-harm/instructions·illicit/violent·hate/threatening·harassment/threatening, sexual/minors 점수 ≥0.2) → posts is_hidden+needs_review / comments is_hidden; REVISAR(harassment·hate·violence·self-harm·self-harm/intent·illicit 또는 flagged) → posts needs_review. 테스트 `scripts/moderar.test.mjs`, 로컬 목업 시 `OPENAI_BASE_URL`.
 - 사이트: 관리자 탭 `ia`(🤖 AI 검수, `IA_CAT` 한국어 라벨, 필터 `window.iaF` 대기 중/전체, `data-iares="<id>|restaurar|confirmar|eliminar"` → `iaResClick`), 대시보드 `admDash(v,r,ia)` 'AI 검수 대기' 칸, 점검 탭 항목, verificar 15번. 제재(경고·정지)는 자동으로 하지 않음.
 - 약관 `#moderacion`·개인정보처리방침 '4. Con quién compartimos datos'에 OpenAI 고지.
-
+- 2026-11-09 17:30: 사용자가 OpenAI 키를 Secret 이름 `OPENAI`로 입력 → 워크플로가 `OPENAI_API_KEY || OPENAI` 둘 다 읽게 수정. 첫 수동 실행: 키 2개 OK, Supabase 접속 OK, `gk_moderacion` 표 없음(PGRST205) → SQL 실행 대기.
