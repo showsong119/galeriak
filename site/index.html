@@ -430,7 +430,7 @@ function meBox(){
 }
 
 function nav(cur){
-  const items=[['home','Inicio'],['/examen-coreano/','📝 Examen de coreano<em>GRATIS</em>'],['hoy','🔥 Mejores de hoy'],['g-asistencia','✅ Asistencia'],['g-libre','💬 Foro libre'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y coreano'],['guias','Guías'],['galerias','Galerías']];
+  const items=[['home','Inicio'],['hoy','🔥 Mejores de hoy'],['g-asistencia','✅ Asistencia'],['g-libre','💬 Foro libre'],['c-beauty','K-Beauty'],['g-ofertas','Ofertas'],['c-kpop','K-Pop'],['g-kdramas','K-Drama'],['c-vida','Corea y coreano'],['guias','Guías'],['galerias','Galerías'],['/examen-coreano/','📝 Examen de coreano<em>GRATIS</em>']];
   if(MYROLE==='admin')items.push(['admin','관리자']);
   renderQbar();
   $('#nav').innerHTML=items.map(([h,n])=>`<a href="${h[0]==='/'?h:'#'+h}" class="${cur===h?'on':''}${h==='hoy'?' nav-hoy':''}${h==='g-asistencia'?' nav-att':''}${h==='/examen-coreano/'?' nav-exam':''}">${n}</a>`).join('');
@@ -455,8 +455,8 @@ async function vHome(){
   const Dy=day.data||[],Wk=week.data||[],Dl=deals.data||[],R=recent.data||[];
   const bestL=Dy.length?Dy:Wk,bestT=Dy.length?'hoy':'esta semana';
   return ad('leader')+welcome()+(isNewbie()?attendNudge():'')+`
-  <a class="card exambar" href="/examen-coreano/"><div><span class="tag">GRATIS · SIN CUENTA</span><h2>📝 ¿Qué tanto coreano sabes?</h2><p>Examen estilo TOPIK con 30 preguntas de un banco de 180: vocabulario, lectura y audio. Nivel del 1 al 6 con explicación en español.</p><span class="go">Hacer el examen gratis →</span></div><img src="/img/examen.svg" alt="Examen de coreano gratis" width="1200" height="630"></a>
   <div class="card"><h2 style="color:var(--hot)">🔥 Mejores de ${bestT} <span class="hint" style="font-weight:400">· lo más votado de todas las galerías</span> <a class="more" href="#hoy">Ver todo</a></h2>${bestL.length?listWithAds(bestL,1,true):'<div class="empty">Todavía no hay publicaciones con ♥. Dale ♥ a lo que te guste y aparecerá aquí.</div>'}</div>
+  <a class="card exambar" href="/examen-coreano/"><div><span class="tag">GRATIS · SIN CUENTA</span><h2>📝 ¿Qué tanto coreano sabes?</h2><p>Examen estilo TOPIK con 30 preguntas de un banco de 180: vocabulario, lectura y audio. Nivel del 1 al 6 con explicación en español.</p><span class="go">Hacer el examen gratis →</span></div><img src="/img/examen.svg" alt="Examen de coreano gratis" width="1200" height="630"></a>
   <div class="card"><h2>📈 Galerías en tendencia <span class="hint" style="font-weight:400">· más activas esta semana</span> <a class="more" href="#galerias">Todas</a></h2>${trendList(trend,8)}</div>
   <div class="card"><h2>🏷️ Ofertas K-Beauty <a class="more" href="#g-ofertas">Ver todas</a></h2>${Dl.length?`<ul class="list">${Dl.map((p,i)=>row(p,i+1,false)).join('')}</ul>`:'<div class="empty">¿Viste un buen precio? <a href="#w-ofertas" style="color:var(--blue)">Compártelo</a></div>'}</div>
   <div class="card"><h2>🕒 Lo más nuevo</h2>${R.length?listWithAds(R,1,true):'<div class="empty">¡Sé la primera persona en publicar!</div>'}</div>
