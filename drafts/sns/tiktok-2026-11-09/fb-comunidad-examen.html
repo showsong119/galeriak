@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es-MX"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1350px;overflow:hidden;background:#111116}
+body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff}
+#s{position:absolute;inset:0;overflow:hidden}
+.ko{font-family:"Noto Sans CJK KR",sans-serif}
+.pink{color:#e5317d}
+.abs{position:absolute;left:0;right:0}
+.pill{display:inline-block;border-radius:999px;font-weight:800}
+.ui{background:#fff;color:#17171c;border-radius:30px;box-shadow:0 24px 60px rgba(0,0,0,.35);overflow:hidden}
+.row{display:flex;align-items:center;gap:18px;padding:20px 28px;border-top:2px solid #f0f0f4;font-size:34px;font-weight:700}
+.row .n{width:40px;color:#e5317d;font-weight:900}
+.row .h{margin-left:auto;color:#e5317d;font-weight:900;font-size:30px;white-space:nowrap}
+.tag{font-size:24px;font-weight:800;background:#f3f3f7;color:#55555f;border-radius:10px;padding:4px 12px;white-space:nowrap}
+</style></head>
+<body><div id="s"></div>
+<script src="lib.js"></script>
+<script>
+const bar=(T)=>`<div style="position:absolute;left:60px;right:60px;top:50px;height:8px;border-radius:9px;background:rgba(255,255,255,.16)"><i style="display:block;height:100%;border-radius:9px;background:#fff;width:${T/TOTAL*100}%"></i></div>`;
+const bg=c=>`<div style="position:absolute;inset:0;background:${c}"></div>`;
+const head=(t,o)=>`<div class="abs" style="top:100px;padding:0 60px;display:flex;justify-content:space-between;align-items:center;opacity:${o}">${logo(44)}<span style="font-size:26px;font-weight:700;opacity:.7">galeriakmx.com</span></div>`;
+const SCENES=[
+ // 0. Gancho: los 3 mundos
+ {d:3.0,f:(t,T)=>bg('radial-gradient(circle at 70% 25%,#4a1232 0,#111116 62%)')+bar(T)+head(t,inn(t,0))+`
+  <div class="abs" style="top:250px;padding:0 60px">
+   <div style="font-size:66px;font-weight:800;color:#d6d6de;${up(inn(t,.05))}">¿Te encanta lo coreano? 🇰🇷</div>
+   <div style="margin-top:56px;display:grid;gap:34px">
+    ${[['🎤','K-Pop','#e5317d'],['📺','K-Drama','#6c4bd8'],['💄','K-Beauty','#ff7a2f']].map((r,i)=>`<div style="display:flex;align-items:center;gap:26px;${up(pop(t,.35+i*.22),80)}"><span style="width:130px;height:130px;border-radius:34px;background:${r[2]};display:grid;place-items:center;font-size:72px">${r[0]}</span><span style="font-size:120px;font-weight:900;letter-spacing:-4px">${r[1]}</span></div>`).join('')}</div>
+   <div style="margin-top:70px;font-size:68px;font-weight:900;${up(inn(t,1.3))}">…todo en <span style="background:#e5317d;padding:2px 18px;border-radius:16px">español</span> 🇲🇽</div>
+  </div>`},
+ // 1. Comunidad: galerías
+ {d:3.6,f:(t,T)=>bg('#f4f4f6')+bar(T).replace('rgba(255,255,255,.16)','rgba(0,0,0,.08)').replace('background:#fff;width','background:#17171c;width')+`
+  <div class="abs" style="top:110px;padding:0 60px;color:#17171c">
+   <div style="font-size:40px;font-weight:800;color:#e5317d;${up(inn(t,0))}">Una comunidad de fans en México</div>
+   <div style="font-size:92px;font-weight:900;letter-spacing:-3px;line-height:1;margin-top:12px;${up(inn(t,.1))}">Una galería para<br>cada tema 💬</div></div>
+  <div class="abs" style="top:430px;padding:0 60px;display:grid;grid-template-columns:1fr 1fr;gap:22px">
+   ${[['🎤','K-Pop','Galerías de tus grupos favoritos'],['📺','K-Drama','Recomendaciones y teorías'],['🧴','Skincare coreano','Rutinas y dudas'],['🏷️','Ofertas','Precios de K-Beauty'],['🇰🇷','Coreano','Aprende y practica'],['✅','Asistencia','Gana puntos cada día']].map((g,i)=>`<div style="background:#fff;color:#17171c;border-radius:28px;padding:28px;box-shadow:0 12px 30px rgba(0,0,0,.07);${zoom(pop(t,.4+i*.12))}"><div style="font-size:60px">${g[0]}</div><div style="font-size:42px;font-weight:900;margin-top:6px">${g[1]}</div><div style="font-size:28px;font-weight:600;color:#6a6a76;margin-top:4px">${g[2]}</div></div>`).join('')}</div>`},
+ // 2. K-Pop y K-Drama: lo más votado
+ {d:3.4,f:(t,T)=>bg('linear-gradient(160deg,#6c4bd8,#e5317d)')+bar(T)+head(t,1)+`
+  <div class="abs" style="top:190px;padding:0 60px">
+   <div style="font-size:84px;font-weight:900;letter-spacing:-3px;line-height:1.02;${up(inn(t,0))}">Habla de K-Pop<br>y K-Dramas 💜</div>
+   <div style="font-size:38px;font-weight:700;opacity:.9;margin-top:16px;${up(inn(t,.15))}">Comparte, vota con ♥ y comenta</div></div>
+  <div class="abs" style="top:520px;padding:0 60px"><div class="ui" style="${up(inn(t,.35),80)}">
+   <div style="padding:24px 28px;font-size:36px;font-weight:900;color:#e85d04">🔥 Mejores de hoy</div>
+   ${[['K-Pop','¿Cuál fue tu primer comeback favorito?',48],['K-Drama','K-Dramas para empezar: mi top 5',41],['K-Pop','Mi primer concierto en CDMX 💜',37],['K-Drama','¿Final feliz o triste? Debate 👀',29],['K-Pop','Fanchants que debes aprender 🎶',24],['K-Drama','OST que no dejo de escuchar 🎧',19]].map((r,i)=>`<div class="row" style="opacity:${cl(inn(t,.6+i*.18)*1.5)}"><span class="n">${i+1}</span><span class="tag">${r[0]}</span><span style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${r[1]}</span><span class="h">♥ ${r[2]}</span></div>`).join('')}
+  </div></div>`},
+ // 3. K-Beauty
+ {d:3.4,f:(t,T)=>bg('linear-gradient(160deg,#ff9a3c,#e5317d)')+bar(T)+head(t,1)+`
+  <div class="abs" style="top:190px;padding:0 60px">
+   <div style="font-size:84px;font-weight:900;letter-spacing:-3px;line-height:1.02;${up(inn(t,0))}">K-Beauty sin<br>complicaciones ✨</div>
+   <div style="font-size:38px;font-weight:700;opacity:.92;margin-top:16px;${up(inn(t,.15))}">Rutinas, reseñas y ofertas de la comunidad</div></div>
+  <div class="abs" style="top:520px;padding:0 60px;display:flex;gap:16px;flex-wrap:wrap">
+   ${['🫧 Limpieza','💧 Tónico','🧴 Sérum','🤍 Crema','☀️ Protector'].map((x,i)=>`<span class="pill" style="background:#fff;color:#17171c;font-size:40px;padding:18px 30px;${zoom(pop(t,.35+i*.12))}">${x}</span>`).join('')}</div>
+  <div class="abs" style="top:800px;padding:0 60px"><div class="ui" style="padding:30px 34px;${up(inn(t,1.1),80)}">
+   <div style="font-size:30px;font-weight:800;color:#e5317d">📘 GUÍAS GRATIS</div>
+   <div style="font-size:42px;font-weight:900;margin-top:8px;line-height:1.25">Rutina coreana paso a paso · Doble limpieza · Protector solar · Skincare para clima cálido</div></div></div>`},
+ // 4. Examen de coreano GRATIS
+ {d:4.6,f:(t,T)=>bg('radial-gradient(circle at 50% 30%,#1d3f99 0,#0f1430 70%)')+bar(T)+head(t,1)+`
+  <div class="abs" style="top:180px;text-align:center"><span class="pill" style="background:#ffd23f;color:#17171c;font-size:46px;padding:10px 34px;transform:scale(${pop(t,0)*pulse(t)})">100% GRATIS</span></div>
+  <div class="abs" style="top:280px;text-align:center;font-size:100px;font-weight:900;letter-spacing:-4px;line-height:1;${zoom(pop(t,.15))}">Examen de<br>coreano 📝</div>
+  <div class="abs" style="top:510px;padding:0 90px"><div class="ui" style="padding:30px 34px;${up(inn(t,.5),80)}">
+   <div style="display:flex;justify-content:space-between;font-size:28px;font-weight:800;color:#6a6a76"><span>Gramática · Pregunta 7/30</span><span>⏱ 18:42</span></div>
+   <div class="ko" style="font-size:64px;font-weight:900;margin:14px 0 10px">저는 학생<span style="color:#2f5bd8">( &nbsp; )</span>.</div>
+   ${['입니다','있습니다','합니다'].map((o,i)=>`<div class="ko" style="border:3px solid ${t>2.4&&i===0?'#1d8a5a':'#e6e6ec'};background:${t>2.4&&i===0?'#e7f6ee':'#fff'};border-radius:18px;padding:12px 22px;margin-top:12px;font-size:38px;font-weight:800">${'ABC'[i]}. ${o}${t>2.4&&i===0?' <span style="color:#1d8a5a">✓</span>':''}</div>`).join('')}
+  </div></div>
+  <div class="abs" style="top:1080px;padding:0 60px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap">
+   ${['✅ Sin registro','⏱ 30 min','🎧 Con audio','📊 Nivel 1–6'].map((x,i)=>`<span class="pill" style="background:rgba(255,255,255,.14);font-size:34px;padding:14px 24px;${up(inn(t,2.6+i*.15))}">${x}</span>`).join('')}</div>`},
+ // 5. CTA
+ {d:4.2,f:(t,T)=>bg('radial-gradient(circle at 50% 40%,#4a1232 0,#111116 65%)')+bar(T)+`
+  <div class="abs" style="top:200px;text-align:center;${zoom(pop(t,0))}">${logo(150)}</div>
+  <div class="abs" style="top:420px;text-align:center;font-size:52px;font-weight:800;color:#e5e5ec;line-height:1.3;${up(inn(t,.3))}">K-Pop · K-Drama · K-Beauty<br>y examen de coreano gratis</div>
+  <div class="abs" style="top:640px;text-align:center"><span class="pill" style="background:#e5317d;font-size:80px;padding:24px 54px;transform:scale(${pop(t,.6)*pulse(t)})">galeriakmx.com</span></div>
+  <div class="abs" style="top:850px;text-align:center;font-size:60px;font-weight:900;${up(inn(t,1))}">Únete gratis 💕</div>
+  <div class="abs" style="top:950px;text-align:center;font-size:40px;font-weight:700;color:#c9c9d3;${up(inn(t,1.3))}">Comparte con tu amiga fan del K-Pop 👯</div>
+  <div class="abs" style="top:1240px;text-align:center;font-size:24px;color:rgba(255,255,255,.45)">Comunidad de fans no oficial · Ejemplos ilustrativos</div>`},
+];
+setup(SCENES);
+draw(0,2.5);
+</script></body></html>
