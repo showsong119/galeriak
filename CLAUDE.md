@@ -203,3 +203,8 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 서치 콘솔: URL 접두어 `https://galeriakmx.com/`, HTML meta 2개(NyNr…, te6g…) site/index.html head — 지우지 말 것.
 - gen-guias 메타 확장(2026-11-09): `seo`(<title>용, 64자 이내), `faq`([[질문,답],…] → 본문 끝 「Preguntas frecuentes」+FAQPage JSON-LD), `published`/`updated`(YYYY-MM-DD, 사이트맵 lastmod·표시 날짜). 새 가이드: niacinamida, boletos-kpop-mexico (18편). 생성 순서는 22번대로(일러스트 → og → gen-guias → set-adsense).
 
+## 31. 검색엔진 자동 알림·가이드 자동 작성 (2026-11-09)
+- `scripts/indexar.mjs` + `.github/workflows/indexar.yml`(pages 배포 성공 후 workflow_run + 매일 13:47 UTC + 수동). 실제 사이트 sitemap.xml을 읽어 `seo/indexnow-estado.json`(url→lastmod)과 다른 URL만 IndexNow(api.indexnow.org)에 전송. 키 `0158a4d97848eee6339bb20951c82231`(공개, `site/<키>.txt` — 지우지 말 것). 첫 실행 82개 성공.
+- 구글: Indexing API는 JobPosting/BroadcastEvent 전용이라 쓰지 않음(정책 위반). 선택 Secret `GSC_SERVICE_ACCOUNT`(서비스 계정 JSON, Search Console 속성 `https://galeriakmx.com/`에 소유자로 추가 필요)가 있으면 새 URL 있을 때 하루 1번 사이트맵 재제출 + 7일마다 URL 검사 API로 주요 페이지(고정 페이지+최근 글 20개, 최대 80) 색인 상태를 `seo/google-estado.json`에 기록. 없으면 건너뜀. 테스트 `scripts/indexar.test.mjs`.
+- 예약 작업 「GaleríaK 가이드 자동 작성 (주 2회)」(`trig_01XZ5m3yc8aEndygqrN686p8`, 화·금 13:37 America/Mexico_City): SEO.md 5장 백로그 ⏳ 위에서 2편 작성 → 일러스트·og·gen-guias·set-adsense·npm test → 백로그 ✅ → 푸시. 사용자 사전 승인(2026-11-09).
+

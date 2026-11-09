@@ -39,3 +39,12 @@ update public.profiles set role = 'admin' where nickname = 'showsong117';
 3. https://github.com/showsong119/galeriak/settings/secrets/actions/new → Name `OPENAI_API_KEY`, Secret에 붙여넣기 → Add secret (4번 `SUPABASE_SERVICE_ROLE_KEY`도 있어야 작동)
 4. 사이트 관리자 › 🩺 점검에서 'AI 자동 검수' ✅ → 10분 안에 관리자 › 🤖 AI 검수 탭에 결과가 쌓이기 시작
 
+## 7. (선택) 구글 자동 사이트맵 제출·색인 상태 점검 — 15분
+구글은 「색인 생성 요청」 자동화를 허용하지 않아요. 대신 아래를 하면 새 글이 생길 때 사이트맵을 자동으로 다시 제출하고, 매주 어떤 페이지가 구글에 등록됐는지 자동으로 확인해요.
+1. https://console.cloud.google.com/ → 상단 프로젝트 `GaleriaK` 선택
+2. https://console.cloud.google.com/apis/library/searchconsole.googleapis.com → **사용(Enable)**
+3. https://console.cloud.google.com/iam-admin/serviceaccounts → **서비스 계정 만들기** → 이름 `galeriak-seo` → 완료
+4. 만든 계정 클릭 → **키** 탭 → **키 추가 → 새 키 만들기 → JSON** → 파일이 내려받아짐
+5. 서치 콘솔 https://search.google.com/search-console/users?resource_id=https://galeriakmx.com/ → **사용자 추가** → 3번 계정의 이메일(…@…iam.gserviceaccount.com) → 권한 **소유자**
+6. https://github.com/showsong119/galeriak/settings/secrets/actions/new → Name `GSC_SERVICE_ACCOUNT`, Secret에 4번 JSON 파일 내용 전체 붙여넣기
+
