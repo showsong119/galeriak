@@ -234,3 +234,8 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 시험 페이지: 기존 `gk_registrar_visita`(사이트 전체) 뒤에 `window.gkPagina('examen')`, `finish()`·시간 종료 시 `gkPagina('examen-fin')`.
 - 사이트: `admDash(v,r,ia,ex)` 「📝 무료 시험」 줄, 관리자 탭 `visitas` 아래 시험 섹션(파란 막대), 점검 탭 항목.
 
+## 36. 아이디(usuario) 로그인 (2026-11-10)
+- 사용자 결정: 가입 때 아이디 지정, 중복 불가, 아이디 또는 이메일로 로그인. 닉네임(apodo)은 별도로 공개 표시, 아이디는 비공개.
+- SQL `supabase/2026-11-10-usuarios.sql`(재실행 안전, 로컬 PG16+pgcrypto 테스트 통과, **사용자 실행 필요**, verificar 18번): `gk_usuarios(id→auth.users, usuario ^[a-z][a-z0-9_]{3,19}$, unique lower())` RLS 본인·관리자 select만. `gk_usuario_prohibido`(admin·soporte·galeriak·mod·bot 등 접두어), `gk_usuario_liberar`(미인증·미로그인 3일 지난 가입의 아이디 해제), `gk_usuario_disponible(text)`→libre|invalido|reservado|tomado(anon), `gk_elegir_usuario(text)`→ok|…|ya-tienes(로그인 사용자, 1회), auth.users AFTER INSERT 트리거 `gk_usuario_al_registrar`(metadata.usuario 저장, 실패해도 가입은 막지 않음), `gk_correo_para_entrar(usuario,clave)`(extensions.crypt로 비밀번호 확인 후에만 이메일 반환, `gk_login_intentos` 15분 5회 초과 시 'demasiados-intentos').
+- 사이트: `USR_OK`(SQL 설치 여부, `usrOk()`), `MYUSR`(null=꺼짐, ''=미지정), `USR_RE`, `USR_MSG`. 가입 폼 `#ausr`(입력 시 소문자화+350ms 실시간 확인, SQL 없으면 숨김) → signUp metadata `usuario`. 로그인 폼 「Correo o usuario」: '@' 없으면 RPC로 이메일 받아 signInWithPassword. 경로 `#usuario` `vUsuario()`/`#uform`(gk_elegir_usuario), route()가 세션당 1회 `#usuario`로 안내(`sessionStorage.gk_usr_ask`). Mi cuenta에 @아이디 또는 「🪪 Elegir usuario」. 점검 탭 항목.
+

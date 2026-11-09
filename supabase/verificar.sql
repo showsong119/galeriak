@@ -28,7 +28,10 @@ with c(orden, revision, ok, archivo) as (values
                                                 and exists (select 1 from pg_policies where tablename = 'comments' and policyname = 'gk_cmt_solo_miembros'),
                                                                                                                              '2026-11-09-anonimo.sql'),
   (17,'Visitas del examen aparte',           to_regclass('public.gk_visitas_pagina') is not null and to_regprocedure('public.gk_estadisticas_examen()') is not null,
-                                                                                                                             '2026-11-10-visitas-examen.sql')
+                                                                                                                             '2026-11-10-visitas-examen.sql'),
+  (18,'Usuario para entrar (único)',          to_regclass('public.gk_usuarios') is not null and to_regprocedure('public.gk_correo_para_entrar(text,text)') is not null
+                                                and exists (select 1 from pg_trigger where tgname = 'gk_usuario_al_registrar'),
+                                                                                                                             '2026-11-10-usuarios.sql')
 )
 select orden as "#", revision as "Revisión", case when ok then '✅ listo' else '❌ falta' end as "Estado",
        case when ok then '' else archivo end as "Ejecutar"

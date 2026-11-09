@@ -377,11 +377,16 @@ const SEL='id,gallery_id,author_id,title,created_at,views,up_count,down_count,co
 
 /* ---------------- sesión ---------------- */
 // La sesión nunca bloquea la página: si getSession tarda (pasa en móviles al volver de Google), seguimos sin ella.
+// Usuario para entrar (gk_usuarios). USR_OK: la SQL está instalada. MYUSR: null=función apagada, ''=sin usuario aún.
+let USR_OK=null,MYUSR=null;
+const usrOk=()=>USR_OK!==null?Promise.resolve(USR_OK):sb.rpc('gk_usuario_disponible',{p_usuario:'zzzz'}).then(r=>USR_OK=!r.error,()=>USR_OK=false);
+const USR_RE=/^[a-z][a-z0-9_]{3,19}$/;
+const USR_MSG={libre:'✅ Disponible',tomado:'❌ Ese usuario ya está en uso',reservado:'❌ Ese usuario está reservado',invalido:'4 a 20: letras minúsculas, números y _ (empieza con letra)'};
 const withTimeout=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
 async function refreshSession(given){
   let session=given;
   if(session===undefined){const res=await withTimeout(sb.auth.getSession(),4000);session=res&&res.data?res.data.session:null}
-  ME=session?session.user:null;MYNICK='';MYROLE='';myVotes=new Map();
+  ME=session?session.user:null;MYNICK='';MYROLE='';MYUSR=null;myVotes=new Map();
   if(!ME)ATT={loaded:false,today:false,streak:0,total:0};
   if(ME){
     let {data:prof}=await sb.from('profiles').select('nickname,role').eq('id',ME.id).maybeSingle();
@@ -394,6 +399,7 @@ async function refreshSession(given){
       prof=r.data||{nickname:n};try{sessionStorage.setItem('gk_new','1')}catch(_){}
     }
     MYNICK=prof.nickname;MYROLE=prof.role||'';
+    {const r=await sb.from('gk_usuarios').select('usuario').eq('id',ME.id).maybeSingle().then(x=>x,()=>({error:1}));MYUSR=r.error?null:(r.data?r.data.usuario:'');if(MYUSR!==null)USR_OK=true}
     await loadAttend().catch(()=>{});
     const {data:v}=await sb.from('votes').select('post_id,value').eq('voter',ME.id);
     (v||[]).forEach(x=>myVotes.set(x.post_id,x.value));
@@ -1008,7 +1014,7 @@ async function vMiCuenta(){
   const top=posts.filter(p=>p.up_count>0).slice(0,5);
   return `<div class="card">
    ${(await mgrReady,myMgrGals().length)?`<div class="mgrbox" style="margin:0 0 10px">${MGR_ICON.replace('<svg','<svg style="width:14px;height:14px;background:#ff8a00;border-radius:4px"')} <b>Eres manager de:</b> ${myMgrGals().map(g=>`<a href="#g-${g}" style="color:var(--blue)">${esc((G[g]||{name:g}).name)}</a>`).join(', ')}</div>`:''}
-   <div class="mc-head"><h1>${esc(MYNICK||'Mi cuenta')}</h1>${adm?'<span class="lv lv-adm">Admin</span>':lvBadge({puntos:pts,asistencias:asisLv})}<span class="hint">Miembro desde ${new Date(ME.created_at).toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'})}</span></div>
+   <div class="mc-head"><h1>${esc(MYNICK||'Mi cuenta')}</h1>${adm?'<span class="lv lv-adm">Admin</span>':lvBadge({puntos:pts,asistencias:asisLv})}${MYUSR?`<span class="hint">@${esc(MYUSR)}</span>`:MYUSR===''?'<a class="btn" href="#usuario">🪪 Elegir usuario</a>':''}<span class="hint">Miembro desde ${new Date(ME.created_at).toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'})}</span></div>
    <div class="lvme">
     <div class="hint">Mis puntos</div><div class="mc-big">${n(pts)} pts</div>
     <div style="margin-top:6px">Mi nivel: ${lvBadge({puntos:pts,asistencias:asisLv})} <b>Lv.${lv[0]} · ${lv[2]}</b>${adm?' <span class="hint">(en el sitio apareces como Admin)</span>':''}</div>
@@ -1148,6 +1154,17 @@ function vWrite(gid){
 }
 const canAnon=()=>MYROLE==='admin'||!!(MYLV&&MYLV.puntos>=LEVELS[1][1]);
 function syncWriteFields(){const g=G[$('#wg').value];if($('#photoWrap'))$('#photoWrap').style.display=g.anon?'none':'';$('#dealFields').style.display=g.deal?'':'none';$('#srcField').style.display=g.needSource?'':'none'}
+function vUsuario(){
+  nav('');
+  if(!ME)return '<div class="card empty"><a href="#entrar" style="color:var(--blue);font-weight:700">Entra</a> para elegir tu usuario.</div>';
+  if(MYUSR)return `<div class="card empty" style="max-width:440px;margin:0 auto">Tu usuario es <b>@${esc(MYUSR)}</b>. Puedes entrar con él o con tu correo.<br><br><a class="btn btn-brand" href="#home">Ir al inicio</a></div>`;
+  if(MYUSR===null)return '<div class="card empty">Esta función todavía no está activa.</div>';
+  return `<div class="card" style="max-width:440px;margin:0 auto 14px"><h2>🪪 Elige tu usuario</h2>
+   <p class="hint">Con tu usuario puedes entrar más rápido (también sigue funcionando tu correo${ME.app_metadata&&ME.app_metadata.provider==='google'?' o el botón de Google':''}). Es único y <b>no se puede cambiar</b>. Tu apodo <b>${esc(MYNICK)}</b> sigue igual.</p>
+   <form id="uform"><div class="f"><label>Usuario</label><input id="uusr" maxlength="20" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="ej. fan_kpop23" required><div class="hint" id="uusrh">4 a 20: letras minúsculas, números y _ (empieza con letra).</div></div>
+   <div class="err" id="uerr"></div><button class="btn btn-brand" style="width:100%">Guardar usuario</button></form>
+   <p class="hint" style="margin-top:10px"><a href="#home" style="color:var(--blue)">Ahora no</a> · Lo puedes elegir después en <a href="#mi-cuenta" style="color:var(--blue)">Mi cuenta</a>.</p></div>`;
+}
 function vAuth(){
   nav('');
   if(ME)return `<div class="card empty">Ya iniciaste sesión como <b>${esc(MYNICK)}</b>. <a href="#home" style="color:var(--blue)">Ir al inicio</a></div>`;
@@ -1155,8 +1172,9 @@ function vAuth(){
    <div class="tabs"><button data-auth="in" class="${authMode==='in'?'on':''}">Entrar</button><button data-auth="up" class="${authMode==='up'?'on':''}">Crear cuenta</button></div>
    ${authMode!=='reset'?`<button type="button" class="btn" id="gLogin" style="width:100%;display:flex;gap:8px;justify-content:center;align-items:center;margin-bottom:6px"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M45 24.5c0-1.6-.1-2.8-.4-4H24v7.6h11.9c-.2 2-1.6 5-4.6 7l7.1 5.5C42.6 36.6 45 31.1 45 24.5z"/><path fill="#34A853" d="M24 46c6 0 11-2 14.6-5.4l-7.1-5.5c-1.9 1.3-4.4 2.2-7.5 2.2-5.8 0-10.7-3.8-12.4-9.1l-7.3 5.7C7.9 41.2 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.6 28.2c-.4-1.3-.7-2.7-.7-4.2s.3-2.9.7-4.2l-7.3-5.7C2.8 17.1 2 20.4 2 24s.8 6.9 2.3 9.9l7.3-5.7z"/><path fill="#EA4335" d="M24 10.7c4.1 0 6.9 1.8 8.5 3.3l6.3-6.1C35 4.3 30 2 24 2 15.4 2 7.9 6.8 4.3 14.1l7.3 5.7c1.7-5.3 6.6-9.1 12.4-9.1z"/></svg>Continuar con Google</button><p class="hint" style="text-align:center;margin:0 0 10px">Al continuar con Google confirmas que tienes 13 años o más y aceptas las <a href="#reglas" style="color:var(--blue)">reglas</a>. · o usa tu correo:</p>`:''}
    <form id="aform">
-    ${authMode==='up'?`<div class="f"><label>Apodo (visible para todos)</label><input id="anick" maxlength="20" minlength="2" required></div>`:''}
-    <div class="f"><label>Correo</label><input id="amail" type="email" required autocomplete="email"></div>
+    ${authMode==='up'?`<div class="f" id="ausrf" ${USR_OK===false?'hidden':''}><label>Usuario (para entrar)</label><input id="ausr" maxlength="20" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="ej. fan_kpop23"><div class="hint" id="ausrh">4 a 20: letras minúsculas, números y _ (empieza con letra). No se puede cambiar.</div></div>
+    <div class="f"><label>Apodo (visible para todos)</label><input id="anick" maxlength="20" minlength="2" required></div>`:''}
+    <div class="f"><label>${authMode==='in'?'Correo o usuario':'Correo'}</label><input id="amail" type="${authMode==='in'?'text':'email'}" required autocomplete="${authMode==='in'?'username':'email'}" autocapitalize="none" spellcheck="false"></div>
     ${authMode==='reset'?'<p class="hint">Te enviaremos un enlace para crear una contraseña nueva.</p>':`<div class="f"><label>Contraseña</label><input id="apass" type="password" minlength="8" required autocomplete="${authMode==='up'?'new-password':'current-password'}"><div class="hint">Mínimo 8 caracteres.</div></div>`}
     ${authMode==='up'?`<div class="f"><label style="font-weight:400"><input type="checkbox" id="aage" style="width:auto"> Tengo 13 años o más y acepto las <a href="#reglas" style="color:var(--blue)">reglas</a> y el <a href="/privacidad/" style="color:var(--blue)">aviso de privacidad</a>.</label></div>`:''}
     <div style="position:absolute;left:-5000px" aria-hidden="true"><label>Sitio web <input id="aweb" tabindex="-1" autocomplete="off"></label></div>
@@ -1392,6 +1410,7 @@ async function vAdmin(){
       ck('회원 관리(gk_admin_miembros)',async()=>errOf(await sb.rpc('gk_admin_resumen')),'2026-11-09-miembros.sql'),
       ck('방문자 통계(gk_estadisticas_visitas)',async()=>errOf(await sb.rpc('gk_estadisticas_visitas')),'2026-11-09-visitas.sql'),
       ck('시험 페이지 별도 통계(gk_estadisticas_examen)',async()=>errOf(await sb.rpc('gk_estadisticas_examen')),'2026-11-10-visitas-examen.sql'),
+      ck('아이디 로그인(gk_usuarios)',async()=>errOf(await sb.rpc('gk_usuario_disponible',{p_usuario:'zzzz'})),'2026-11-10-usuarios.sql'),
       ck('AI 자동 검수(gk_moderacion)',async()=>errOf(await sb.from('gk_moderacion').select('id').limit(1)),'2026-11-09-moderacion-ia.sql'),
       ck('정적 페이지(/g/, /p/)',async()=>{const r=await fetch('/g/skincare/',{cache:'no-store'});return r.ok||'아직 생성 전(최대 몇 분)'},'GitHub Actions'),
     ]);
@@ -1459,6 +1478,7 @@ function errMsg(e){const m=(e&&e.message)||'';if(/Invalid login/i.test(m))return
 let routeSeq=0,PREP=Promise.resolve();
 async function route(){
   try{if(ME&&sessionStorage.getItem('gk_new')){sessionStorage.removeItem('gk_new');if(location.hash!=='#g-asistencia'){location.hash='#g-asistencia';return}}}catch(_){}
+  try{if(ME&&MYUSR===''&&!sessionStorage.getItem('gk_usr_ask')&&location.hash!=='#usuario'&&location.hash!=='#g-asistencia'){sessionStorage.setItem('gk_usr_ask','1');location.hash='#usuario';return}}catch(_){}
   const seq=++routeSeq;const raw=decodeURIComponent(location.hash.slice(1));const h=/^(access_token|error|type)=/.test(raw)?'home':(raw||'home');let m,html;
   document.title='GaleríaK – Comunidad de K-Beauty, K-Pop y ofertas en México';
   countVisit();
@@ -1480,6 +1500,7 @@ async function route(){
     else if(h==='niveles')html=vNiveles();
     else if(h==='mi-cuenta')html=await vMiCuenta();
     else if(h==='entrar')html=vAuth();
+    else if(h==='usuario')html=vUsuario();
     else if(h==='admin')html=await vAdmin();
     else if(h==='miembros')html=await vMiembros();
     else if(h==='nueva-clave')html=vNewPass();
@@ -1497,6 +1518,8 @@ async function route(){
   $('#main').innerHTML=html;if(!snap)window.scrollTo(0,0);
   if(h==='home'&&!ME&&!/No se pudo cargar/.test(html))try{localStorage.setItem('gk_home_snap',JSON.stringify({t:Date.now(),h:html}))}catch(_){}
   mountTurnstile();
+  if($('#ausr')){usrOk().then(ok=>{if(!ok&&$('#ausrf'))$('#ausrf').hidden=true});let t;$('#ausr').oninput=e=>{const el=e.target,u=el.value=el.value.toLowerCase().replace(/\s/g,'');clearTimeout(t);const h=$('#ausrh');if(!USR_RE.test(u)){h.textContent=USR_MSG.invalido;return}h.textContent='Revisando…';t=setTimeout(async()=>{const {data}=await sb.rpc('gk_usuario_disponible',{p_usuario:u});if($('#ausr')&&$('#ausr').value===u)h.textContent=USR_MSG[data]||''},350)}}
+  if($('#uusr')){let t;$('#uusr').oninput=e=>{const el=e.target,u=el.value=el.value.toLowerCase().replace(/\s/g,'');clearTimeout(t);const h=$('#uusrh');if(!USR_RE.test(u)){h.textContent=USR_MSG.invalido;return}h.textContent='Revisando…';t=setTimeout(async()=>{const {data}=await sb.rpc('gk_usuario_disponible',{p_usuario:u});if($('#uusr')&&$('#uusr').value===u)h.textContent=USR_MSG[data]||''},350)}}
   if($('#wg')){$('#wg').onchange=syncWriteFields;syncWriteFields()}
   if($('#wfile')){$('#wfile').onchange=e=>{addPhotos(e.target.files).finally(()=>{e.target.value=''})};renderThumbs()}
   decorateLevels().catch(()=>{});
@@ -1576,20 +1599,37 @@ document.addEventListener('submit',async e=>{
       const n=$('#anick').value.trim();
       if(!/^[\wÁÉÍÓÚÑáéíóúñ.\-]{2,20}$/.test(n)){busy(false);return err.textContent='El apodo debe tener 2 a 20 letras o números, sin espacios.'}
       if(!$('#aage').checked){busy(false);return err.textContent='Debes confirmar que tienes 13 años o más.'}
+      const usrOn=await usrOk(),u=usrOn&&$('#ausr')?$('#ausr').value.trim().toLowerCase():'';
+      if(usrOn){if(!USR_RE.test(u)){busy(false);return err.textContent='Usuario: '+USR_MSG.invalido+'.'}
+        const {data:us}=await sb.rpc('gk_usuario_disponible',{p_usuario:u});if(us!=='libre'){busy(false);return err.textContent=USR_MSG[us]||'Elige otro usuario.'}}
       const {data:taken}=await sb.from('profiles').select('id').eq('nickname',n).maybeSingle();
       if(taken){busy(false);return err.textContent='Ese apodo ya está en uso.'}
-      const {data,error}=await sb.auth.signUp({email:mail,password:pass,options:{data:{nickname:n,age_confirmed:true},emailRedirectTo:location.origin+location.pathname,...capOpt()}});
+      const {data,error}=await sb.auth.signUp({email:mail,password:pass,options:{data:{nickname:n,age_confirmed:true,...(u?{usuario:u}:{})},emailRedirectTo:location.origin+location.pathname,...capOpt()}});
       busy(false);capReset();
       if(error)return err.textContent=errMsg(error);
       if(!data.session){$('#main').innerHTML=`<div class="card empty" style="max-width:440px;margin:0 auto">📩 Te enviamos un correo a <b>${esc(mail)}</b>. Abre el enlace para confirmar tu cuenta y después entra.<br><br><button class="btn btn-brand" data-auth="in">Ya confirmé, entrar</button></div>`;return}
       await refreshSession();try{sessionStorage.removeItem('gk_new')}catch(_){}toast('¡Cuenta creada! Empieza en Lv.0: pasa tu primera lista ✅');go('g-asistencia');
     }else{
-      const {error}=await sb.auth.signInWithPassword({email:mail,password:pass,options:capOpt()});busy(false);capReset();
+      let em=mail;
+      if(!mail.includes('@')){ // entrar con usuario
+        if(!await usrOk()){busy(false);return err.textContent='Escribe el correo con el que te registraste.'}
+        const r=await sb.rpc('gk_correo_para_entrar',{p_usuario:mail,p_clave:pass});
+        if(r.error){busy(false);return err.textContent=/demasiados/.test(r.error.message||'')?'Demasiados intentos. Espera 15 minutos o entra con tu correo.':errMsg(r.error)}
+        if(!r.data){busy(false);return err.textContent='Usuario o contraseña incorrectos. Si entras con Google, usa ese botón.'}
+        em=r.data;
+      }
+      const {error}=await sb.auth.signInWithPassword({email:em,password:pass,options:capOpt()});busy(false);capReset();
       if(error)return err.textContent=errMsg(error);
       await refreshSession();toast('¡Hola, '+MYNICK+'!');go('home');
     }
     return;
   }
+  if(f.id==='uform'){const err=$('#uerr'),u=$('#uusr').value.trim().toLowerCase();err.textContent='';
+    if(!USR_RE.test(u))return err.textContent=USR_MSG.invalido+'.';
+    busy(true);const {data,error}=await sb.rpc('gk_elegir_usuario',{p_usuario:u});busy(false);
+    if(error)return err.textContent=errMsg(error);
+    if(data==='ok'||data==='ya-tienes'){if(data==='ok')MYUSR=u;else await refreshSession();toast('¡Listo! Ya puedes entrar con @'+MYUSR);go('home');return}
+    return err.textContent=USR_MSG[data]||'No se pudo guardar. Intenta otro usuario.'}
   if(f.id==='attform'){await sendAttend();return}
   if(f.id==='wform'){
     const err=$('#werr');err.textContent='';const g=G[$('#wg').value];
