@@ -253,3 +253,9 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 시험 결과 `#share`: canvas 1080×1350 카드(bomi-dali.svg + 레벨·정답 수·galeriakmx.com/examen-coreano) → `navigator.share({files})`, 안 되면 `#sharebox`(미리보기·다운로드·wa.me 링크)+문구 복사.
 - `/sns/`: `scripts/gen-sns.py`(content/diario 기준, ultima.json=Para hoy, cola 3편=Próxima, 이전 6편, 시험 고정글) → `site/sns/index.html`(noindex, robots Disallow /sns/, 사이트맵 제외). 클라이언트 canvas로 1080×1350 이미지 생성, 공유/다운로드·문구 복사. pages.yml 배포 전 실행 + 레슨 예약 작업 3단계에 포함.
 
+
+## 39. 틱톡 키트 (2026-11-10)
+- 사용자 결정: **틱톡만 먼저**, 인스타·페이스북은 나중(Meta 관련 미추적 파일 `scripts/meta-*.mjs`, `scripts/publicar-redes.mjs`, `.github/workflows/meta-configurar.yml`·`publicar-redes.yml`은 커밋하지 않음). 틱톡 계정 비밀번호는 받지 않음 — 공개 자동 게시는 TikTok API 심사 전엔 불가, TikTok Studio(웹) 예약으로 운영.
+- `scripts/render-sns.cjs`(Playwright+ffmpeg): /sns/ 카드 → `site/img/sns/<slug>.jpg` + 8초 1080×1920 mp4(카드를 위쪽 y=110에 두어 아래 460px는 틱톡 버튼·문구 자리). `--todo`면 전부 다시. 결과 커밋.
+- `gen-sns.py`: 10일 계획 D1~D10(매일 19:00 CDMX = 한국 다음 날 10:00, 19시 지나면 내일부터): 대기열 첫 편 → 시험 홍보 → 나머지 대기열 → 이미 게시된 레슨. 카드마다 🎬 동영상 받기·📋 문구 복사·📅 예약 시간.
+- 매일 레슨 예약 작업이 대기열을 8~10편으로 유지하고 render-sns까지 실행.
