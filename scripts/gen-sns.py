@@ -114,8 +114,8 @@ textarea{width:100%;box-sizing:border-box;min-height:150px;border:1px solid #ddd
 .row{display:flex;gap:8px;flex-wrap:wrap}button{flex:1;min-width:140px;border:0;border-radius:12px;padding:12px;font-weight:800;font-size:15px;cursor:pointer}
 .b1{background:#cc1f68;color:#fff}.b2{background:#17171c;color:#fff}.ok{color:#16784d;font-size:13px;min-height:18px;margin-top:6px}
 .how{font-size:14px;line-height:1.5}.fecha{font-size:14px;margin:2px 0 6px;color:#2f5bd8}.b3{flex:1;min-width:140px;text-align:center;text-decoration:none;border-radius:12px;padding:11px;font-weight:800;font-size:15px;background:#fff;border:2px solid #17171c;color:#17171c}.how li{margin:3px 0}</style></head><body>
-<header><h1>📲 GaleríaK 틱톡 키트</h1><p>앞으로 10일 치 동영상과 스페인어 문구가 준비돼 있어요. 열흘에 한 번 예약하면 끝!</p></header>
-<main><div class="c how"><b>틱톡 예약 방법 (열흘에 한 번, 컴퓨터에서)</b><ol><li>아래 카드마다 <b>🎬 동영상 받기</b>를 눌러 저장해요.</li><li><a href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">TikTok Studio 업로드</a>에서 동영상을 올리고, <b>📋 문구 복사</b>한 걸 설명에 붙여 넣어요.</li><li>「예약(Schedule)」을 켜고 카드에 적힌 <b>예약 시간</b>을 넣어요.</li></ol><p class="hint" style="font-size:13px;color:#666">휴대폰에서 바로 올릴 땐 🎬 동영상 받기 → 틱톡 앱에서 업로드. 이 페이지는 매일 자동으로 새 10일 치로 바뀌어요(D1 = 가장 가까운 날).</p></div><div id="lista"></div></main>
+<header><h1>📲 GaleríaK 틱톡 키트</h1><p>매일 저녁 6시 40분(멕시코) 오늘의 동영상이 틱톡 앱 받은편지함으로 자동 도착해요. 알림 열기 → 문구 붙여넣기 → 게시!</p></header>
+<main><div id="hoy"></div><div class="c how"><b>예비용: 직접 예약하는 방법 (자동 전송이 안 될 때)</b><ol><li>아래 카드마다 <b>🎬 동영상 받기</b>를 눌러 저장해요.</li><li><a href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">TikTok Studio 업로드</a>에서 동영상을 올리고, <b>📋 문구 복사</b>한 걸 설명에 붙여 넣어요.</li><li>「예약(Schedule)」을 켜고 카드에 적힌 <b>예약 시간</b>을 넣어요.</li></ol><p class="hint" style="font-size:13px;color:#666">휴대폰에서 바로 올릴 땐 🎬 동영상 받기 → 틱톡 앱에서 업로드. 이 페이지는 매일 자동으로 새 10일 치로 바뀌어요(D1 = 가장 가까운 날).</p></div><div id="lista"></div></main>
 <script>
 const ITEMS=/*DATOS*/[];
 const F="system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans KR',sans-serif";
@@ -131,6 +131,10 @@ function lienzo(it){return new Promise(res=>{const W=1080,H=1350,c=document.crea
   t('Lección completa gratis 👇',1210,44,'#3b2f3f');t('galeriakmx.com',1280,54,'#2f5bd8');
   c.toBlob(b=>res(b),'image/png')};
  im.onerror=()=>res(null);im.src=it.img;})}
+fetch('/sns/hoy.json?'+Date.now()).then(r=>r.ok?r.json():null).then(h=>{if(!h||!h.texto)return;const b=document.getElementById('hoy');
+ b.className='c';b.style.border='3px solid #cc1f68';b.innerHTML='<span class="tag hoy">📥 틱톡 받은편지함에 보낸 영상</span><div class="fecha"></div><h2></h2><textarea readonly></textarea><div class="row"><button class="b2">📋 문구 복사</button></div><div class="ok"></div><p style="font-size:13px;color:#666">틱톡 앱 → 알림(받은편지함)의 초안 열기 → 다음 → 설명 칸에 붙여넣기 → 게시</p>';
+ b.querySelector('.fecha').textContent='📅 '+h.dia;b.querySelector('h2').textContent=h.titulo;b.querySelector('textarea').value=h.texto;
+ b.querySelector('.b2').onclick=async()=>{const ok=b.querySelector('.ok');try{await navigator.clipboard.writeText(h.texto)}catch(e){b.querySelector('textarea').select();document.execCommand('copy')}ok.textContent='✓ 문구 복사됨 — 틱톡 설명 칸에 붙여 넣으세요'}}).catch(()=>{});
 const L=document.getElementById('lista');
 ITEMS.forEach((it,k)=>{const d=document.createElement('div');d.className='c';
  d.innerHTML=`<span class="tag ${it.etiqueta==='D1'?'hoy':/^D/.test(it.etiqueta)?'prox':''}">${({'Anterior':'지난 글','Siempre':'언제든'})[it.etiqueta]||it.etiqueta}</span>${it.fecha?`<div class="fecha">📅 예약 시간: <b>${it.fecha}</b></div>`:''}<h2></h2><img class="p" alt="미리보기"><textarea readonly></textarea><div class="row"><button class="b1">📤 이미지 공유</button><button class="b2">📋 문구 복사</button></div>${it.mp4?`<div class="row" style="margin-top:8px"><a class="b3" href="${it.mp4}" download>🎬 동영상 받기 (틱톡용)</a>${it.jpg?`<a class="b3" href="${it.jpg}" download>🖼️ 이미지 받기</a>`:''}</div>`:''}<div class="ok"></div>`;

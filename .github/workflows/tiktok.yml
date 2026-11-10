@@ -1,0 +1,57 @@
+name: tiktok
+# Cada día 18:37 CDMX (00:37 UTC) envía el video de la lección de hoy a la bandeja (borradores) de TikTok.
+# El usuario abre la notificación en la app, pega el texto (galeriakmx.com/sns/) y publica.
+on:
+  schedule:
+    - cron: '37 0 * * *'
+  workflow_dispatch:
+    inputs:
+      accion:
+        description: 'enviar | conectar'
+        default: 'enviar'
+      codigo:
+        description: 'Solo para conectar: el código que muestra galeriakmx.com/tiktok/'
+        default: ''
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: tiktok
+  cancel-in-progress: false
+
+jobs:
+  tiktok:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Lista de tarjetas (/sns/)
+        run: python3 scripts/gen-sns.py
+      - name: TikTok
+        env:
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_CODIGO: ${{ github.event.inputs.codigo }}
+        run: |
+          echo "::add-mask::${TIKTOK_CODIGO:-x}"
+          node scripts/tiktok.mjs "${{ github.event.inputs.accion || 'enviar' }}"
+      - name: Guardar estado
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "galeriak-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/tiktok site/sns/hoy.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "bot: tiktok $(date -u +%F)"
+            git pull --rebase --autostash origin main && git push
+            # un push con GITHUB_TOKEN no dispara otros workflows → publicar /sns/hoy.json a mano
+            if git show --stat HEAD | grep -q site/sns/hoy.json; then
+              gh api -X POST repos/${{ github.repository }}/actions/workflows/pages.yml/dispatches -f ref=main || true
+            fi
+          fi

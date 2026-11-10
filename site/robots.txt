@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /sns/
+Disallow: /tiktok/
 Sitemap: https://galeriakmx.com/sitemap.xml

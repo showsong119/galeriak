@@ -1,0 +1,29 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>GaleríaK · TikTok 연결</title>
+<style>body{font-family:system-ui,sans-serif;max-width:560px;margin:0 auto;padding:20px;background:#fff7fa;color:#222}h1{color:#cc1f68;font-size:22px}.c{background:#fff;border-radius:14px;padding:16px;margin:14px 0;box-shadow:0 1px 4px #0001}input,textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccc;border-radius:8px;font-size:15px}textarea{height:90px;font-family:monospace}button,a.b{display:inline-block;margin-top:10px;padding:11px 16px;border:0;border-radius:10px;background:#cc1f68;color:#fff;font-size:15px;font-weight:700;text-decoration:none;cursor:pointer}.ok{color:#16784d;font-weight:700}small{color:#666}</style></head>
+<body><h1>🎵 GaleríaK × TikTok 연결</h1>
+<div id="app"></div>
+<p><small>이 페이지는 운영자 전용입니다(검색 제외). 비밀번호는 입력하지 않아요 — TikTok 공식 로그인 화면에서 허용만 누르면 됩니다.</small></p>
+<script>
+const REDIRECT='https://galeriakmx.com/tiktok/';
+const q=new URLSearchParams(location.search),app=document.getElementById('app');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let ck='';try{ck=localStorage.getItem('gk_tt_ck')||''}catch(e){}
+if(q.get('code')){
+  const st=q.get('state'),okState=(()=>{try{return st&&st===sessionStorage.getItem('gk_tt_state')}catch(e){return true}})();
+  app.innerHTML=`<div class="c"><p class="ok">✅ TikTok 허용 완료!</p><p>아래 코드를 복사해서 GitHub의 <b>codigo</b> 칸에 붙여 넣고, <b>accion</b> 칸에는 <code>conectar</code>를 넣은 뒤 <b>Run workflow</b>를 누르세요. (코드는 몇 분 안에 써야 해요)</p>${okState?'':'<p style="color:#c8361a">⚠️ 보안 확인값이 달라요. 직접 연결 버튼을 누른 게 아니라면 진행하지 마세요.</p>'}
+  <textarea id="cd" readonly>${esc(q.get('code'))}</textarea><button id="cp">📋 코드 복사</button>
+  <p>👉 붙일 곳: <a href="https://github.com/showsong119/galeriak/actions/workflows/tiktok.yml" target="_blank" rel="noopener">GitHub › tiktok › Run workflow</a></p></div>`;
+  document.getElementById('cp').onclick=e=>{navigator.clipboard.writeText(q.get('code')).then(()=>e.target.textContent='✅ 복사됨')};
+}else if(q.get('error')){
+  app.innerHTML=`<div class="c"><p style="color:#c8361a">❌ 연결이 취소됐거나 오류가 났어요: ${esc(q.get('error_description')||q.get('error'))}</p><a class="b" href="/tiktok/">다시 하기</a></div>`;
+}else{
+  app.innerHTML=`<div class="c"><p><b>1.</b> TikTok for Developers 앱의 <b>Client key</b>를 붙여 넣으세요(공개값이라 괜찮아요).</p><input id="ck" placeholder="Client key" value="${esc(ck)}"><p><b>2.</b> 아래 버튼 → TikTok 로그인 → <b>허용</b>.</p><button id="go">🎵 TikTok 연결하기</button></div>`;
+  document.getElementById('go').onclick=()=>{
+    const k=document.getElementById('ck').value.trim();if(!k)return alert('Client key를 넣어 주세요');
+    const s=Math.random().toString(36).slice(2)+Date.now().toString(36);
+    try{localStorage.setItem('gk_tt_ck',k);sessionStorage.setItem('gk_tt_state',s)}catch(e){}
+    location.href='https://www.tiktok.com/v2/auth/authorize/?'+new URLSearchParams({client_key:k,scope:'user.info.basic,video.upload',response_type:'code',redirect_uri:REDIRECT,state:s});
+  };
+}
+</script></body></html>
