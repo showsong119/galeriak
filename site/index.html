@@ -84,6 +84,12 @@ nav.main a.nav-hoy{color:var(--hot);font-weight:800}.tabs button{white-space:now
 .repbox{border:1px solid var(--line);background:#fafafc;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:14px}
 .guide img{display:block;width:100%;height:auto;aspect-ratio:1200/630;border-radius:10px;margin-bottom:8px;background:#f4f4f6}
 .gmini{display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);color:var(--ink);font-size:13px;font-weight:600;line-height:1.3}.gmini:last-child{border:0}.gmini img{width:72px;height:38px;object-fit:cover;border-radius:6px;flex:none}
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;align-items:center;background:linear-gradient(135deg,#fff0f6,#fff8e6);border-color:#f6c3d8}
+.hero h1{font-size:24px;line-height:1.2;margin:0 0 6px}.hero p{margin:0 0 12px;color:#4a4a55}
+.hero-cta{display:block;border-radius:14px;padding:12px 14px;margin:0 0 10px;background:#fff;border:2px solid #f6c3d8;color:#17171c;text-decoration:none}
+.hero-cta b{display:block;font-size:17px}.hero-cta span{font-size:13px;color:#5c5c66}.hero-exam{background:#2f5bd8;border-color:#2f5bd8;color:#fff}.hero-exam span{color:#e8eeff}
+.hero-join{margin:6px 0 0!important}.hero-img{width:100%;height:auto}
+@media(max-width:700px){.hero{grid-template-columns:1fr}.hero-img{order:-1;max-height:160px;object-fit:contain}.hero h1{font-size:21px}}
 .exambar{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:center;background:linear-gradient(120deg,#2f5bd8,#5a7bff);color:#fff;border:0}.exambar img{width:100%;height:auto;border-radius:12px;display:block}
 .exambar h2{color:#fff;font-size:22px;margin:0 0 4px}.exambar p{margin:0 0 10px;color:#e8eeff;font-size:14px}.exambar .go{display:inline-block;background:#ffd400;color:#17171c;font-weight:900;border-radius:999px;padding:9px 18px}.exambar .tag{display:inline-block;background:#c2410c;color:#fff;font-weight:900;border-radius:999px;padding:2px 10px;font-size:12px;margin-bottom:6px}
 @media(max-width:700px){.exambar{grid-template-columns:1fr}.exambar img{max-height:170px;object-fit:cover}}
@@ -405,6 +411,7 @@ async function refreshSession(given){
       prof=r.data||{nickname:n};try{sessionStorage.setItem('gk_new','1')}catch(_){}
     }
     MYNICK=prof.nickname;MYROLE=prof.role||'';
+    if(MYROLE==='admin'){try{localStorage.setItem('gk_no_contar','1')}catch(_){}}
     {const r=await sb.from('gk_usuarios').select('usuario').eq('id',ME.id).maybeSingle().then(x=>x,()=>({error:1}));MYUSR=r.error?null:(r.data?r.data.usuario:'');if(MYUSR!==null)USR_OK=true}
     await loadAttend().catch(()=>{});
     const {data:v}=await sb.from('votes').select('post_id,value').eq('voter',ME.id);
@@ -442,7 +449,9 @@ async function side(){
 /* contador de visitas anónimo (solo el equipo ve las estadísticas) */
 let VID=null,lastVisit=0;
 function visitId(){if(VID)return VID;try{VID=localStorage.getItem('gk_vid');if(!VID){VID=(crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)}));localStorage.setItem('gk_vid',VID)}}catch(_){VID=null}return VID}
-function countVisit(){const now=Date.now();if(now-lastVisit<4000)return;lastVisit=now;const v=visitId();if(v)sb.rpc('gk_registrar_visita',{p_visitante:v}).then(()=>{},()=>{})}
+// No contar robots, navegadores automatizados ni los dispositivos del equipo (gk_no_contar se pone al entrar como admin)
+const ES_ROBOT=navigator.webdriver||/bot|crawl|spider|slurp|lighthouse|headless|inspectiontool|pagespeed|preview|facebookexternalhit/i.test(navigator.userAgent||'');
+function countVisit(){if(ES_ROBOT||MYROLE==='admin')return;try{if(localStorage.getItem('gk_no_contar')==='1')return}catch(_){}const now=Date.now();if(now-lastVisit<4000)return;lastVisit=now;const v=visitId();if(v)sb.rpc('gk_registrar_visita',{p_visitante:v}).then(()=>{},()=>{})}
 const LSJ={get(k){try{const v=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(v)?v:[]}catch(_){return []}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}};
 function visitGal(id){if(!G[id]||G[id].attend)return;const r=LSJ.get('gk_recent').filter(x=>x!==id);r.unshift(id);LSJ.set('gk_recent',r.slice(0,8))}
 const isFav=id=>LSJ.get('gk_favs').includes(id);
@@ -491,7 +500,13 @@ const galCard=g=>`<a class="gal" href="#g-${g.id}">${av(g)}<div><b>${esc(g.name)
 const FLAME='<svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="flg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e5482b"/><stop offset="1" stop-color="#ff9a3c"/></linearGradient></defs><path fill="url(#flg)" d="M16 1.5c1.2 5-1.6 7.6-4.2 10.4C9.3 14.6 7 17.4 7 21.4 7 26.6 11 30.5 16 30.5s9-3.9 9-9.1c0-4.6-2.4-7.6-4.6-10.3-.5 2.3-1.6 4-3.3 4.9.6-5.2-.4-10.4-1.1-14.5z"/><path fill="#ffd25e" d="M16.3 17c.5 2.6-.9 3.8-2.1 5.1-.9 1-1.6 2-1.6 3.4 0 2 1.6 3.5 3.5 3.5s3.5-1.5 3.5-3.5c0-1.9-1.1-3.2-2.1-4.3-.3 1-.8 1.6-1.4 1.9.3-2.2 0-4.3-.2-6.1z"/></svg>';
 const catCard=cid=>{const c=CATS.find(x=>x.id===cid),n=GALS.filter(g=>g.cat===cid).length;return `<a class="gal" href="#c-${cid}"><span class="av" style="background:#6c4bd8;font-size:16px">${c.icon}</span><div><b>${esc(c.name)}</b><small>Todos los grupos en un tablero (${n} galerías)</small></div></a>`};
 const hotCard=()=>`<a class="gal gal-hot" href="#hoy"><span class="av flame">${FLAME}</span><div><b>Mejores de hoy</b><small>Lo más votado de todas las galerías</small></div></a>`;
-const welcome=()=>ME?'':`<div class="card" style="background:var(--brand-soft);border-color:#f6c3d8"><b>¡Bienvenida, bienvenido a GaleríaK!</b> La comunidad en español de K-Beauty y K-Pop. <a href="#entrar" style="color:var(--brand);font-weight:700">Crea tu cuenta</a> para publicar, comentar y votar.</div>`;
+// Portada para quien llega por primera vez (sin sesión): qué es GaleríaK y qué hacer ya
+const welcome=()=>ME?'':`<div class="card hero"><div class="hero-t"><h1>Tu comunidad de cultura coreana en México <span aria-hidden="true">🇲🇽🇰🇷</span></h1>
+ <p>K-Pop, K-Dramas, K-Beauty y coreano, todo en español y gratis.</p>
+ <a class="hero-cta hero-exam" href="/examen-coreano/"><b>📝 Descubre tu nivel de coreano</b><span>Examen gratis estilo TOPIK · sin cuenta · resultado al instante</span></a>
+ <a class="hero-cta" href="#g-coreano"><b>📚 Coreano del día con Bomi y Dali</b><span>Una lección cortita cada mañana: palabras de K-Pop, K-Dramas y la vida diaria</span></a>
+ <p class="hero-join"><a class="btn btn-brand" href="#entrar">✨ Únete gratis</a> <span class="hint">para comentar, pasar lista y subir de nivel</span></p></div>
+ <img class="hero-img" src="/img/mascotas/bomi-dali.svg" alt="Bomi y Dali, mascotas de GaleríaK" width="620" height="440"></div>`;
 
 /* ---------------- 👥 회원 관리 (solo administradores) ---------------- */
 let mFil='all',mSort='new',mQ='',mShow=50,mOpen=null,MEM=null,MEM_T=0,MEM_OFF=false;
@@ -661,7 +676,7 @@ async function vHome(){
   const bestL=Dy.length?Dy:Wk,bestT=Dy.length?'hoy':'esta semana';
   return ad('leader')+admDash(vis,res,ia,exv)+welcome()+(isNewbie()?attendNudge():'')+`
   <div class="card"><h2 style="color:var(--hot)">🔥 Mejores de ${bestT} <span class="hint" style="font-weight:400">· lo más votado de todas las galerías</span> <a class="more" href="#hoy">Ver todo</a></h2>${bestL.length?`<ul class="list">${bestL.slice(0,5).map((p,i)=>row(p,i+1,true)).join('')}</ul>`+(bestL.length>5?`<ul class="list" id="bestMore" hidden>${bestL.slice(5,10).map((p,i)=>row(p,i+6,true)).join('')}</ul><button class="btn" style="width:100%;margin-top:8px" onclick="const m=document.getElementById('bestMore');m.hidden=!m.hidden;this.textContent=m.hidden?'Ver más · TOP 10 ▾':'Ver menos ▴'">Ver más · TOP 10 ▾</button>`:''):'<div class="empty">Todavía no hay publicaciones con ♥. Dale ♥ a lo que te guste y aparecerá aquí.</div>'}</div>
-  <a class="card exambar" href="/examen-coreano/"><div><span class="tag">GRATIS · SIN CUENTA</span><h2>📝 ¿Qué tanto coreano sabes?</h2><p>Examen estilo TOPIK con 30 preguntas de un banco de 180: vocabulario, lectura y audio. Nivel del 1 al 6 con explicación en español.</p><span class="go">Hacer el examen gratis →</span></div><img src="/img/examen.svg" alt="Examen de coreano gratis" width="1200" height="630"></a>
+  ${ME?`<a class="card exambar" href="/examen-coreano/"><div><span class="tag">GRATIS · SIN CUENTA</span><h2>📝 ¿Qué tanto coreano sabes?</h2><p>Examen estilo TOPIK con 30 preguntas de un banco de 180: vocabulario, lectura y audio. Nivel del 1 al 6 con explicación en español.</p><span class="go">Hacer el examen gratis →</span></div><img src="/img/examen.svg" alt="Examen de coreano gratis" width="1200" height="630"></a>`:''}
   <div class="card"><h2>📈 Galerías en tendencia <span class="hint" style="font-weight:400">· más activas esta semana</span> <a class="more" href="#galerias">Todas</a></h2>${trendList(trend,8)}</div>
   <div class="card"><h2>🏷️ Ofertas K-Beauty <a class="more" href="#g-ofertas">Ver todas</a></h2>${Dl.length?`<ul class="list">${Dl.map((p,i)=>row(p,i+1,false)).join('')}</ul>`:'<div class="empty">¿Viste un buen precio? <a href="#w-ofertas" style="color:var(--blue)">Compártelo</a></div>'}</div>
   <div class="card"><h2>🕒 Lo más nuevo</h2>${R.length?listWithAds(R,1,true):'<div class="empty">¡Sé la primera persona en publicar!</div>'}</div>

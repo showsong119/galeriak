@@ -247,3 +247,9 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - `.github/workflows/ejecutar-sql.yml` + `scripts/ejecutar-sql.mjs`(입력 archivo=supabase/<파일>.sql): Management API `POST /v1/projects/{ref}/database/query`. **Claude가 직접 실행 가능**: `gh api -X POST repos/showsong119/galeriak/actions/workflows/ejecutar-sql.yml/dispatches -f ref=main -f 'inputs[archivo]=supabase/xxx.sql'` → 이후 `comprobar` 워크플로로 확인. 로컬 PG16 테스트 통과한 추가 전용 SQL만 실행, 실행 후 사용자에게 보고.
 - Secrets(사용자가 입력): `RESEND_API_KEY`, `NETLIFY_AUTH_TOKEN`, `SUPABASE_ACCESS_TOKEN`. 없으면 경고만 하고 종료.
 
+## 38. 유입 개선 (2026-11-10 15시)
+- 방문 집계 제외: 모든 정적 페이지·시험 페이지 VISIT 스니펫과 gen-guias/build-static `VISIT_JS`에 `navigator.webdriver`·UA(bot|crawl|spider|lighthouse|headless|inspectiontool|pagespeed|preview|facebookexternalhit|whatsapp|telegram)·`localStorage.gk_no_contar==='1'` 검사. SPA `ES_ROBOT`, `countVisit()`은 admin이면 제외, refreshSession이 admin이면 `gk_no_contar=1`.
+- 홈: 비회원 `welcome()` = `.hero`(제목·시험 CTA `.hero-exam`·Coreano del día CTA·Únete, `/img/mascotas/bomi-dali.svg`), 회원만 `.exambar`. 마스코트 단독 파일 `scripts/gen-mascotas.py` → `site/img/mascotas/{bomi-dali,bomi,dali}.svg`.
+- 시험 결과 `#share`: canvas 1080×1350 카드(bomi-dali.svg + 레벨·정답 수·galeriakmx.com/examen-coreano) → `navigator.share({files})`, 안 되면 `#sharebox`(미리보기·다운로드·wa.me 링크)+문구 복사.
+- `/sns/`: `scripts/gen-sns.py`(content/diario 기준, ultima.json=Para hoy, cola 3편=Próxima, 이전 6편, 시험 고정글) → `site/sns/index.html`(noindex, robots Disallow /sns/, 사이트맵 제외). 클라이언트 canvas로 1080×1350 이미지 생성, 공유/다운로드·문구 복사. pages.yml 배포 전 실행 + 레슨 예약 작업 3단계에 포함.
+

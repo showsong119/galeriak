@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 440" width="340" height="440" role="img" aria-label="Dali"><g transform="translate(170 250)">
+<path d="M120-70a80 80 0 1 1-40-110a64 64 0 1 0 40 110z" fill="#ffe066" opacity=".55"/>
+<ellipse cx="0" cy="150" rx="95" ry="14" fill="#000" opacity=".08"/>
+<ellipse cx="-38" cy="-150" rx="26" ry="70" fill="#fffdf8" stroke="#3b2f3f" stroke-width="6" transform="rotate(-10 -38 -150)"/>
+<ellipse cx="38" cy="-150" rx="26" ry="70" fill="#fffdf8" stroke="#3b2f3f" stroke-width="6" transform="rotate(14 38 -150)"/>
+<ellipse cx="-38" cy="-146" rx="12" ry="48" fill="#ffc9d6" transform="rotate(-10 -38 -146)"/>
+<path d="M30-110c10-30 40-40 50-70" fill="none" stroke="#3b2f3f" stroke-width="0"/>
+<ellipse cx="44" cy="-146" rx="12" ry="40" fill="#ffc9d6" transform="rotate(14 44 -146)"/>
+<ellipse cx="0" cy="100" rx="80" ry="62" fill="#fffdf8" stroke="#3b2f3f" stroke-width="6"/>
+<ellipse cx="-40" cy="150" rx="26" ry="14" fill="#fffdf8" stroke="#3b2f3f" stroke-width="5"/><ellipse cx="40" cy="150" rx="26" ry="14" fill="#fffdf8" stroke="#3b2f3f" stroke-width="5"/>
+<ellipse cx="0" cy="-10" rx="125" ry="105" fill="#fffdf8" stroke="#3b2f3f" stroke-width="6"/>
+<ellipse cx="-48" cy="-8" rx="19.68" ry="24" fill="#3b2f3f"/><circle cx="-41.28" cy="-17.12" r="8.64" fill="#fff"/><circle cx="-55.2" cy="0.3999999999999986" r="3.84" fill="#fff"/><ellipse cx="48" cy="-8" rx="19.68" ry="24" fill="#3b2f3f"/><circle cx="54.72" cy="-17.12" r="8.64" fill="#fff"/><circle cx="40.8" cy="0.3999999999999986" r="3.84" fill="#fff"/><ellipse cx="-82" cy="28" rx="22" ry="12.100000000000001" fill="#ffa8c5" opacity=".75"/><ellipse cx="82" cy="28" rx="22" ry="12.100000000000001" fill="#ffa8c5" opacity=".75"/>
+<ellipse cx="0" cy="22" rx="8" ry="6" fill="#ff8fab"/><path d="M-8 32q4.0 6.4 8 0q4.0 6.4 8 0" fill="none" stroke="#3b2f3f" stroke-width="5" stroke-linecap="round"/>
+<g transform="translate(0 88)"><clipPath id="c2"><path d="M-30 0h60c8 30 0 48-30 48s-38-18-30-48z"/></clipPath>
+<g clip-path="url(#c2)"><rect x="-30" y="0" width="12" height="40" fill="#f06595"/><rect x="-18" y="0" width="12" height="40" fill="#fcc419"/><rect x="-6" y="0" width="12" height="40" fill="#339af0"/><rect x="6" y="0" width="12" height="40" fill="#e03131"/><rect x="18" y="0" width="12" height="40" fill="#40c057"/></g><path d="M-30 0h60c8 30 0 48-30 48s-38-18-30-48z" fill="none" stroke="#3b2f3f" stroke-width="5"/>
+<path d="M-34-4q34 12 68 0" stroke="#3b2f3f" stroke-width="5" fill="none"/><circle cx="0" cy="-6" r="7" fill="#fcc419" stroke="#3b2f3f" stroke-width="4"/></g>
+<ellipse cx="-58" cy="98" rx="20" ry="16" fill="#fffdf8" stroke="#3b2f3f" stroke-width="5"/><ellipse cx="58" cy="98" rx="20" ry="16" fill="#fffdf8" stroke="#3b2f3f" stroke-width="5"/></g></svg>

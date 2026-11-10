@@ -801,10 +801,39 @@ function vResultado(){
   </section>
   ${ad("resultBottom")}`;
   $("#again").onclick=()=>{MODO=modeOf(r.modo);try{localStorage.setItem(MODE_KEY,MODO)}catch(e){}st=fresh();save();go("inicio")};
+  // Tarjeta para compartir (imagen con Bomi y Dali): Instagram, WhatsApp, TikTok… Trae gente nueva al examen.
+  const url=location.origin+location.pathname,
+    text=r.bajo?`Hice la prueba de coreano ${MODES[r.modo].name} gratis de GaleríaK 🐯🐰 ¿Te animas?`:`¡Saqué nivel ${r.level} de 6 en la prueba de coreano${r.modo&&r.modo!=="todo"?" ("+MODES[r.modo].name+")":""} gratis de GaleríaK! 🐯🐰 ¿Y tú?`;
+  const tarjeta=()=>new Promise(res=>{
+    const W=1080,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+    const g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,"#ffe3ec");g.addColorStop(1,"#fff3d9");x.fillStyle=g;x.fillRect(0,0,W,H);
+    x.fillStyle="rgba(255,255,255,.55)";for(let i=18;i<W;i+=48)for(let j=18;j<H;j+=48){x.beginPath();x.arc(i,j,4,0,7);x.fill()}
+    const F="system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans KR',sans-serif",ctr=(t,y,sz,col,w=900)=>{x.font=`900 ${sz}px ${F}`;while(x.measureText(t).width>w&&sz>20){sz-=2;x.font=`900 ${sz}px ${F}`}x.fillStyle=col;x.textAlign="center";x.fillText(t,W/2,y)};
+    const fin=()=>{
+      x.fillStyle="#fff";x.strokeStyle="#3b2f3f";x.lineWidth=8;const bx=90,by=640,bw=900,bh=520;x.beginPath();x.roundRect?x.roundRect(bx,by,bw,bh,48):x.rect(bx,by,bw,bh);x.fill();x.stroke();
+      ctr("Mi nivel de coreano",by+90,52,"#3b2f3f");
+      ctr(r.bajo?"< "+r.lo:String(r.level),by+290,210,"#cc1f68");
+      x.font=`700 48px ${F}`;x.fillStyle="#868e96";x.textAlign="center";x.fillText(r.bajo?"":"de 6",W/2,by+350);
+      ctr(r.bajo?"¡Apenas empiezo!":(LEVEL_TXT[r.level]||""),by+420,46,"#3b2f3f",820);
+      ctr(`${r.right} de ${r.total} correctas`,by+485,38,"#5c5c66");
+      ctr("¿Y tú? Haz el examen gratis 👇",1240,44,"#3b2f3f");ctr("galeriakmx.com/examen-coreano",1300,44,"#2f5bd8");
+      c.toBlob(b=>res(b),"image/png");};
+    const im=new Image();im.onload=()=>{x.drawImage(im,190,40,700,497);fin()};im.onerror=fin;im.src="/img/mascotas/bomi-dali.svg";
+  });
   $("#share").onclick=async()=>{
-    const url=location.origin+location.pathname,text=r.bajo?`Hice la prueba de coreano ${MODES[r.modo].name} gratis de GaleríaK. ¿Te animas?`:`Saqué nivel ${r.level} de 6 en la prueba de coreano${r.modo&&r.modo!=="todo"?" ("+MODES[r.modo].name+")":""} gratis de GaleríaK. ¿Y tú?`;
-    try{if(navigator.share){await navigator.share({title:"Prueba de nivel de coreano",text,url});return}}catch(e){if(e&&e.name==="AbortError")return}
-    try{await navigator.clipboard.writeText(text+" "+url);$("#toast").textContent="Enlace copiado"}catch(e){$("#toast").textContent=url}
+    const t=$("#toast");t.textContent="Creando tu tarjeta…";
+    let blob=null;try{blob=await tarjeta()}catch(e){}
+    const file=blob&&new File([blob],"mi-nivel-de-coreano.png",{type:"image/png"});
+    try{if(file&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:text+" "+url});t.textContent="";return}
+        if(navigator.share&&!file){await navigator.share({title:"Prueba de nivel de coreano",text,url});t.textContent="";return}}catch(e){if(e&&e.name==="AbortError"){t.textContent="";return}}
+    // Sin compartir nativo: mostrar la tarjeta para descargar + WhatsApp
+    const box=document.getElementById("sharebox")||Object.assign(document.createElement("div"),{id:"sharebox"});
+    $("#share").closest("section").appendChild(box);
+    const u=blob?URL.createObjectURL(blob):"";
+    box.innerHTML=`${u?`<img src="${u}" alt="Tu tarjeta de nivel de coreano" style="width:100%;max-width:360px;border-radius:14px;margin:12px auto 8px;display:block">`:""}
+      <div class="row">${u?`<a class="btn red" href="${u}" download="mi-nivel-de-coreano.png">⬇️ Descargar imagen</a>`:""}<a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(text+" "+url)}">💬 WhatsApp</a></div>
+      <p class="note">Súbela a tu historia de Instagram o TikTok y etiqueta a quien quieras retar.</p>`;
+    try{await navigator.clipboard.writeText(text+" "+url);t.textContent="Texto copiado ✓"}catch(e){t.textContent=""}
   };
 }
 
@@ -820,6 +849,6 @@ function boot(){
 }
 boot();
 </script>
-<script>/* contador de visitas anónimo */(function(){try{var k='gk_vid',v=localStorage.getItem(k);if(!v){v=(crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)}));localStorage.setItem(k,v)}fetch('https://pimuwxsazuzmgwhbrzbx.supabase.co/rest/v1/rpc/gk_registrar_visita',{method:'POST',headers:{'apikey':'sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn','Content-Type':'application/json'},body:JSON.stringify({p_visitante:v}),keepalive:true}).catch(function(){});window.gkPagina=function(pg){try{fetch('https://pimuwxsazuzmgwhbrzbx.supabase.co/rest/v1/rpc/gk_registrar_pagina',{method:'POST',headers:{'apikey':'sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn','Content-Type':'application/json'},body:JSON.stringify({p_visitante:v,p_pagina:pg}),keepalive:true}).catch(function(){})}catch(e){}};window.gkPagina('examen')}catch(e){}})();</script>
+<script>/* contador de visitas anónimo (sin robots ni equipo) */(function(){try{if(navigator.webdriver||/bot|crawl|spider|slurp|lighthouse|headless|inspectiontool|pagespeed|preview|facebookexternalhit|whatsapp|telegram/i.test(navigator.userAgent||'')||localStorage.getItem('gk_no_contar')==='1')return;var k='gk_vid',v=localStorage.getItem(k);if(!v){v=(crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c=='x'?r:(r&3|8)).toString(16)}));localStorage.setItem(k,v)}fetch('https://pimuwxsazuzmgwhbrzbx.supabase.co/rest/v1/rpc/gk_registrar_visita',{method:'POST',headers:{'apikey':'sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn','Content-Type':'application/json'},body:JSON.stringify({p_visitante:v}),keepalive:true}).catch(function(){});window.gkPagina=function(pg){try{fetch('https://pimuwxsazuzmgwhbrzbx.supabase.co/rest/v1/rpc/gk_registrar_pagina',{method:'POST',headers:{'apikey':'sb_publishable_njWRhiyl0oZOeJh6m-Zdyw_5yPgHiNn','Content-Type':'application/json'},body:JSON.stringify({p_visitante:v,p_pagina:pg}),keepalive:true}).catch(function(){})}catch(e){}};window.gkPagina('examen')}catch(e){}})();</script>
 </body>
 </html>

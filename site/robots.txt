@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+Disallow: /sns/
 Sitemap: https://galeriakmx.com/sitemap.xml

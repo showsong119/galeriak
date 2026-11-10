@@ -31,6 +31,8 @@ jobs:
           node-version: 20
       - name: Páginas estáticas para buscadores
         run: node scripts/build-static.mjs site
+      - name: Kit para redes (/sns/)
+        run: python3 scripts/gen-sns.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
