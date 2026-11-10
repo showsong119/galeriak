@@ -10,6 +10,8 @@ Se ejecuta en cada despliegue (pages.yml) y en el trabajo diario de lecciones.
 Uso: python3 scripts/gen-sns.py
 """
 import json
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 from html import escape
 from pathlib import Path
 
@@ -41,9 +43,26 @@ def texto(l):
             "¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n" + TAGS)
 
 
-def tarjeta(l, etiqueta):
-    return {'n': l['_n'], 'slug': l['_slug'], 'titulo': l['title'], 'etiqueta': etiqueta,
-            'img': f"/img/diario/{l['_slug']}.svg", 'texto': texto(l)}
+def tarjeta(l, etiqueta, fecha=None):
+    t = {'n': l['_n'], 'slug': l['_slug'], 'titulo': l['title'], 'etiqueta': etiqueta,
+         'img': f"/img/diario/{l['_slug']}.svg", 'texto': texto(l)}
+    if fecha:
+        t['fecha'] = fecha
+    for ext in ('jpg', 'mp4'):
+        if (ROOT / f"site/img/sns/{l['_slug']}.{ext}").exists():
+            t[ext] = f"/img/sns/{l['_slug']}.{ext}"
+    return t
+
+
+DIAS = ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom']
+def fechas():
+    # La lección del día se publica a las 8:13 (Ciudad de México); en redes se recomienda 19:00 CDMX (= 10:00 del día siguiente en Corea)
+    mx = ZoneInfo('America/Mexico_City')
+    hoy = datetime.now(mx).date()
+    def f(d):
+        kr = datetime(d.year, d.month, d.day, 19, 0, tzinfo=mx).astimezone(ZoneInfo('Asia/Seoul'))
+        return f"{d.month}/{d.day}({DIAS[d.weekday()]}) 19:00 멕시코 = 한국 {kr.month}/{kr.day} {kr.hour}:00"
+    return hoy, f
 
 
 def main():
@@ -53,22 +72,39 @@ def main():
     except Exception:
         ult = pub[-1]['_slug'] if pub else ''
     hoy = [l for l in pub if l['_slug'] == ult] or pub[-1:]
-    items = [tarjeta(l, 'Para hoy') for l in hoy]
-    items += [tarjeta(l, 'Próxima') for l in cola[:3]]
-    items += [tarjeta(l, 'Anterior') for l in reversed(pub) if l['_slug'] != (hoy[0]['_slug'] if hoy else '')][:6]
-    items.append({'n': 0, 'slug': 'examen', 'titulo': 'Examen de coreano gratis (publicación fija)', 'etiqueta': 'Siempre',
-                  'img': '/img/mascotas/bomi-dali.svg', 'examen': True,
-                  'texto': "¿Qué tanto coreano sabes? 🇰🇷\n\nHaz gratis el examen estilo TOPIK de GaleríaK: 30 preguntas de vocabulario, lectura y audio, con tu nivel del 1 al 6 y explicaciones en español. Sin cuenta.\n\n👉 galeriakmx.com/examen-coreano (link en la bio)\n\nComparte tu resultado y reta a tus amigas y amigos 🐯🐰\n\n" + TAGS})
+    dia, fmt = fechas()
+    try:
+        at = json.loads((D / 'ultima.json').read_text(encoding='utf-8')).get('at', '')
+        pub_hoy = datetime.fromisoformat(at.replace('Z', '+00:00')).astimezone(ZoneInfo('America/Mexico_City')).date() == dia
+    except Exception:
+        pub_hoy = True
+    # Plan de TikTok: las próximas 10 publicaciones desde hoy (19:00 CDMX). Si ya pasaron las 19:00, desde mañana.
+    ahora = datetime.now(ZoneInfo('America/Mexico_City'))
+    ini = dia if ahora.hour < 19 else dia + timedelta(days=1)
+    examen = {'n': 0, 'slug': 'examen', 'titulo': 'Examen de coreano gratis (publicación fija)', 'etiqueta': 'Siempre',
+              'img': '/img/mascotas/bomi-dali.svg', 'examen': True,
+                  'texto': "¿Qué tanto coreano sabes? 🇰🇷\n\nHaz gratis el examen estilo TOPIK de GaleríaK: 30 preguntas de vocabulario, lectura y audio, con tu nivel del 1 al 6 y explicaciones en español. Sin cuenta.\n\n👉 galeriakmx.com/examen-coreano (link en la bio)\n\nComparte tu resultado y reta a tus amigas y amigos 🐯🐰\n\n" + TAGS}
+    for ext in ('jpg', 'mp4'):
+        if (ROOT / f'site/img/sns/examen.{ext}').exists():
+            examen[ext] = f'/img/sns/examen.{ext}'
+    plan = [('l', l) for l in cola[:1]] + [('e', examen)] + [('l', l) for l in cola[1:]] + [('l', l) for l in pub]
+    items = []
+    for i, (k, x) in enumerate(plan[:10]):
+        t = tarjeta(x, f'D{i + 1}', fmt(ini + timedelta(days=i))) if k == 'l' else dict(x, etiqueta=f'D{i + 1}', fecha=fmt(ini + timedelta(days=i)))
+        items.append(t)
+    usados = {t['slug'] for t in items}
+    items += [tarjeta(l, 'Anterior') for l in reversed(pub) if l['_slug'] not in usados][:4]
     datos = json.dumps(items, ensure_ascii=False).replace('</', '<\\/')
     html = PAGE.replace('/*DATOS*/[]', datos)
     out = ROOT / 'site/sns'
     out.mkdir(parents=True, exist_ok=True)
     (out / 'index.html').write_text(html, encoding='utf-8')
+    (out / 'items.json').write_text(json.dumps(items, ensure_ascii=False, indent=1), encoding='utf-8')  # para publicar-redes.mjs
     print(f'✅ site/sns/index.html · {len(items)} tarjetas (hoy: {ult or "—"})')
 
 
 PAGE = r'''<!doctype html><html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><title>Kit para redes · GaleríaK</title>
+<meta name="robots" content="noindex,nofollow"><title>SNS 키트 · GaleríaK</title>
 <style>body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#f6f6f8;color:#17171c}
 header{background:#cc1f68;color:#fff;padding:14px 16px}header h1{margin:0;font-size:19px}header p{margin:4px 0 0;font-size:13px;opacity:.9}
 main{max-width:560px;margin:0 auto;padding:12px}.c{background:#fff;border-radius:16px;padding:12px;margin:0 0 14px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
@@ -77,9 +113,9 @@ h2{font-size:16px;margin:2px 0 8px}img.p{width:100%;border-radius:12px;backgroun
 textarea{width:100%;box-sizing:border-box;min-height:150px;border:1px solid #ddd;border-radius:10px;padding:8px;font:14px/1.45 system-ui;margin:8px 0}
 .row{display:flex;gap:8px;flex-wrap:wrap}button{flex:1;min-width:140px;border:0;border-radius:12px;padding:12px;font-weight:800;font-size:15px;cursor:pointer}
 .b1{background:#cc1f68;color:#fff}.b2{background:#17171c;color:#fff}.ok{color:#16784d;font-size:13px;min-height:18px;margin-top:6px}
-.how{font-size:14px;line-height:1.5}.how li{margin:3px 0}</style></head><body>
-<header><h1>📲 Kit para redes de GaleríaK</h1><p>Imagen + texto listos. Toca «Compartir» y elige Instagram, TikTok, Facebook o WhatsApp.</p></header>
-<main><div class="c how"><b>Cómo publicar (1 minuto)</b><ol><li>Toca <b>Compartir imagen</b> (o Descargar).</li><li>Toca <b>Copiar texto</b> y pégalo como descripción.</li><li>Publica. Mejor hora en México: 7–9 pm.</li></ol></div><div id="lista"></div></main>
+.how{font-size:14px;line-height:1.5}.fecha{font-size:14px;margin:2px 0 6px;color:#2f5bd8}.b3{flex:1;min-width:140px;text-align:center;text-decoration:none;border-radius:12px;padding:11px;font-weight:800;font-size:15px;background:#fff;border:2px solid #17171c;color:#17171c}.how li{margin:3px 0}</style></head><body>
+<header><h1>📲 GaleríaK 틱톡 키트</h1><p>앞으로 10일 치 동영상과 스페인어 문구가 준비돼 있어요. 열흘에 한 번 예약하면 끝!</p></header>
+<main><div class="c how"><b>틱톡 예약 방법 (열흘에 한 번, 컴퓨터에서)</b><ol><li>아래 카드마다 <b>🎬 동영상 받기</b>를 눌러 저장해요.</li><li><a href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">TikTok Studio 업로드</a>에서 동영상을 올리고, <b>📋 문구 복사</b>한 걸 설명에 붙여 넣어요.</li><li>「예약(Schedule)」을 켜고 카드에 적힌 <b>예약 시간</b>을 넣어요.</li></ol><p class="hint" style="font-size:13px;color:#666">휴대폰에서 바로 올릴 땐 🎬 동영상 받기 → 틱톡 앱에서 업로드. 이 페이지는 매일 자동으로 새 10일 치로 바뀌어요(D1 = 가장 가까운 날).</p></div><div id="lista"></div></main>
 <script>
 const ITEMS=/*DATOS*/[];
 const F="system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans KR',sans-serif";
@@ -97,14 +133,14 @@ function lienzo(it){return new Promise(res=>{const W=1080,H=1350,c=document.crea
  im.onerror=()=>res(null);im.src=it.img;})}
 const L=document.getElementById('lista');
 ITEMS.forEach((it,k)=>{const d=document.createElement('div');d.className='c';
- d.innerHTML=`<span class="tag ${it.etiqueta==='Para hoy'?'hoy':it.etiqueta==='Próxima'?'prox':''}">${it.etiqueta}</span><h2></h2><img class="p" alt="Vista previa"><textarea readonly></textarea><div class="row"><button class="b1">📤 Compartir imagen</button><button class="b2">📋 Copiar texto</button></div><div class="ok"></div>`;
+ d.innerHTML=`<span class="tag ${it.etiqueta==='D1'?'hoy':/^D/.test(it.etiqueta)?'prox':''}">${({'Anterior':'지난 글','Siempre':'언제든'})[it.etiqueta]||it.etiqueta}</span>${it.fecha?`<div class="fecha">📅 예약 시간: <b>${it.fecha}</b></div>`:''}<h2></h2><img class="p" alt="미리보기"><textarea readonly></textarea><div class="row"><button class="b1">📤 이미지 공유</button><button class="b2">📋 문구 복사</button></div>${it.mp4?`<div class="row" style="margin-top:8px"><a class="b3" href="${it.mp4}" download>🎬 동영상 받기 (틱톡용)</a>${it.jpg?`<a class="b3" href="${it.jpg}" download>🖼️ 이미지 받기</a>`:''}</div>`:''}<div class="ok"></div>`;
  d.querySelector('h2').textContent=it.titulo;d.querySelector('textarea').value=it.texto;L.appendChild(d);
  const ok=d.querySelector('.ok');let blob=null;
  lienzo(it).then(b=>{blob=b;if(b)d.querySelector('img').src=URL.createObjectURL(b)});
- d.querySelector('.b2').onclick=async()=>{try{await navigator.clipboard.writeText(it.texto);ok.textContent='✓ Texto copiado. Pégalo en la descripción.'}catch(e){const ta=d.querySelector('textarea');ta.select();document.execCommand('copy');ok.textContent='✓ Texto copiado'}};
- d.querySelector('.b1').onclick=async()=>{if(!blob)return ok.textContent='La imagen todavía se está creando…';const name='galeriak-'+(it.slug||k)+'.png',file=new File([blob],name,{type:'image/png'});
-  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:it.texto});ok.textContent='✓ Listo';return}}catch(e){if(e.name==='AbortError')return}
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();ok.textContent='✓ Imagen descargada. Súbela desde tu galería.'};
+ d.querySelector('.b2').onclick=async()=>{try{await navigator.clipboard.writeText(it.texto);ok.textContent='✓ 문구 복사됨 — 설명 칸에 붙여 넣으세요'}catch(e){const ta=d.querySelector('textarea');ta.select();document.execCommand('copy');ok.textContent='✓ 문구 복사됨'}};
+ d.querySelector('.b1').onclick=async()=>{if(!blob)return ok.textContent='이미지를 만드는 중이에요…';const name='galeriak-'+(it.slug||k)+'.png',file=new File([blob],name,{type:'image/png'});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:it.texto});ok.textContent='✓ 완료';return}}catch(e){if(e.name==='AbortError')return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();ok.textContent='✓ 이미지 저장됨 — 앨범에서 올리세요'};
 });
 </script></body></html>
 '''
