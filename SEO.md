@@ -58,8 +58,8 @@
 |---|---|---|---|---|
 | 1 | niacinamida | niacinamida para qué sirve | K-Beauty | ✅ 2026-11-09 |
 | 2 | boletos-kpop-mexico | cómo comprar boletos kpop México | K-Pop | ✅ 2026-11-09 |
-| 3 | topik-mexico | TOPIK México / dónde presentar el TOPIK en México | Coreano | ⏳ |
-| 4 | serum-coreano | sérum coreano para principiantes | K-Beauty | ⏳ |
+| 3 | topik-mexico | TOPIK México / dónde presentar el TOPIK en México | Coreano | ✅ 2026-11-10 |
+| 4 | serum-coreano | sérum coreano para principiantes | K-Beauty | ✅ 2026-11-10 |
 | 5 | palabras-kpop-significado | qué significa oppa, daebak, aegyo | Coreano | ⏳ |
 | 6 | kdramas-principiantes | kdramas para principiantes | K-Drama | ⏳ |
 | 7 | acido-salicilico-coreano | ácido salicílico para poros / BHA coreano | K-Beauty | ⏳ |
