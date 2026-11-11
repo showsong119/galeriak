@@ -28,6 +28,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://pimuwxsazuzmgwhbrzbx.supabase.co" crossorigin>
+<link rel="preload" as="image" href="/img/mascotas/bomi-dali.svg" fetchpriority="high">
 <link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
@@ -208,13 +209,18 @@ footer a{margin:0 6px;text-decoration:underline}
 </header>
 
 <div class="wrap">
-  <main id="main"><div class="card"><h1 style="font-size:22px;margin:0 0 6px">GaleríaK: comunidad de K-Beauty, K-Pop y K-Dramas en México</h1>
+  <main id="main"><div class="card hero" id="hero0"><div class="hero-t"><h1>Tu comunidad de cultura coreana en México <span aria-hidden="true">🇲🇽🇰🇷</span></h1>
+ <p>K-Pop, K-Dramas, K-Beauty y coreano, todo en español y gratis.</p>
+ <a class="hero-cta hero-exam" href="/examen-coreano/"><b>📝 Descubre tu nivel de coreano</b><span>Examen gratis estilo TOPIK · sin cuenta · resultado al instante</span></a>
+ <a class="hero-cta" href="#g-coreano"><b>📚 Coreano del día con Bomi y Dali</b><span>Una lección cortita cada mañana: palabras de K-Pop, K-Dramas y la vida diaria</span></a>
+ <p class="hero-join"><a class="btn btn-brand" href="#entrar">✨ Únete gratis</a> <span class="hint">para comentar, pasar lista y subir de nivel</span></p></div>
+ <img class="hero-img" src="/img/mascotas/bomi-dali.svg" alt="Bomi y Dali, mascotas de GaleríaK" width="620" height="440" fetchpriority="high"></div><div class="card"><h2 style="font-size:20px;margin:0 0 6px">GaleríaK: comunidad de K-Beauty, K-Pop y K-Dramas en México</h2>
    <p>Comunidad independiente en español para fans de la cosmética coreana, el K-Pop, los K-Dramas y la cultura coreana. Participa en galerías por tema, comparte reseñas y ofertas, aprende con nuestras guías y mide tu nivel con el examen de coreano gratis.</p>
    <ul><li><a href="/g/">Todas las galerías</a>: skincare, maquillaje, ofertas, grupos de K-Pop, K-Dramas y aprender coreano</li>
    <li><a href="/guias/">Guías en español</a>: rutina de skincare coreana, protector solar, ingredientes, hangul, partículas y números en coreano</li>
    <li><a href="/examen-coreano/">Examen de coreano gratis</a> estilo TOPIK con explicaciones en español</li>
    <li><a href="/acerca/">Acerca de GaleríaK</a> · <a href="/contacto/">Contacto</a></li></ul>
-   <noscript><p>Activa JavaScript para participar en la comunidad.</p></noscript></div></main><script>/* portada guardada: se pinta antes de cargar Supabase (solo visitas anteriores) */(function(){try{var h=decodeURIComponent(location.hash.slice(1));if(h&&h!=='home')return;var x=JSON.parse(localStorage.getItem('gk_home_snap')||'null');if(x&&x.h&&Date.now()-x.t<864e5){document.getElementById('main').innerHTML=x.h;window.GK_SNAP=1}}catch(e){}})();</script>
+   <noscript><p>Activa JavaScript para participar en la comunidad.</p></noscript></div></main><script>/* portada guardada: se pinta antes de cargar Supabase (solo visitas anteriores) */(function(){try{var hz=document.getElementById('hero0');if(hz)for(var k=0;k<localStorage.length;k++){var kk=localStorage.key(k);if(/^sb-.*-auth-token$/.test(kk)){hz.remove();break}}var h=decodeURIComponent(location.hash.slice(1));if(h&&h!=='home')return;var x=JSON.parse(localStorage.getItem('gk_home_snap')||'null');if(x&&x.h&&Date.now()-x.t<864e5){document.getElementById('main').innerHTML=x.h;window.GK_SNAP=1}}catch(e){}})();</script>
   <aside class="side" id="side"></aside>
 </div>
 
@@ -506,7 +512,7 @@ const welcome=()=>ME?'':`<div class="card hero"><div class="hero-t"><h1>Tu comun
  <a class="hero-cta hero-exam" href="/examen-coreano/"><b>📝 Descubre tu nivel de coreano</b><span>Examen gratis estilo TOPIK · sin cuenta · resultado al instante</span></a>
  <a class="hero-cta" href="#g-coreano"><b>📚 Coreano del día con Bomi y Dali</b><span>Una lección cortita cada mañana: palabras de K-Pop, K-Dramas y la vida diaria</span></a>
  <p class="hero-join"><a class="btn btn-brand" href="#entrar">✨ Únete gratis</a> <span class="hint">para comentar, pasar lista y subir de nivel</span></p></div>
- <img class="hero-img" src="/img/mascotas/bomi-dali.svg" alt="Bomi y Dali, mascotas de GaleríaK" width="620" height="440"></div>`;
+ <img class="hero-img" src="/img/mascotas/bomi-dali.svg" alt="Bomi y Dali, mascotas de GaleríaK" width="620" height="440" fetchpriority="high"></div>`;
 
 /* ---------------- 👥 회원 관리 (solo administradores) ---------------- */
 let mFil='all',mSort='new',mQ='',mShow=50,mOpen=null,MEM=null,MEM_T=0,MEM_OFF=false;
