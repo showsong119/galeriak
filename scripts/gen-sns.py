@@ -17,7 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 D = ROOT / 'content/diario'
-TAGS = '#coreano #aprendecoreano #coreanoparaprincipiantes #kpop #kdrama #kpopmexico #hangul #한국어 #mexico'
+TAGS = '#coreano #aprendecoreano #kpop #kdrama #kpopmexico'  # máx. 5 hashtags (pedido del usuario 2026-11-11)
 
 
 def leer(carpeta):
