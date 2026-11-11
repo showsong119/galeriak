@@ -20,7 +20,7 @@ if(q.get('code')){
 }else{
   app.innerHTML=`<div class="c"><p><b>1.</b> TikTok for Developers 앱의 <b>Client key</b>를 붙여 넣으세요(공개값이라 괜찮아요).</p><input id="ck" placeholder="Client key" value="${esc(ck)}"><p><b>2.</b> 아래 버튼 → TikTok 로그인 → <b>허용</b>.</p><button id="go">🎵 TikTok 연결하기</button></div>`;
   document.getElementById('go').onclick=()=>{
-    const k=document.getElementById('ck').value.trim();if(!k)return alert('Client key를 넣어 주세요');
+    const k=document.getElementById('ck').value.replace(/\s+/g,'');if(!k)return alert('Client key를 넣어 주세요');
     const s=Math.random().toString(36).slice(2)+Date.now().toString(36);
     try{localStorage.setItem('gk_tt_ck',k);sessionStorage.setItem('gk_tt_state',s)}catch(e){}
     location.href='https://www.tiktok.com/v2/auth/authorize/?'+new URLSearchParams({client_key:k,scope:'user.info.basic,video.upload',response_type:'code',redirect_uri:REDIRECT,state:s});

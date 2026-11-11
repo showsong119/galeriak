@@ -86,7 +86,7 @@ function estado(cambios) {
 
 async function main() {
   const cmd = process.argv[2];
-  const CK = process.env.TIKTOK_CLIENT_KEY, CS = process.env.TIKTOK_CLIENT_SECRET;
+  const CK = (process.env.TIKTOK_CLIENT_KEY || '').trim(), CS = (process.env.TIKTOK_CLIENT_SECRET || '').trim();
   const items = leer(join(ROOT, 'site/sns/items.json'), []);
   const ultima = leer(join(ROOT, 'content/diario/ultima.json'), null);
 
