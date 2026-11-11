@@ -3,15 +3,19 @@
     {
       "dia": "2026-11-11",
       "slug": "003-hangul-grupos"
+    },
+    {
+      "dia": "2026-11-11",
+      "slug": "003-hangul-grupos"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-11T07:25:30.631Z",
+  "at": "2026-11-11T07:58:18.332Z",
   "ultimo": {
     "dia": "2026-11-11",
     "slug": "003-hangul-grupos",
-    "publish_id": "v_inbox_file~v2.7706811538610587669",
+    "publish_id": "p_inbox_url~v2.7706819770405996565",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
