@@ -1,5 +1,5 @@
 name: tiktok
-# Cada día 18:37 CDMX (00:37 UTC) envía el video de la lección de hoy a la bandeja (borradores) de TikTok.
+# Cada día 18:37 CDMX (00:37 UTC) envía el carrusel (card news) de la lección de hoy a la bandeja (borradores) de TikTok.
 # El usuario abre la notificación en la app, pega el texto (galeriakmx.com/sns/) y publica.
 on:
   schedule:
@@ -9,7 +9,7 @@ on:
       accion:
         description: '¿Qué hacer?'
         type: choice
-        options: [enviar, conectar]
+        options: [enviar, reenviar, conectar]
         default: enviar
       codigo:
         description: 'Solo para conectar: el código que muestra galeriakmx.com/tiktok/'

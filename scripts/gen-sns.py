@@ -43,14 +43,18 @@ def texto(l):
             "¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n" + TAGS)
 
 
+def fotos(slug):
+    # carrusel tipo «card news» hecho por scripts/render-sns.cjs: site/img/sns/<slug>/01.jpg …
+    fs = sorted((ROOT / f'site/img/sns/{slug}').glob('[0-9][0-9].jpg'))
+    return {'fotos': [f'/img/sns/{slug}/{f.name}' for f in fs]} if fs else {}
+
+
 def tarjeta(l, etiqueta, fecha=None):
     t = {'n': l['_n'], 'slug': l['_slug'], 'titulo': l['title'], 'etiqueta': etiqueta,
          'img': f"/img/diario/{l['_slug']}.svg", 'texto': texto(l)}
     if fecha:
         t['fecha'] = fecha
-    for ext in ('jpg', 'mp4'):
-        if (ROOT / f"site/img/sns/{l['_slug']}.{ext}").exists():
-            t[ext] = f"/img/sns/{l['_slug']}.{ext}"
+    t.update(fotos(l['_slug']))
     return t
 
 
@@ -84,9 +88,7 @@ def main():
     examen = {'n': 0, 'slug': 'examen', 'titulo': 'Examen de coreano gratis (publicación fija)', 'etiqueta': 'Siempre',
               'img': '/img/mascotas/bomi-dali.svg', 'examen': True,
                   'texto': "¿Qué tanto coreano sabes? 🇰🇷\n\nHaz gratis el examen estilo TOPIK de GaleríaK: 30 preguntas de vocabulario, lectura y audio, con tu nivel del 1 al 6 y explicaciones en español. Sin cuenta.\n\n👉 galeriakmx.com/examen-coreano (link en la bio)\n\nComparte tu resultado y reta a tus amigas y amigos 🐯🐰\n\n" + TAGS}
-    for ext in ('jpg', 'mp4'):
-        if (ROOT / f'site/img/sns/examen.{ext}').exists():
-            examen[ext] = f'/img/sns/examen.{ext}'
+    examen.update(fotos('examen'))
     plan = [('l', l) for l in cola[:1]] + [('e', examen)] + [('l', l) for l in cola[1:]] + [('l', l) for l in pub]
     items = []
     for i, (k, x) in enumerate(plan[:10]):
@@ -110,12 +112,13 @@ header{background:#cc1f68;color:#fff;padding:14px 16px}header h1{margin:0;font-s
 main{max-width:560px;margin:0 auto;padding:12px}.c{background:#fff;border-radius:16px;padding:12px;margin:0 0 14px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .tag{display:inline-block;font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px;background:#eee;margin-bottom:6px}.tag.hoy{background:#16784d;color:#fff}.tag.prox{background:#2f5bd8;color:#fff}
 h2{font-size:16px;margin:2px 0 8px}img.p{width:100%;border-radius:12px;background:#fafafa;display:block}
+.tira{display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.tira img{height:220px;border-radius:10px;scroll-snap-align:start;display:block}
 textarea{width:100%;box-sizing:border-box;min-height:150px;border:1px solid #ddd;border-radius:10px;padding:8px;font:14px/1.45 system-ui;margin:8px 0}
 .row{display:flex;gap:8px;flex-wrap:wrap}button{flex:1;min-width:140px;border:0;border-radius:12px;padding:12px;font-weight:800;font-size:15px;cursor:pointer}
 .b1{background:#cc1f68;color:#fff}.b2{background:#17171c;color:#fff}.ok{color:#16784d;font-size:13px;min-height:18px;margin-top:6px}
 .how{font-size:14px;line-height:1.5}.fecha{font-size:14px;margin:2px 0 6px;color:#2f5bd8}.b3{flex:1;min-width:140px;text-align:center;text-decoration:none;border-radius:12px;padding:11px;font-weight:800;font-size:15px;background:#fff;border:2px solid #17171c;color:#17171c}.how li{margin:3px 0}</style></head><body>
-<header><h1>📲 GaleríaK 틱톡 키트</h1><p>매일 저녁 6시 40분(멕시코) 오늘의 동영상이 틱톡 앱 받은편지함으로 자동 도착해요. 알림 열기 → 문구 붙여넣기 → 게시!</p></header>
-<main><div id="hoy"></div><div class="c how"><b>예비용: 직접 예약하는 방법 (자동 전송이 안 될 때)</b><ol><li>아래 카드마다 <b>🎬 동영상 받기</b>를 눌러 저장해요.</li><li><a href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">TikTok Studio 업로드</a>에서 동영상을 올리고, <b>📋 문구 복사</b>한 걸 설명에 붙여 넣어요.</li><li>「예약(Schedule)」을 켜고 카드에 적힌 <b>예약 시간</b>을 넣어요.</li></ol><p class="hint" style="font-size:13px;color:#666">휴대폰에서 바로 올릴 땐 🎬 동영상 받기 → 틱톡 앱에서 업로드. 이 페이지는 매일 자동으로 새 10일 치로 바뀌어요(D1 = 가장 가까운 날).</p></div><div id="lista"></div></main>
+<header><h1>📲 GaleríaK 틱톡 키트</h1><p>매일 저녁 6시 37분(멕시코) 오늘의 카드뉴스(3~9장)가 틱톡 앱 받은편지함으로 자동 도착해요. 알림 열기 → 문구 확인 → 게시!</p></header>
+<main><div id="hoy"></div><div class="c how"><b>예비용: 직접 예약하는 방법 (자동 전송이 안 될 때)</b><ol><li>아래 카드마다 <b>📤 카드뉴스 공유/저장</b>을 눌러 사진을 받아요.</li><li><a href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" rel="noopener">TikTok Studio 업로드</a>에서 사진(여러 장)을 올리고, <b>📋 문구 복사</b>한 걸 설명에 붙여 넣어요.</li><li>「예약(Schedule)」을 켜고 카드에 적힌 <b>예약 시간</b>을 넣어요.</li></ol><p class="hint" style="font-size:13px;color:#666">휴대폰에서는 📤 카드뉴스 공유 → 틱톡을 고르면 바로 사진 게시물로 올라가요. 이 페이지는 매일 자동으로 새 10일 치로 바뀌어요(D1 = 가장 가까운 날).</p></div><div id="lista"></div></main>
 <script>
 const ITEMS=/*DATOS*/[];
 const F="system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans KR',sans-serif";
@@ -132,19 +135,24 @@ function lienzo(it){return new Promise(res=>{const W=1080,H=1350,c=document.crea
   c.toBlob(b=>res(b),'image/png')};
  im.onerror=()=>res(null);im.src=it.img;})}
 fetch('/sns/hoy.json?'+Date.now()).then(r=>r.ok?r.json():null).then(h=>{if(!h||!h.texto)return;const b=document.getElementById('hoy');
- b.className='c';b.style.border='3px solid #cc1f68';b.innerHTML='<span class="tag hoy">📥 틱톡 받은편지함에 보낸 영상</span><div class="fecha"></div><h2></h2><textarea readonly></textarea><div class="row"><button class="b2">📋 문구 복사</button></div><div class="ok"></div><p style="font-size:13px;color:#666">틱톡 앱 → 알림(받은편지함)의 초안 열기 → 다음 → 설명 칸에 붙여넣기 → 게시</p>';
+ b.className='c';b.style.border='3px solid #cc1f68';b.innerHTML='<span class="tag hoy">📥 틱톡 받은편지함에 보낸 영상</span><div class="fecha"></div><h2></h2>'+(h.fotos?tira(h.fotos):'')+'<textarea readonly></textarea><div class="row"><button class="b2">📋 문구 복사</button></div><div class="ok"></div><p style="font-size:13px;color:#666">틱톡 앱 → 알림(받은편지함)의 초안 열기 → 문구가 비어 있으면 붙여넣기 → 게시</p>';
  b.querySelector('.fecha').textContent='📅 '+h.dia;b.querySelector('h2').textContent=h.titulo;b.querySelector('textarea').value=h.texto;
  b.querySelector('.b2').onclick=async()=>{const ok=b.querySelector('.ok');try{await navigator.clipboard.writeText(h.texto)}catch(e){b.querySelector('textarea').select();document.execCommand('copy')}ok.textContent='✓ 문구 복사됨 — 틱톡 설명 칸에 붙여 넣으세요'}}).catch(()=>{});
+function tira(f){return '<div class="tira">'+f.map((u,i)=>'<a href="'+u+'" target="_blank"><img src="'+u+'" alt="'+(i+1)+'" loading="lazy"></a>').join('')+'</div>'}
+async function copiar(t,d,ok){try{await navigator.clipboard.writeText(t)}catch(e){const ta=d.querySelector('textarea');ta.select();document.execCommand('copy')}ok.textContent='✓ 문구 복사됨 — 설명 칸에 붙여 넣으세요'}
+async function compartir(it,ok){ok.textContent='사진 준비 중…';try{const files=await Promise.all(it.fotos.map(async(u,i)=>{const b=await (await fetch(u)).blob();return new File([b],'galeriak-'+it.slug+'-'+String(i+1).padStart(2,'0')+'.jpg',{type:'image/jpeg'})}));
+ if(navigator.canShare&&navigator.canShare({files})){try{await navigator.share({files,text:it.texto});ok.textContent='✓ 완료';return}catch(e){if(e.name==='AbortError'){ok.textContent='';return}}}
+ for(const f of files){const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();await new Promise(r=>setTimeout(r,350))}ok.textContent='✓ '+files.length+'장 저장됨 — 틱톡에서 사진 여러 장으로 올리세요'}catch(e){ok.textContent='오류: '+e.message}}
 const L=document.getElementById('lista');
 ITEMS.forEach((it,k)=>{const d=document.createElement('div');d.className='c';
- d.innerHTML=`<span class="tag ${it.etiqueta==='D1'?'hoy':/^D/.test(it.etiqueta)?'prox':''}">${({'Anterior':'지난 글','Siempre':'언제든'})[it.etiqueta]||it.etiqueta}</span>${it.fecha?`<div class="fecha">📅 예약 시간: <b>${it.fecha}</b></div>`:''}<h2></h2><img class="p" alt="미리보기"><textarea readonly></textarea><div class="row"><button class="b1">📤 이미지 공유</button><button class="b2">📋 문구 복사</button></div>${it.mp4?`<div class="row" style="margin-top:8px"><a class="b3" href="${it.mp4}" download>🎬 동영상 받기 (틱톡용)</a>${it.jpg?`<a class="b3" href="${it.jpg}" download>🖼️ 이미지 받기</a>`:''}</div>`:''}<div class="ok"></div>`;
+ d.innerHTML=`<span class="tag ${it.etiqueta==='D1'?'hoy':/^D/.test(it.etiqueta)?'prox':''}">${({'Anterior':'지난 글','Siempre':'언제든'})[it.etiqueta]||it.etiqueta}</span>${it.fecha?`<div class="fecha">📅 예약 시간: <b>${it.fecha}</b></div>`:''}<h2></h2>${it.fotos?tira(it.fotos):'<img class="p" alt="미리보기">'}<textarea readonly></textarea><div class="row"><button class="b1">📤 카드뉴스 공유/저장${it.fotos?' ('+it.fotos.length+'장)':''}</button><button class="b2">📋 문구 복사</button></div><div class="ok"></div>`;
  d.querySelector('h2').textContent=it.titulo;d.querySelector('textarea').value=it.texto;L.appendChild(d);
  const ok=d.querySelector('.ok');let blob=null;
- lienzo(it).then(b=>{blob=b;if(b)d.querySelector('img').src=URL.createObjectURL(b)});
- d.querySelector('.b2').onclick=async()=>{try{await navigator.clipboard.writeText(it.texto);ok.textContent='✓ 문구 복사됨 — 설명 칸에 붙여 넣으세요'}catch(e){const ta=d.querySelector('textarea');ta.select();document.execCommand('copy');ok.textContent='✓ 문구 복사됨'}};
- d.querySelector('.b1').onclick=async()=>{if(!blob)return ok.textContent='이미지를 만드는 중이에요…';const name='galeriak-'+(it.slug||k)+'.png',file=new File([blob],name,{type:'image/png'});
+ if(!it.fotos)lienzo(it).then(b=>{blob=b;if(b)d.querySelector('img').src=URL.createObjectURL(b)});
+ d.querySelector('.b2').onclick=()=>copiar(it.texto,d,ok);
+ d.querySelector('.b1').onclick=()=>it.fotos?compartir(it,ok):(async()=>{if(!blob)return ok.textContent='이미지를 만드는 중이에요…';const file=new File([blob],'galeriak-'+(it.slug||k)+'.png',{type:'image/png'});
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:it.texto});ok.textContent='✓ 완료';return}}catch(e){if(e.name==='AbortError')return}
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();ok.textContent='✓ 이미지 저장됨 — 앨범에서 올리세요'};
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;a.click();ok.textContent='✓ 이미지 저장됨 — 앨범에서 올리세요'})();
 });
 </script></body></html>
 '''
