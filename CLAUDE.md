@@ -197,6 +197,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 시험 레벨 선택: `MODES`(todo 1–6 / basico 1–2 / intermedio 3–4 / avanzado 5–6, 모두 30문항). basico V{1:6,2:6}R{1:3,2:3}L{1:6,2:6}, intermedio·avanzado V6+6 R6+6 L3+3(듣기 문항이 레벨당 6개뿐이라 2회 무중복). `pickExam(seen,rand,modo)`, `grade(ans,qs,modo)` → level은 lo-1부터, `bajo`(첫 레벨 미달 → 결과에 「Aún no alcanzas …」·아래 레벨 추천), `tope`(최고 레벨 통과 → 다음 레벨 추천). 선택값 localStorage `gk-examen-modo`, URL `?nivel=basico|intermedio|avanzado`, `st.modo`. 테스트 2개 추가.
 
 ## 29. 속도(PageSpeed) (2026-11-09)
+- 2026-11-11: 홈 `#hero0`(마스코트 카드)를 초기 HTML에 넣고 fetchpriority=high·image preload → LCP 5.3→3.3초. welcome()과 마크업 동일하게 유지할 것.
 - `.github/workflows/lighthouse.yml`(workflow_dispatch, inputs.urls) — 실제 사이트 모바일 Lighthouse, 결과는 실행 로그/요약. 실행: `gh api -X POST repos/showsong119/galeriak/actions/workflows/lighthouse.yml/dispatches -f ref=main`.
 - 홈: 글꼴 `media=print onload` 비동기, supabase.js는 `</footer>` 뒤 메인 스크립트 바로 앞(+preload), preconnect(gstatic·jsdelivr·supabase), `#main{min-height:100vh}`(CLS), 본문 링크 밑줄. 색: --brand #cc1f68, --hot #c8361a, --ok #16784d, 주황 배지 #c2410c(대비 4.5 이상). 권장사항 점수는 애드센스 제3자 쿠키로 79 고정(수정 불가).
 
