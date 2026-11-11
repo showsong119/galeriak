@@ -142,7 +142,7 @@ async function main() {
     }
     const dia = hoyMx();
     estado({ status: 'enviado', ultimo: { dia, slug: pick.slug, publish_id, tiktok_status: st }, enviados: [...(e0.enviados || []), { dia, slug: pick.slug }] });
-    writeFileSync(HOY, JSON.stringify({ dia, slug: pick.slug, titulo: pick.titulo, texto: pick.texto, img: `/img/sns/${pick.slug}.jpg` }, null, 2) + '\n');
+    writeFileSync(HOY, JSON.stringify({ dia, slug: pick.slug, titulo: pick.titulo, texto: pick.texto, img: `/img/sns/${pick.slug}.jpg`, jpg: `/img/sns/${pick.slug}.jpg`, mp4: `/img/sns/${pick.slug}.mp4`, enviados: [...(e0.enviados || []), { dia, slug: pick.slug }].slice(-30) }, null, 2) + '\n');
     console.log(`✅ Enviado a la bandeja de TikTok: ${pick.slug} (${st || 'procesando'})`);
     return;
   }
