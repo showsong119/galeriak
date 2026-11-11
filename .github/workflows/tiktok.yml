@@ -7,8 +7,10 @@ on:
   workflow_dispatch:
     inputs:
       accion:
-        description: 'enviar | conectar'
-        default: 'enviar'
+        description: '¿Qué hacer?'
+        type: choice
+        options: [enviar, conectar]
+        default: enviar
       codigo:
         description: 'Solo para conectar: el código que muestra galeriakmx.com/tiktok/'
         default: ''
@@ -38,7 +40,10 @@ jobs:
           TIKTOK_CODIGO: ${{ github.event.inputs.codigo }}
         run: |
           echo "::add-mask::${TIKTOK_CODIGO:-x}"
-          node scripts/tiktok.mjs "${{ github.event.inputs.accion || 'enviar' }}"
+          ACC="${{ github.event.inputs.accion || 'enviar' }}"
+          # si viene un código, siempre es para conectar
+          if [ -n "$TIKTOK_CODIGO" ]; then ACC=conectar; fi
+          node scripts/tiktok.mjs "$ACC"
       - name: Guardar estado
         if: always()
         env:

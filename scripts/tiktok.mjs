@@ -146,7 +146,7 @@ async function main() {
     console.log(`✅ Enviado a la bandeja de TikTok: ${pick.slug} (${st || 'procesando'})`);
     return;
   }
-  console.log('Uso: node scripts/tiktok.mjs conectar|enviar|elegir');
+  throw new Error('Acción desconocida: usa conectar | enviar | elegir');
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
