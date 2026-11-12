@@ -1,17 +1,18 @@
 {
-  "dia": "2026-11-11",
-  "slug": "003-hangul-grupos",
-  "titulo": "Coreano del día #3: Lee los nombres de tus grupos favoritos en hangul",
-  "texto": "📚 Coreano del día #3: Lee los nombres de tus grupos favoritos en hangul\n\n한글 (hangul) = Lee los nombres en coreano\n\nLa lección completa, con ejemplos y mini reto, está gratis en GaleríaK 👉 galeriakmx.com (link en la bio)\n\n¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
-  "img": "/img/sns/003-hangul-grupos/01.jpg",
+  "dia": "2026-11-12",
+  "slug": "004-vocabulario-concierto",
+  "titulo": "Coreano del día #4: Vocabulario para tu próximo concierto de K-Pop",
+  "texto": "📚 Coreano del día #4: Vocabulario para tu próximo concierto de K-Pop\n\n응원해요! (eungwonhaeyo) = ¡Te apoyo!\n\nLa lección completa, con ejemplos y mini reto, está gratis en GaleríaK 👉 galeriakmx.com (link en la bio)\n\n¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
+  "img": "/img/sns/004-vocabulario-concierto/01.jpg",
   "fotos": [
-    "/img/sns/003-hangul-grupos/01.jpg",
-    "/img/sns/003-hangul-grupos/02.jpg",
-    "/img/sns/003-hangul-grupos/03.jpg",
-    "/img/sns/003-hangul-grupos/04.jpg",
-    "/img/sns/003-hangul-grupos/05.jpg",
-    "/img/sns/003-hangul-grupos/06.jpg",
-    "/img/sns/003-hangul-grupos/07.jpg"
+    "/img/sns/004-vocabulario-concierto/01.jpg",
+    "/img/sns/004-vocabulario-concierto/02.jpg",
+    "/img/sns/004-vocabulario-concierto/03.jpg",
+    "/img/sns/004-vocabulario-concierto/04.jpg",
+    "/img/sns/004-vocabulario-concierto/05.jpg",
+    "/img/sns/004-vocabulario-concierto/06.jpg",
+    "/img/sns/004-vocabulario-concierto/07.jpg",
+    "/img/sns/004-vocabulario-concierto/08.jpg"
   ],
   "enviados": [
     {
@@ -21,6 +22,10 @@
     {
       "dia": "2026-11-11",
       "slug": "003-hangul-grupos"
+    },
+    {
+      "dia": "2026-11-12",
+      "slug": "004-vocabulario-concierto"
     }
   ]
 }

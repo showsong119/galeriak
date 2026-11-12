@@ -7,15 +7,19 @@
     {
       "dia": "2026-11-11",
       "slug": "003-hangul-grupos"
+    },
+    {
+      "dia": "2026-11-12",
+      "slug": "004-vocabulario-concierto"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-11T07:58:18.332Z",
+  "at": "2026-11-12T07:39:57.581Z",
   "ultimo": {
-    "dia": "2026-11-11",
-    "slug": "003-hangul-grupos",
-    "publish_id": "p_inbox_url~v2.7706819770405996565",
+    "dia": "2026-11-12",
+    "slug": "004-vocabulario-concierto",
+    "publish_id": "p_inbox_url~v2.7707186044433680385",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
