@@ -11,15 +11,19 @@
     {
       "dia": "2026-11-12",
       "slug": "004-vocabulario-concierto"
+    },
+    {
+      "dia": "2026-11-13",
+      "slug": "005-comida-kdrama"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-12T07:39:57.581Z",
+  "at": "2026-11-13T07:12:26.812Z",
   "ultimo": {
-    "dia": "2026-11-12",
-    "slug": "004-vocabulario-concierto",
-    "publish_id": "p_inbox_url~v2.7707186044433680385",
+    "dia": "2026-11-13",
+    "slug": "005-comida-kdrama",
+    "publish_id": "p_inbox_url~v2.7707550363687094293",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
