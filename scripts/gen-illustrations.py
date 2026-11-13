@@ -155,6 +155,8 @@ ART = {
  'formal-informal-coreano': ('coreano', speech(520, 150, 420, 140, '안녕하세요', '#fff', CO[2], fs=50) + speech(760, 330, 300, 130, '안녕~', CO[3], '#fff', tail='right') + f'<text x="560" y="520" font-family="{FONT}" font-size="40" font-weight="900" fill="{CO[2]}">존댓말 · 반말</text>', 'Habla formal e informal'),
  'topik-mexico': ('coreano', tile(600, 260, '한국어', '#fff', CO[2], w=230, fs=60, rot=-5) + tile(860, 260, '시험', CO[2], '#fff', w=190, fs=64, rot=3) + tile(740, 460, 'TOPIK', CO[3], '#fff', w=250, fs=56, rot=-2) + tile(1000, 460, 'MX', '#fff', CO[3], w=170, fs=64, rot=5) + sparkle(1100, 160, 1.3, CO[3]), 'Calendario y fichas del TOPIK en México'),
  'serum-coreano': ('beauty', bottle(720, 410, 1.1, '#ffd0e0', B[2], ko='세럼') + drop(930, 250, 1.5, '#5ab0ff', .9) + drop(1010, 400, 1, '#ffb3cc') + leaf(1060, 470, .9, '#3aa76d') + sparkle(560, 200, 1.4, B[3]), 'Gotero de sérum con gotas'),
+ 'palabras-kpop-significado': ('kpop', speech(520, 140, 300, 140, '오빠', '#fff', K[2], fs=60) + speech(840, 170, 320, 140, '대박!', K[3], '#fff', fs=60, tail='right') + tile(700, 420, '애교', K[2], '#fff', w=200, fs=66, rot=-5) + heart(960, 450, 1, K[3]) + sparkle(1090, 330, 1.2, K[2]), 'Burbujas con oppa, daebak y aegyo'),
+ 'kdramas-principiantes': ('kpop', phone(760, 330, 1, K[2]) + tile(980, 250, '드라마', '#fff', K[2], w=230, fs=56, rot=5) + heart(1000, 450, 1, K[3]) + heart(600, 440, .7, K[2], .8) + sparkle(560, 190, 1.3, K[3]), 'Celular con K-drama y corazones'),
 }
 
 def examen_svg():
