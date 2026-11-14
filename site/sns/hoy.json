@@ -1,18 +1,16 @@
 {
-  "dia": "2026-11-13",
-  "slug": "005-comida-kdrama",
-  "titulo": "Coreano del día #5: La comida de los K-Dramas y cómo pedirla",
-  "texto": "📚 Coreano del día #5: La comida de los K-Dramas y cómo pedirla\n\n🐯 Bomi: 맛있어요! (masisseoyo) — ¡Está delicioso!\n🐰 Dali: 한 입 더! (han ip deo) — ¡Otro bocado!\n\nLa lección completa, con ejemplos y mini reto, está gratis en GaleríaK 👉 galeriakmx.com (link en la bio)\n\n¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
-  "img": "/img/sns/005-comida-kdrama/01.jpg",
+  "dia": "2026-11-14",
+  "slug": "006-te-quiero",
+  "titulo": "Coreano del día #6: ¿좋아해 o 사랑해? Cómo decir «me gustas» y «te quiero»",
+  "texto": "📚 Coreano del día #6: ¿좋아해 o 사랑해? Cómo decir «me gustas» y «te quiero»\n\n좋아해 (joahae) = Me gustas\n\nLa lección completa, con ejemplos y mini reto, está gratis en GaleríaK 👉 galeriakmx.com (link en la bio)\n\n¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
+  "img": "/img/sns/006-te-quiero/01.jpg",
   "fotos": [
-    "/img/sns/005-comida-kdrama/01.jpg",
-    "/img/sns/005-comida-kdrama/02.jpg",
-    "/img/sns/005-comida-kdrama/03.jpg",
-    "/img/sns/005-comida-kdrama/04.jpg",
-    "/img/sns/005-comida-kdrama/05.jpg",
-    "/img/sns/005-comida-kdrama/06.jpg",
-    "/img/sns/005-comida-kdrama/07.jpg",
-    "/img/sns/005-comida-kdrama/08.jpg"
+    "/img/sns/006-te-quiero/01.jpg",
+    "/img/sns/006-te-quiero/02.jpg",
+    "/img/sns/006-te-quiero/03.jpg",
+    "/img/sns/006-te-quiero/04.jpg",
+    "/img/sns/006-te-quiero/05.jpg",
+    "/img/sns/006-te-quiero/06.jpg"
   ],
   "enviados": [
     {
@@ -30,6 +28,10 @@
     {
       "dia": "2026-11-13",
       "slug": "005-comida-kdrama"
+    },
+    {
+      "dia": "2026-11-14",
+      "slug": "006-te-quiero"
     }
   ]
 }
