@@ -1,16 +1,17 @@
 {
-  "dia": "2026-11-14",
-  "slug": "006-te-quiero",
-  "titulo": "Coreano del día #6: ¿좋아해 o 사랑해? Cómo decir «me gustas» y «te quiero»",
-  "texto": "📚 Coreano del día #6: ¿좋아해 o 사랑해? Cómo decir «me gustas» y «te quiero»\n\n좋아해 (joahae) = Me gustas\n\nLa lección completa, con ejemplos y mini reto, está gratis en GaleríaK 👉 galeriakmx.com (link en la bio)\n\n¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
-  "img": "/img/sns/006-te-quiero/01.jpg",
+  "dia": "2026-11-15",
+  "slug": "007-konglish",
+  "titulo": "Coreano del día #7: Konglish, el inglés «a la coreana» que escuchas en el K-Pop",
+  "texto": "📚 Coreano del día #7: Konglish, el inglés «a la coreana» que escuchas en el K-Pop\n\n🐰 Dali: 내일 시험이야… (naeil siheomiya) — Mañana tengo examen…\n🐯 Bomi: 파이팅! (paiting) — ¡Ánimo! ¡Tú puedes!\n\nLa lección completa, con ejemplos y mini reto, está gratis en GaleríaK 👉 galeriakmx.com (link en la bio)\n\n¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
+  "img": "/img/sns/007-konglish/01.jpg",
   "fotos": [
-    "/img/sns/006-te-quiero/01.jpg",
-    "/img/sns/006-te-quiero/02.jpg",
-    "/img/sns/006-te-quiero/03.jpg",
-    "/img/sns/006-te-quiero/04.jpg",
-    "/img/sns/006-te-quiero/05.jpg",
-    "/img/sns/006-te-quiero/06.jpg"
+    "/img/sns/007-konglish/01.jpg",
+    "/img/sns/007-konglish/02.jpg",
+    "/img/sns/007-konglish/03.jpg",
+    "/img/sns/007-konglish/04.jpg",
+    "/img/sns/007-konglish/05.jpg",
+    "/img/sns/007-konglish/06.jpg",
+    "/img/sns/007-konglish/07.jpg"
   ],
   "enviados": [
     {
@@ -32,6 +33,10 @@
     {
       "dia": "2026-11-14",
       "slug": "006-te-quiero"
+    },
+    {
+      "dia": "2026-11-15",
+      "slug": "007-konglish"
     }
   ]
 }
