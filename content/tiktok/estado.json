@@ -23,15 +23,19 @@
     {
       "dia": "2026-11-15",
       "slug": "007-konglish"
+    },
+    {
+      "dia": "2026-11-16",
+      "slug": "008-saludos-despedidas"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-15T07:07:36.020Z",
+  "at": "2026-11-16T07:12:27.395Z",
   "ultimo": {
-    "dia": "2026-11-15",
-    "slug": "007-konglish",
-    "publish_id": "p_inbox_url~v2.7708290982625937429",
+    "dia": "2026-11-16",
+    "slug": "008-saludos-despedidas",
+    "publish_id": "p_inbox_url~v2.7708663502596114438",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
