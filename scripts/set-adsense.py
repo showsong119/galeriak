@@ -3,7 +3,8 @@
 Uso: python3 scripts/set-adsense.py ca-pub-1234567890123456
 - Reemplaza el comentario '<!-- AdSense: ... -->' o, si no existe, lo inserta antes de </head>.
 - En el examen de coreano también llena ADS.client para activar sus espacios.
-- Repetirlo con el mismo ID no duplica nada."""
+- Repetirlo con el mismo ID no duplica nada.
+- Las páginas internas /sns/ y /tiktok/ quedan sin anuncios."""
 import re, sys, pathlib
 pub = (sys.argv[1] if len(sys.argv) > 1 else '').strip()
 if not re.fullmatch(r'ca-pub-\d{10,20}', pub): sys.exit('Uso: set-adsense.py ca-pub-XXXXXXXXXXXXXXXX')
@@ -14,6 +15,9 @@ for f in sorted((ROOT / 'site').rglob('*.html')):
     s = f.read_text(); o = s
     s = re.sub(r'<script async src="https://pagead2\.googlesyndication\.com/pagead/js/adsbygoogle\.js\?client=[^"]+" crossorigin="anonymous"></script>\n?', '', s)
     s = re.sub(r'<!-- AdSense:[^>]*-->\n?(<!-- <script async src="https://pagead2[^>]*></script> -->\n?)?', '', s)
+    if f.parent.name in ('sns', 'tiktok') and f.parent.parent.name == 'site':
+        if s != o: f.write_text(s); n += 1
+        continue  # páginas internas (noindex): sin anuncios
     if 'examen-coreano' in str(f):
         s = re.sub(r'const ADS=\{client:"[^"]*"', f'const ADS={{client:"{pub}"', s)
     s = s.replace('</head>', tag + '\n</head>', 1)

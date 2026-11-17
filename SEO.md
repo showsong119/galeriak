@@ -62,8 +62,8 @@
 | 4 | serum-coreano | sérum coreano para principiantes | K-Beauty | ✅ 2026-11-10 |
 | 5 | palabras-kpop-significado | qué significa oppa, daebak, aegyo | Coreano | ✅ 2026-11-13 |
 | 6 | kdramas-principiantes | kdramas para principiantes | K-Drama | ✅ 2026-11-13 |
-| 7 | acido-salicilico-coreano | ácido salicílico para poros / BHA coreano | K-Beauty | ⏳ |
-| 8 | lightstick-kpop | qué es un lightstick y cómo conectarlo | K-Pop | ⏳ |
+| 7 | acido-salicilico-coreano | ácido salicílico para poros / BHA coreano | K-Beauty | ✅ 2026-11-17 |
+| 8 | lightstick-kpop | qué es un lightstick y cómo conectarlo | K-Pop | ✅ 2026-11-17 |
 | 9 | aprender-coreano-gratis | cómo aprender coreano gratis desde cero | Coreano | ⏳ |
 | 10 | manchas-skincare-coreano | skincare coreano para manchas | K-Beauty | ⏳ |
 | 11 | comida-coreana-mexico | comida coreana para principiantes (qué pedir) | Corea | ⏳ |

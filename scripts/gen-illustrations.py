@@ -157,6 +157,8 @@ ART = {
  'serum-coreano': ('beauty', bottle(720, 410, 1.1, '#ffd0e0', B[2], ko='세럼') + drop(930, 250, 1.5, '#5ab0ff', .9) + drop(1010, 400, 1, '#ffb3cc') + leaf(1060, 470, .9, '#3aa76d') + sparkle(560, 200, 1.4, B[3]), 'Gotero de sérum con gotas'),
  'palabras-kpop-significado': ('kpop', speech(520, 140, 300, 140, '오빠', '#fff', K[2], fs=60) + speech(840, 170, 320, 140, '대박!', K[3], '#fff', fs=60, tail='right') + tile(700, 420, '애교', K[2], '#fff', w=200, fs=66, rot=-5) + heart(960, 450, 1, K[3]) + sparkle(1090, 330, 1.2, K[2]), 'Burbujas con oppa, daebak y aegyo'),
  'kdramas-principiantes': ('kpop', phone(760, 330, 1, K[2]) + tile(980, 250, '드라마', '#fff', K[2], w=230, fs=56, rot=5) + heart(1000, 450, 1, K[3]) + heart(600, 440, .7, K[2], .8) + sparkle(560, 190, 1.3, K[3]), 'Celular con K-drama y corazones'),
+ 'acido-salicilico-coreano': ('beauty', bottle(740, 410, 1.05, '#d6f0ff', '#2f8fd8', ko='BHA') + magnifier(990, 300, 1.05, B[2]) + drop(600, 240, 1.1, '#5ab0ff', .9) + bubble_dots(960, 470, B[3]) + sparkle(1080, 160, 1.2, B[3]), 'Tónico con BHA y lupa sobre los poros'),
+ 'lightstick-kpop': ('kpop', lightstick(760, 360, 1.15, K[2], K[3]) + phone(990, 340, .8, K[2]) + note(580, 230, 1.1, K[3]) + sparkle(1080, 160, 1.4, K[3]) + heart(600, 460, .8, K[2], .8), 'Lightstick genérico conectado al celular'),
 }
 
 def examen_svg():
