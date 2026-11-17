@@ -27,15 +27,19 @@
     {
       "dia": "2026-11-16",
       "slug": "008-saludos-despedidas"
+    },
+    {
+      "dia": "2026-11-17",
+      "slug": "009-kdrama-oficina"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-16T07:12:27.395Z",
+  "at": "2026-11-17T08:26:32.676Z",
   "ultimo": {
-    "dia": "2026-11-16",
-    "slug": "008-saludos-despedidas",
-    "publish_id": "p_inbox_url~v2.7708663502596114438",
+    "dia": "2026-11-17",
+    "slug": "009-kdrama-oficina",
+    "publish_id": "p_inbox_url~v2.7709053573711169542",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }

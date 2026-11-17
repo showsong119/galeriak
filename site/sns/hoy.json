@@ -1,17 +1,19 @@
 {
-  "dia": "2026-11-16",
-  "slug": "008-saludos-despedidas",
-  "titulo": "Coreano del día #8: 안녕하세요, 안녕히 가세요 y 안녕히 계세요 — cómo saludar y despedirse",
-  "texto": "📚 Coreano del día #8: 안녕하세요, 안녕히 가세요 y 안녕히 계세요 — cómo saludar y despedirse\n\n안녕히 계세요 (annyeonghi gyeseyo) = Adiós (cuando tú te vas)\n\nLa lección completa, con ejemplos y mini reto, está gratis en GaleríaK 👉 galeriakmx.com (link en la bio)\n\n¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
-  "img": "/img/sns/008-saludos-despedidas/01.jpg",
+  "dia": "2026-11-17",
+  "slug": "009-kdrama-oficina",
+  "titulo": "Coreano del día #9: El coreano de los K-Dramas de oficina: 출근, 퇴근 y 회식",
+  "texto": "📚 Coreano del día #9: El coreano de los K-Dramas de oficina: 출근, 퇴근 y 회식\n\n퇴근! (toegeun) = ¡Hora de salir del trabajo!\n\nLa lección completa, con ejemplos y mini reto, está gratis en GaleríaK 👉 galeriakmx.com (link en la bio)\n\n¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
+  "img": "/img/sns/009-kdrama-oficina/01.jpg",
   "fotos": [
-    "/img/sns/008-saludos-despedidas/01.jpg",
-    "/img/sns/008-saludos-despedidas/02.jpg",
-    "/img/sns/008-saludos-despedidas/03.jpg",
-    "/img/sns/008-saludos-despedidas/04.jpg",
-    "/img/sns/008-saludos-despedidas/05.jpg",
-    "/img/sns/008-saludos-despedidas/06.jpg",
-    "/img/sns/008-saludos-despedidas/07.jpg"
+    "/img/sns/009-kdrama-oficina/01.jpg",
+    "/img/sns/009-kdrama-oficina/02.jpg",
+    "/img/sns/009-kdrama-oficina/03.jpg",
+    "/img/sns/009-kdrama-oficina/04.jpg",
+    "/img/sns/009-kdrama-oficina/05.jpg",
+    "/img/sns/009-kdrama-oficina/06.jpg",
+    "/img/sns/009-kdrama-oficina/07.jpg",
+    "/img/sns/009-kdrama-oficina/08.jpg",
+    "/img/sns/009-kdrama-oficina/09.jpg"
   ],
   "enviados": [
     {
@@ -41,6 +43,10 @@
     {
       "dia": "2026-11-16",
       "slug": "008-saludos-despedidas"
+    },
+    {
+      "dia": "2026-11-17",
+      "slug": "009-kdrama-oficina"
     }
   ]
 }
