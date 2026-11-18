@@ -192,7 +192,7 @@ SETUP.md                 사용자가 직접 해야 할 일 체크리스트
 - 사진 업로드는 기존대로 Lv.2(DB 정책 `gk_puede_fotos`).
 
 ## 28. Coreano del día · 시험 레벨 선택 (2026-11-09)
-- 매일 한국어 공부 글: 대기열 `content/diario/cola/NNN-slug.json` `{tema, title, body}` → `scripts/publicar-diario.mjs`(검증: 제목 8–120, 본문 300–6000·한글 필수·사진 금지) → `.github/workflows/diario.yml`(매일 14:13 UTC = 8:13 CDMX)이 맨 앞 파일 1개를 `coreano` 갤러리에 관리자 명의로 게시(같은 제목 있으면 건너뜀) → `content/diario/publicadas/`로 이동, `content/diario/ultima.json` 기록. 테스트 `scripts/publicar-diario.test.mjs`(대기열 전체 검증). 첫 7편(#1–#7) 작성 완료.
+- 매일 한국어 공부 글: 대기열 `content/diario/cola/NNN-slug.json` `{tema, title, body}` → `scripts/publicar-diario.mjs`(검증: 제목 8–80 — posts 표 제약, 2026-11-17 #10 제목 83자로 게시 실패(23514), 본문 300–6000·한글 필수·사진 금지) → `.github/workflows/diario.yml`(매일 14:13 UTC = 8:13 CDMX)이 맨 앞 파일 1개를 `coreano` 갤러리에 관리자 명의로 게시(같은 제목 있으면 건너뜀) → `content/diario/publicadas/`로 이동, `content/diario/ultima.json` 기록. 테스트 `scripts/publicar-diario.test.mjs`(대기열 전체 검증). 첫 7편(#1–#7) 작성 완료.
 - 예약 작업 「GaleríaK 매일 한국어 콘텐츠」(`trig_01N7BX964RgDKmmAceyzmNgs`, 매일 21:17 America/Mexico_City): Claude가 새 레슨 1편(대기열 3편 미만이면 2편)을 써서 푸시. 규칙: 오리지널만, 가사·드라마 대사·기사 인용 금지, 실존 인물 루머·연애/성적 내용 금지, 주제(tema) 돌려가며 중복 금지, 한국어 맞춤법·로마자 확인.
 - 시험 레벨 선택: `MODES`(todo 1–6 / basico 1–2 / intermedio 3–4 / avanzado 5–6, 모두 30문항). basico V{1:6,2:6}R{1:3,2:3}L{1:6,2:6}, intermedio·avanzado V6+6 R6+6 L3+3(듣기 문항이 레벨당 6개뿐이라 2회 무중복). `pickExam(seen,rand,modo)`, `grade(ans,qs,modo)` → level은 lo-1부터, `bajo`(첫 레벨 미달 → 결과에 「Aún no alcanzas …」·아래 레벨 추천), `tope`(최고 레벨 통과 → 다음 레벨 추천). 선택값 localStorage `gk-examen-modo`, URL `?nivel=basico|intermedio|avanzado`, `st.modo`. 테스트 2개 추가.
 

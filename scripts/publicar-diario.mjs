@@ -26,7 +26,7 @@ export function validar(l, nombre) {
   const e = [];
   if (!l || typeof l !== 'object') return ['no es un objeto'];
   const t = String(l.title || '').trim(), b = String(l.body || '').trim();
-  if (t.length < 8 || t.length > 120) e.push('título de 8 a 120 caracteres');
+  if (t.length < 8 || t.length > 80) e.push('título de 8 a 80 caracteres (límite de posts)');
   if (b.length < 300 || b.length > 6000) e.push('cuerpo de 300 a 6000 caracteres');
   if (!/[가-힣]/.test(b)) e.push('el cuerpo no tiene hangul');
   if (l.tema && !TEMAS.includes(l.tema)) e.push('tema no válido');
@@ -60,7 +60,7 @@ export function validar(l, nombre) {
 export function armarPost(l, adminId, nombre) {
   const ilus = l.ilus && nombre ? `[ilus:${nombre.replace(/\.json$/, '')}]\n\n` : '';
   const body = ilus + String(l.body).trim() + '\n\n— 📚 Coreano del día · ¿Quieres saber tu nivel? Haz el examen gratis: /examen-coreano/';
-  return { gallery_id: GALERIA, author_id: adminId, title: String(l.title).trim().slice(0, 120), body };
+  return { gallery_id: GALERIA, author_id: adminId, title: String(l.title).trim().slice(0, 80), body };
 }
 
 function sbHeaders(key) {
