@@ -1,19 +1,13 @@
 {
-  "dia": "2026-11-17",
-  "slug": "009-kdrama-oficina",
-  "titulo": "Coreano del día #9: El coreano de los K-Dramas de oficina: 출근, 퇴근 y 회식",
-  "texto": "📚 Coreano del día #9: El coreano de los K-Dramas de oficina: 출근, 퇴근 y 회식\n\n퇴근! (toegeun) = ¡Hora de salir del trabajo!\n\nLa lección completa, con ejemplos y mini reto, está gratis en GaleríaK 👉 galeriakmx.com (link en la bio)\n\n¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
-  "img": "/img/sns/009-kdrama-oficina/01.jpg",
+  "dia": "2026-11-18",
+  "slug": "examen",
+  "titulo": "Examen de coreano gratis (publicación fija)",
+  "texto": "¿Qué tanto coreano sabes? 🇰🇷\n\nHaz gratis el examen estilo TOPIK de GaleríaK: 30 preguntas de vocabulario, lectura y audio, con tu nivel del 1 al 6 y explicaciones en español. Sin cuenta.\n\n👉 galeriakmx.com/examen-coreano (link en la bio)\n\nComparte tu resultado y reta a tus amigas y amigos 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
+  "img": "/img/sns/examen/01.jpg",
   "fotos": [
-    "/img/sns/009-kdrama-oficina/01.jpg",
-    "/img/sns/009-kdrama-oficina/02.jpg",
-    "/img/sns/009-kdrama-oficina/03.jpg",
-    "/img/sns/009-kdrama-oficina/04.jpg",
-    "/img/sns/009-kdrama-oficina/05.jpg",
-    "/img/sns/009-kdrama-oficina/06.jpg",
-    "/img/sns/009-kdrama-oficina/07.jpg",
-    "/img/sns/009-kdrama-oficina/08.jpg",
-    "/img/sns/009-kdrama-oficina/09.jpg"
+    "/img/sns/examen/01.jpg",
+    "/img/sns/examen/02.jpg",
+    "/img/sns/examen/03.jpg"
   ],
   "enviados": [
     {
@@ -47,6 +41,10 @@
     {
       "dia": "2026-11-17",
       "slug": "009-kdrama-oficina"
+    },
+    {
+      "dia": "2026-11-18",
+      "slug": "examen"
     }
   ]
 }

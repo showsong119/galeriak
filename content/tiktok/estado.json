@@ -31,15 +31,19 @@
     {
       "dia": "2026-11-17",
       "slug": "009-kdrama-oficina"
+    },
+    {
+      "dia": "2026-11-18",
+      "slug": "examen"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-17T08:26:32.676Z",
+  "at": "2026-11-18T07:53:58.286Z",
   "ultimo": {
-    "dia": "2026-11-17",
-    "slug": "009-kdrama-oficina",
-    "publish_id": "p_inbox_url~v2.7709053573711169542",
+    "dia": "2026-11-18",
+    "slug": "examen",
+    "publish_id": "p_inbox_url~v2.7709415901024077831",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
