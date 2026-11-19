@@ -35,15 +35,19 @@
     {
       "dia": "2026-11-18",
       "slug": "examen"
+    },
+    {
+      "dia": "2026-11-19",
+      "slug": "010-estaciones-bomi-dali"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-18T07:53:58.286Z",
+  "at": "2026-11-19T07:51:55.127Z",
   "ultimo": {
-    "dia": "2026-11-18",
-    "slug": "examen",
-    "publish_id": "p_inbox_url~v2.7709415901024077831",
+    "dia": "2026-11-19",
+    "slug": "010-estaciones-bomi-dali",
+    "publish_id": "p_inbox_url~v2.7709786613257684998",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }

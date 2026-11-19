@@ -1,13 +1,17 @@
 {
-  "dia": "2026-11-18",
-  "slug": "examen",
-  "titulo": "Examen de coreano gratis (publicación fija)",
-  "texto": "¿Qué tanto coreano sabes? 🇰🇷\n\nHaz gratis el examen estilo TOPIK de GaleríaK: 30 preguntas de vocabulario, lectura y audio, con tu nivel del 1 al 6 y explicaciones en español. Sin cuenta.\n\n👉 galeriakmx.com/examen-coreano (link en la bio)\n\nComparte tu resultado y reta a tus amigas y amigos 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
-  "img": "/img/sns/examen/01.jpg",
+  "dia": "2026-11-19",
+  "slug": "010-estaciones-bomi-dali",
+  "titulo": "Coreano del día #10: 봄, 여름, 가을, 겨울 y el secreto de Bomi y Dali",
+  "texto": "📚 Coreano del día #10: 봄, 여름, 가을, 겨울 y el secreto de Bomi y Dali\n\n🐯 Bomi: 나는 봄이야! (naneun bomiya) — ¡Soy Bomi, de primavera!\n🐰 Dali: 나는 달이야! (naneun dariya) — ¡Y yo Dali, de la luna!\n\nLa lección completa, con ejemplos y mini reto, está gratis en GaleríaK 👉 galeriakmx.com (link en la bio)\n\n¿Ya sabes tu nivel de coreano? Haz el examen gratis en la web 🐯🐰\n\n#coreano #aprendecoreano #kpop #kdrama #kpopmexico",
+  "img": "/img/sns/010-estaciones-bomi-dali/01.jpg",
   "fotos": [
-    "/img/sns/examen/01.jpg",
-    "/img/sns/examen/02.jpg",
-    "/img/sns/examen/03.jpg"
+    "/img/sns/010-estaciones-bomi-dali/01.jpg",
+    "/img/sns/010-estaciones-bomi-dali/02.jpg",
+    "/img/sns/010-estaciones-bomi-dali/03.jpg",
+    "/img/sns/010-estaciones-bomi-dali/04.jpg",
+    "/img/sns/010-estaciones-bomi-dali/05.jpg",
+    "/img/sns/010-estaciones-bomi-dali/06.jpg",
+    "/img/sns/010-estaciones-bomi-dali/07.jpg"
   ],
   "enviados": [
     {
@@ -45,6 +49,10 @@
     {
       "dia": "2026-11-18",
       "slug": "examen"
+    },
+    {
+      "dia": "2026-11-19",
+      "slug": "010-estaciones-bomi-dali"
     }
   ]
 }
