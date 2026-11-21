@@ -8,7 +8,7 @@ import { build, readSiteConfig, esc, isThin, buildSitemap, bodyHTML } from './bu
 const UID = '00000000-0000-0000-0000-00000000000c';
 const data = {
   posts: [
-    { id: 11, gallery_id: 'skincare', author_id: UID, title: 'Mi rutina <script>', body: 'Uso limpiador, tónico, hidratante y protector solar todos los días en la mañana y en la noche.\n[foto:' + UID + '/abcdef12.webp]', up_count: 3, comment_count: 1, created_at: '2026-11-08T10:00:00Z', profiles: { nickname: 'ana' } },
+    { id: 11, gallery_id: 'skincare', author_id: UID, title: 'Mi rutina <script>', body: 'Uso limpiador, tónico, hidratante y protector solar todos los días en la mañana y en la noche. '.repeat(6) + '\n[foto:' + UID + '/abcdef12.webp]', up_count: 3, comment_count: 1, created_at: '2026-11-08T10:00:00Z', profiles: { nickname: 'ana' } },
     { id: 12, gallery_id: 'bts', author_id: UID, title: 'Hola', body: 'hola', up_count: 0, comment_count: 0, created_at: '2026-11-08T09:00:00Z', profiles: { nickname: 'ana' } },
   ],
   comments: [{ id: 1, post_id: 11, body: '¡Gracias!', created_at: '2026-11-08T11:00:00Z', profiles: { nickname: 'luis' } }],
@@ -42,14 +42,21 @@ test('genera páginas, escapa HTML y arma el sitemap', async () => {
   assert.ok(!sm.includes('/p/12/'));
   assert.match(sm, /\/guias\/doble-limpieza\//);
   assert.match(sm, /\/g\/skincare\//);
-  assert.match(sm, /\/g\/bts\//);
+  assert.ok(!sm.includes('/g/bts/'), 'galería solo con publicaciones delgadas fuera del sitemap');
+  assert.match(readFileSync(join(out, 'g/bts/index.html'), 'utf8'), /noindex/);
+  assert.ok(!readFileSync(join(out, 'g/skincare/index.html'), 'utf8').includes('noindex'));
   assert.ok(!sm.includes('/g/twice/'), 'galería vacía fuera del sitemap');
+  const home = readFileSync(join(out, 'index.html'), 'utf8');
+  assert.match(home, /<!-- GK_LIST --><h3[^>]*>Lo más reciente<\/h3><ul><li><a href="\/p\/11\/">/);
+  assert.ok(!home.includes('/p/12/'), 'la portada no enlaza publicaciones delgadas');
 });
 
 test('utilidades', () => {
   assert.equal(esc('<a "x">'), '&lt;a &quot;x&quot;&gt;');
   assert.equal(isThin({ body: 'corto' }, 0), true);
   assert.equal(isThin({ body: 'corto' }, 2), false);
+  assert.equal(isThin({ body: 'x'.repeat(300) }, 1), true, 'pregunta corta con 1 comentario sigue delgada');
+  assert.equal(isThin({ body: 'x'.repeat(500) }, 0), false, 'lección larga se indexa');
   const sm = buildSitemap('<urlset><url><loc>https://galeriakmx.com/p/1/</loc></url><url><loc>https://galeriakmx.com/guias/</loc></url></urlset>', [{ loc: 'https://galeriakmx.com/p/2/' }]);
   assert.ok(!sm.includes('/p/1/') && sm.includes('/p/2/') && sm.includes('/guias/'));
   assert.ok(!bodyHTML({ author_id: 'otro', body: '[foto:' + UID + '/abcdef12.webp]' }, 'https://x').includes('<img'));

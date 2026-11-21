@@ -54,8 +54,11 @@ export function fmtBody(body,authorId,fotoUrl){
 }
 export function bodyHTML(p, supaUrl) { return fmtBody(p.body, p.author_id, `${supaUrl}/storage/v1/object/public/post-images`); }
 
-// Página delgada (casi sin texto y sin comentarios): no se indexa ni va al sitemap
-export const isThin = (p, nComments) => plainBody(p.body).length < 60 && !nComments;
+// Página delgada: no se indexa ni va al sitemap (AdSense rechazó el sitio por "contenido de poco valor").
+// Solo se indexa una publicación con texto propio suficiente (lecciones, reseñas largas) o con conversación real (2+ comentarios).
+// Las preguntas cortas del equipo para abrir galerías ("preséntate", "recomienda una canción") quedan fuera hasta que alguien responda.
+export const MIN_INDEX_CHARS = 500;
+export const isThin = (p, nComments) => plainBody(p.body).length < MIN_INDEX_CHARS && (nComments || 0) < 2;
 
 // ---------- plantilla ----------
 function page({ title, desc, canonical, robots, jsonld, body, css, adsense }) {
@@ -117,7 +120,7 @@ ${comments.length ? `<section class="box" style="margin-top:14px"><h2 style="mar
   return page({ title: `${p.title} – ${g.name} | GaleríaK`, desc, canonical: url, robots: thin ? 'noindex,follow' : '', jsonld, body, css: ctx.css, adsense: ctx.adsense });
 }
 
-export function renderGallery(g, cat, posts, ctx) {
+export function renderGallery(g, cat, posts, ctx, indexable = posts.length > 0) {
   const url = `${BASE}/g/${g.id}/`;
   const body = `<article>
 <div class="crumb"><a href="/">Inicio</a> › <a href="/g/">Galerías</a> › ${esc(cat?.name || '')}</div>
@@ -128,7 +131,7 @@ export function renderGallery(g, cat, posts, ctx) {
 <h2>Publicaciones recientes</h2>
 ${posts.length ? `<ul class="list">${posts.slice(0, 50).map(p => `<li><a href="/p/${p.id}/">${esc(p.title)}</a><small>${esc(p.profiles?.nickname || p.anon_name || 'usuario')} · ${fecha(p.created_at)} · 👁 ${p.views || 0} · ♥ ${p.up_count || 0} · 💬 ${p.comment_count || 0}</small></li>`).join('')}</ul>` : '<p>Todavía no hay publicaciones. ¡Sé la primera persona en escribir!</p>'}
 </article>`;
-  return page({ title: `${g.name} – Galería de fans en español | GaleríaK`, desc: snippet(`${g.desc}. Comunidad de fans en español en México: publicaciones, reseñas y conversaciones sobre ${g.name}.`), canonical: url, robots: posts.length ? '' : 'noindex,follow', jsonld: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: g.name, description: g.desc, url, inLanguage: 'es-MX' }, body, css: ctx.css, adsense: ctx.adsense });
+  return page({ title: `${g.name} – Galería de fans en español | GaleríaK`, desc: snippet(`${g.desc}. Comunidad de fans en español en México: publicaciones, reseñas y conversaciones sobre ${g.name}.`), canonical: url, robots: indexable ? '' : 'noindex,follow', jsonld: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: g.name, description: g.desc, url, inLanguage: 'es-MX' }, body, css: ctx.css, adsense: ctx.adsense });
 }
 
 export function renderIndex(CATS, GALS, counts, ctx) {
@@ -192,6 +195,13 @@ export function injectPre(indexHtml, pre) {
   return indexHtml.replace(/window\.GK_PRE=[^;]*;\/\* GK_PRE \*\//, () => `window.GK_PRE=${json};/* GK_PRE */`);
 }
 
+// Lista estática de las publicaciones indexables más recientes en la portada (HTML sin JavaScript, para buscadores y revisores)
+export function injectHomeList(indexHtml, items) {
+  const li = items.slice(0, 8).map(({ p, g }) => `<li><a href="/p/${p.id}/">${esc(p.title)}</a> <small>· ${esc(g.name)}</small></li>`).join('');
+  const block = li ? `<h3 style="font-size:16px;margin:12px 0 4px">Lo más reciente</h3><ul>${li}</ul>` : '';
+  return indexHtml.replace(/<!-- GK_LIST -->[\s\S]*?<!-- \/GK_LIST -->/, () => `<!-- GK_LIST -->${block}<!-- /GK_LIST -->`);
+}
+
 export async function build(outDir, data) {
   const indexHtml = readFileSync(join(outDir, 'index.html'), 'utf8');
   const cfg = readSiteConfig(indexHtml);
@@ -211,6 +221,8 @@ export async function build(outDir, data) {
   for (const d of ['g', 'p']) { const dir = join(outDir, d); if (existsSync(dir)) rmSync(dir, { recursive: true }); }
   const sm = [{ loc: `${BASE}/g/`, lastmod: day(Date.now()) }];
   const counts = {};
+  const indexedIn = {}; // galería → publicaciones que sí se indexan
+  const idxList = [];   // para la lista estática de la portada
   let nPosts = 0, nIndexed = 0;
   for (const p of data.posts) {
     const g = G[p.gallery_id]; if (!g || g.anon) continue;
@@ -219,16 +231,20 @@ export async function build(outDir, data) {
     mkdirSync(join(outDir, 'p', String(p.id)), { recursive: true });
     writeFileSync(join(outDir, 'p', String(p.id), 'index.html'), renderPost(p, g, cm, ctx));
     nPosts++;
-    if (!isThin(p, cm.length)) { nIndexed++; sm.push({ loc: `${BASE}/p/${p.id}/`, lastmod: day(cm.length ? cm[cm.length - 1].created_at : p.created_at) }); }
+    if (!isThin(p, cm.length)) { nIndexed++; indexedIn[g.id] = (indexedIn[g.id] || 0) + 1; idxList.push({ p, g }); sm.push({ loc: `${BASE}/p/${p.id}/`, lastmod: day(cm.length ? cm[cm.length - 1].created_at : p.created_at) }); }
   }
   for (const g of cfg.GALS) {
     if (g.attend || g.anon) continue;
     const ps = data.posts.filter(p => p.gallery_id === g.id);
     mkdirSync(join(outDir, 'g', g.id), { recursive: true });
-    writeFileSync(join(outDir, 'g', g.id, 'index.html'), renderGallery(g, cfg.CATS.find(c => c.id === g.cat), ps, ctx));
-    if (ps.length) sm.push({ loc: `${BASE}/g/${g.id}/`, lastmod: day(ps[0].created_at) });
+    // Galería sin ninguna publicación indexable (vacía o solo con la pregunta de bienvenida): noindex y fuera del sitemap
+    const ok = (indexedIn[g.id] || 0) > 0;
+    writeFileSync(join(outDir, 'g', g.id, 'index.html'), renderGallery(g, cfg.CATS.find(c => c.id === g.cat), ps, ctx, ok));
+    if (ok) sm.push({ loc: `${BASE}/g/${g.id}/`, lastmod: day(ps[0].created_at) });
   }
   writeFileSync(join(outDir, 'g', 'index.html'), renderIndex(cfg.CATS, cfg.GALS, counts, ctx));
+  const idxPath = join(outDir, 'index.html');
+  writeFileSync(idxPath, injectHomeList(readFileSync(idxPath, 'utf8'), idxList));
   const smPath = join(outDir, 'sitemap.xml');
   writeFileSync(smPath, buildSitemap(existsSync(smPath) ? readFileSync(smPath, 'utf8') : '', sm));
   console.log(`✅ Páginas: ${nPosts} publicaciones (${nIndexed} en el sitemap), ${cfg.GALS.filter(g => !g.attend).length} galerías + /g/`);
