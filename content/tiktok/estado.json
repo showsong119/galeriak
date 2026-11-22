@@ -47,15 +47,19 @@
     {
       "dia": "2026-11-21",
       "slug": "012-dias-semana"
+    },
+    {
+      "dia": "2026-11-22",
+      "slug": "013-reacciones"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-21T07:40:08.137Z",
+  "at": "2026-11-22T07:23:50.559Z",
   "ultimo": {
-    "dia": "2026-11-21",
-    "slug": "012-dias-semana",
-    "publish_id": "p_inbox_url~v2.7710525982829987861",
+    "dia": "2026-11-22",
+    "slug": "013-reacciones",
+    "publish_id": "p_inbox_url~v2.7710892708721707014",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
