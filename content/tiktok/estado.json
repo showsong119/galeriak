@@ -51,15 +51,19 @@
     {
       "dia": "2026-11-22",
       "slug": "013-reacciones"
+    },
+    {
+      "dia": "2026-11-23",
+      "slug": "014-antojitos-invierno"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-22T07:23:50.559Z",
+  "at": "2026-11-23T08:08:06.939Z",
   "ultimo": {
-    "dia": "2026-11-22",
-    "slug": "013-reacciones",
-    "publish_id": "p_inbox_url~v2.7710892708721707014",
+    "dia": "2026-11-23",
+    "slug": "014-antojitos-invierno",
+    "publish_id": "p_inbox_url~v2.7711275389640869908",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
