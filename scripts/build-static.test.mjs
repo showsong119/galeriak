@@ -90,3 +90,13 @@ test('formato legible del cuerpo', async () => {
   assert.ok(!fmtBody('[ilus:../x]', 'u', 'X').includes('<img'));
   assert.equal(plainBody('[ilus:abc]\n\nTexto'), 'Texto');
 });
+
+test('imagen para compartir: tarjeta del carrusel si existe', async () => {
+  const { ogImage } = await import('./build-static.mjs');
+  const { mkdtempSync, mkdirSync, writeFileSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os'); const { join } = await import('node:path');
+  const d = mkdtempSync(join(tmpdir(), 'og-')); mkdirSync(join(d, 'abc-uno')); writeFileSync(join(d, 'abc-uno', '01.jpg'), 'x');
+  assert.equal(ogImage({ body: '[ilus:abc-uno]\nHola' }, { snsDir: d }), 'https://galeriakmx.com/img/sns/abc-uno/01.jpg');
+  assert.equal(ogImage({ body: '[ilus:otro]\nHola' }, { snsDir: d }), '');
+  assert.equal(ogImage({ body: 'sin ilus' }, { snsDir: d }), '');
+});

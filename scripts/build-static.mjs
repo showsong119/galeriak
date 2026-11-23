@@ -61,7 +61,8 @@ export const MIN_INDEX_CHARS = 500;
 export const isThin = (p, nComments) => plainBody(p.body).length < MIN_INDEX_CHARS && (nComments || 0) < 2;
 
 // ---------- plantilla ----------
-function page({ title, desc, canonical, robots, jsonld, body, css, adsense }) {
+function page({ title, desc, canonical, robots, jsonld, body, css, adsense, image }) {
+  const img = image || `${BASE}/img/og/home.jpg`;
   return `<!DOCTYPE html>
 <html lang="es-MX">
 <head>
@@ -72,7 +73,7 @@ function page({ title, desc, canonical, robots, jsonld, body, css, adsense }) {
 <link rel="canonical" href="${canonical}">
 ${robots ? `<meta name="robots" content="${robots}">\n` : ''}<meta property="og:type" content="article"><meta property="og:locale" content="es_MX">
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}">
-<meta property="og:url" content="${canonical}"><meta property="og:image" content="${BASE}/icons/icon-512.png">
+<meta property="og:url" content="${canonical}"><meta property="og:image" content="${img}"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/icons/icon-192.png" type="image/png"><meta name="theme-color" content="#e5317d">
 ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>\n` : ''}${adsense}
 <style>${css}
@@ -96,10 +97,18 @@ ${VISIT_JS}
 `;
 }
 
+// Imagen para compartir: la primera tarjeta del carrusel (/img/sns/<slug>/01.jpg) si la lección tiene [ilus:slug]
+export function ogImage(p, ctx) {
+  const m = String(p.body || '').match(/^\[ilus:([a-z0-9-]{2,60})\]$/m);
+  if (!m || !ctx.snsDir || !existsSync(join(ctx.snsDir, m[1], '01.jpg'))) return '';
+  return `${BASE}/img/sns/${m[1]}/01.jpg`;
+}
+
 export function renderPost(p, g, comments, ctx) {
   const url = `${BASE}/p/${p.id}/`, nick = p.profiles?.nickname || p.anon_name || 'usuario';
   const desc = snippet(plainBody(p.body) || p.title);
   const thin = isThin(p, comments.length);
+  const image = ogImage(p, ctx);
   const jsonld = {
     '@context': 'https://schema.org', '@type': 'DiscussionForumPosting', headline: String(p.title).slice(0, 110), text: snippet(plainBody(p.body), 500),
     url, datePublished: p.created_at, inLanguage: 'es-MX', author: { '@type': 'Person', name: nick },
@@ -117,7 +126,7 @@ ${p.deal_price ? `<p><b>Tienda:</b> ${esc(p.deal_store || '')} · revisa el prec
 <div class="btns"><a class="btnp" href="/#p-${p.id}">💬 Comentar o dar ♥</a><a class="btnp sec" href="/#g-${g.id}">Más de ${esc(g.name)}</a></div>
 </article>
 ${comments.length ? `<section class="box" style="margin-top:14px"><h2 style="margin-top:0">Comentarios (${comments.length})</h2>${comments.slice(0, 50).map(c => `<div class="cmt"><b>${esc(c.profiles?.nickname || c.anon_name || 'usuario')}</b> <small style="color:var(--muted)">${fecha(c.created_at)}</small><p>${esc(c.body)}</p></div>`).join('')}</section>` : ''}`;
-  return page({ title: `${p.title} – ${g.name} | GaleríaK`, desc, canonical: url, robots: thin ? 'noindex,follow' : '', jsonld, body, css: ctx.css, adsense: ctx.adsense });
+  return page({ title: `${p.title} – ${g.name} | GaleríaK`, desc, canonical: url, robots: thin ? 'noindex,follow' : '', jsonld: image ? { ...jsonld, image } : jsonld, body, css: ctx.css, adsense: ctx.adsense, image });
 }
 
 export function renderGallery(g, cat, posts, ctx, indexable = posts.length > 0) {
@@ -207,7 +216,7 @@ export async function build(outDir, data) {
   const cfg = readSiteConfig(indexHtml);
   const guide = readFileSync(join(outDir, 'guias/doble-limpieza/index.html'), 'utf8');
   const css = (guide.match(/<style>([\s\S]*?)<\/style>/) || [, ''])[1];
-  const ctx = { css, adsense: cfg.adsense, url: cfg.url };
+  const ctx = { css, adsense: cfg.adsense, url: cfg.url, snsDir: join(outDir, 'img', 'sns') };
   if (!data && cfg.sel) {
     try { writeFileSync(join(outDir, 'index.html'), injectPre(indexHtml, await homePre(cfg))); console.log('✅ Portada precargada'); }
     catch (e) { console.warn('⚠️ Portada sin precarga (' + e.message + ')'); }
