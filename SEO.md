@@ -64,8 +64,12 @@
 | 6 | kdramas-principiantes | kdramas para principiantes | K-Drama | ✅ 2026-11-13 |
 | 7 | acido-salicilico-coreano | ácido salicílico para poros / BHA coreano | K-Beauty | ✅ 2026-11-17 |
 | 8 | lightstick-kpop | qué es un lightstick y cómo conectarlo | K-Pop | ✅ 2026-11-17 |
-| 9 | aprender-coreano-gratis | cómo aprender coreano gratis desde cero | Coreano | ⏳ |
-| 10 | manchas-skincare-coreano | skincare coreano para manchas | K-Beauty | ⏳ |
+| 9 | aprender-coreano-gratis | cómo aprender coreano gratis desde cero | Coreano | ✅ 2026-11-24 |
+| 10 | manchas-skincare-coreano | skincare coreano para manchas | K-Beauty | ✅ 2026-11-24 |
 | 11 | comida-coreana-mexico | comida coreana para principiantes (qué pedir) | Corea | ⏳ |
 | 12 | beca-gks-mexico | beca GKS México requisitos (solo con fuentes oficiales) | Coreano | ⏳ |
+| 13 | centella-asiatica | centella asiática para qué sirve en la cara | K-Beauty | ⏳ |
+| 14 | mascarillas-coreanas | mascarillas coreanas de tela: cómo usarlas y cada cuánto | K-Beauty | ⏳ |
+| 15 | viajar-corea-mexico | requisitos para viajar a Corea del Sur desde México (K-ETA, solo fuentes oficiales: Embajada de México en Corea / Embajada de Corea en México) | Corea | ⏳ |
+<!-- 2026-11-24 추가 근거: 13 = El Universal·Excélsior(mx)가 '센텔라란 무엇·어디에 좋은가' 기사를 따로 냄 / 14 = Grazia México·UnoTV가 '마스크팩 사용법' 기사를 냄 / 15 = 멕시코 외교부(embamex.sre.gob.mx/corea)에 K-ETA 안내 공지가 있을 만큼 문의가 많음 -->
 백로그가 3편 이하로 남으면 예약 작업이 SEO.md 1장 규칙에 맞는 새 주제를 아래에 추가한다(검색 수요 근거를 한 줄로).

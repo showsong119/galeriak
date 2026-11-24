@@ -159,6 +159,8 @@ ART = {
  'kdramas-principiantes': ('kpop', phone(760, 330, 1, K[2]) + tile(980, 250, '드라마', '#fff', K[2], w=230, fs=56, rot=5) + heart(1000, 450, 1, K[3]) + heart(600, 440, .7, K[2], .8) + sparkle(560, 190, 1.3, K[3]), 'Celular con K-drama y corazones'),
  'acido-salicilico-coreano': ('beauty', bottle(740, 410, 1.05, '#d6f0ff', '#2f8fd8', ko='BHA') + magnifier(990, 300, 1.05, B[2]) + drop(600, 240, 1.1, '#5ab0ff', .9) + bubble_dots(960, 470, B[3]) + sparkle(1080, 160, 1.2, B[3]), 'Tónico con BHA y lupa sobre los poros'),
  'lightstick-kpop': ('kpop', lightstick(760, 360, 1.15, K[2], K[3]) + phone(990, 340, .8, K[2]) + note(580, 230, 1.1, K[3]) + sparkle(1080, 160, 1.4, K[3]) + heart(600, 460, .8, K[2], .8), 'Lightstick genérico conectado al celular'),
+ 'aprender-coreano-gratis': ('coreano', tile(600, 250, '가', '#fff', CO[2], rot=-5) + tile(790, 250, '나', CO[2], '#fff', rot=4) + tile(980, 250, '다', '#fff', CO[3], rot=-3) + phone(1010, 470, .6, CO[2]) + sparkle(1080, 160, 1.4, CO[3]) + heart(640, 470, .8, CO[3], .8) + tile(800, 450, '공부', CO[3], '#fff', w=190, fs=60, rot=2), 'Letras coreanas y celular para estudiar'),
+ 'manchas-skincare-coreano': ('beauty', sun(1020, 180, 70, '#ffb020') + bottle(740, 410, 1.05, '#f5b942', '#c98a00', ko='미백') + tube(560, 440, .9, '#fff', '#ff7a00', 'SPF') + magnifier(960, 400, .95, B[2]) + sparkle(600, 200, 1.3, B[3]), 'Sérum para manchas, protector solar y lupa'),
 }
 
 def examen_svg():
