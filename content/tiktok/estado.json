@@ -55,15 +55,19 @@
     {
       "dia": "2026-11-23",
       "slug": "014-antojitos-invierno"
+    },
+    {
+      "dia": "2026-11-24",
+      "slug": "015-sageuk-historicos"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-23T08:08:06.939Z",
+  "at": "2026-11-24T10:22:12.856Z",
   "ultimo": {
-    "dia": "2026-11-23",
-    "slug": "014-antojitos-invierno",
-    "publish_id": "p_inbox_url~v2.7711275389640869908",
+    "dia": "2026-11-24",
+    "slug": "015-sageuk-historicos",
+    "publish_id": "p_inbox_url~v2.7711680915730401301",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
