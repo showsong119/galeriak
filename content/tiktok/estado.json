@@ -59,15 +59,19 @@
     {
       "dia": "2026-11-24",
       "slug": "015-sageuk-historicos"
+    },
+    {
+      "dia": "2026-11-25",
+      "slug": "016-presentarte"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-24T10:22:12.856Z",
+  "at": "2026-11-25T09:03:45.291Z",
   "ultimo": {
-    "dia": "2026-11-24",
-    "slug": "015-sageuk-historicos",
-    "publish_id": "p_inbox_url~v2.7711680915730401301",
+    "dia": "2026-11-25",
+    "slug": "016-presentarte",
+    "publish_id": "p_inbox_url~v2.7712032147556567048",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
