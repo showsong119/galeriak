@@ -63,15 +63,19 @@
     {
       "dia": "2026-11-25",
       "slug": "016-presentarte"
+    },
+    {
+      "dia": "2026-11-26",
+      "slug": "017-suneung-suerte"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-25T09:03:45.291Z",
+  "at": "2026-11-26T08:51:46.033Z",
   "ultimo": {
-    "dia": "2026-11-25",
-    "slug": "016-presentarte",
-    "publish_id": "p_inbox_url~v2.7712032147556567048",
+    "dia": "2026-11-26",
+    "slug": "017-suneung-suerte",
+    "publish_id": "p_inbox_url~v2.7712399425074907156",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
