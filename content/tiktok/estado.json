@@ -67,15 +67,19 @@
     {
       "dia": "2026-11-26",
       "slug": "017-suneung-suerte"
+    },
+    {
+      "dia": "2026-11-27",
+      "slug": "018-roles-grupo"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-26T08:51:46.033Z",
+  "at": "2026-11-27T09:00:19.860Z",
   "ultimo": {
-    "dia": "2026-11-26",
-    "slug": "017-suneung-suerte",
-    "publish_id": "p_inbox_url~v2.7712399425074907156",
+    "dia": "2026-11-27",
+    "slug": "018-roles-grupo",
+    "publish_id": "p_inbox_url~v2.7712773307141097492",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
