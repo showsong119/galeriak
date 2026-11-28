@@ -71,15 +71,19 @@
     {
       "dia": "2026-11-27",
       "slug": "018-roles-grupo"
+    },
+    {
+      "dia": "2026-11-28",
+      "slug": "019-como-te-sientes"
     }
   ],
   "status": "enviado",
   "scope": "user.info.basic,video.upload",
-  "at": "2026-11-27T09:00:19.860Z",
+  "at": "2026-11-28T08:23:04.513Z",
   "ultimo": {
-    "dia": "2026-11-27",
-    "slug": "018-roles-grupo",
-    "publish_id": "p_inbox_url~v2.7712773307141097492",
+    "dia": "2026-11-28",
+    "slug": "019-como-te-sientes",
+    "publish_id": "p_inbox_url~v2.7713134291101976597",
     "tiktok_status": "SEND_TO_USER_INBOX"
   }
 }
